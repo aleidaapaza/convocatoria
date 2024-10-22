@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    {% if user.is_authenticated%}
+        {% if user.is_municipio %}
+            {% include "perfil/municipio.html" %}
+        {% elif user.is_revisor%}
+            {% include "perfil/revisor.html" %}
+        {% elif user.is_superuser %}
+            {% include "perfil/superuser.html" %}
+        {% endif %}
+    {% else %}
+            {% include "homepage/Solicitud.html" %}
+    {% endif %}
+{% endblock %}

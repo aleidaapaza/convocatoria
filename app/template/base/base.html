@@ -1,0 +1,30 @@
+{% extends 'base/librerias.html' %}
+{% load static %}
+{% block cuerpo %}
+    <div class="wrapper">
+        <hr>
+        <div class="container">
+            <div class="row">
+                <div class="col ">
+                    <ol class="breadcrumb float-sm-right bg bg-white border border-primary bg-gradient-white text-uppercase">
+                        <li class="breadcrumb-item font-weight-bold "><a href="{% url 'index' %}"><b>Inicio</b></a></li>
+                        {% block entity %}
+
+                        {% endblock %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="background-color: #043c75">
+            {% block contenido %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'include/footer/footer.html' %}
+{% endblock %}
