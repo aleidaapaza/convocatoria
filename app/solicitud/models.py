@@ -1,3 +1,28 @@
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
+from solicitud.choices import departamentos, entidad_territorial_autonoma, estado_proyecto, periodo_ejecucion
 # Create your models here.
+
+class Municipios (models.Model):
+    departamento = models.CharField(choices=departamentos, max_length=30)
+    entidad_territorial = models.CharField(choices=entidad_territorial_autonoma, max_length=100 )
+    nombre_municipio = models.CharField(max_length=255)
+    estado = models.CharField(choices=estado_proyecto, max_length=255)
+
+    def __str__(self):
+        return f' {self.departamento}-{self.entidad_territorial}-{self.nombre_municipio}'
+    
+    class Meta:
+        verbose_name = _('Municipios')
+        verbose_name_plural = _('Municipios')
+        db_table = 'Municipios'
+
+class DatosBase(models.Model):
+    nombre = models.CharField(max_length=255)
+    n_comunidades = models.IntegerField()
+    comunidades = models.TextField()
+    tipologia_proy = models.BooleanField()
+    periodo_ejecu = models.IntegerField(choices=periodo_ejecucion)
+
+class Postulaciones(models.Model):
+    municipio = models.ForeignKey(Municipios, related_name='Datos_base_proyecto', on_delete=models.CASCADE)
