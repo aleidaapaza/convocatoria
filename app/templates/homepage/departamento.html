@@ -1,0 +1,88 @@
+{% load static%}
+{% block contenido %}
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="miModalLabel">Bienvenido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Estas son unas recomendaciones que se deben de tomar en cuenta para el llenado del formulario:
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Los archivos solicitados para subir <i class="text-danger">no deben de exeder los 2MB de peso</i></li>
+                        <li class="list-group-item">A second item</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1 class="text-center text-bg-primary">SELECCIONE SU DEPARTAMENTO</h1>
+    <div class="row">
+        <div class="col-4">
+        <a href="{% url 'solicitud:Entidad_Territorial' 'LA PAZ' %}" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">LA PAZ</h3>            
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/laPaz.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">BENI</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/beni.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/chuquisaca.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/cochabamba.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">ORURO</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/oruro.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">PANDO</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/pando.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/potosi.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/santaCruz.jpg' %}"/>
+        </a>
+        </div>
+        <div class="col-4">
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
+            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/tarija.jpg' %}"/>
+        </a>
+        </div>
+    </div>
+{% endblock contenido %}
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('miModal'));
+        myModal.show();
+    });
+</script>
+{% endblock js %}

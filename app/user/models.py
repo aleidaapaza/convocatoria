@@ -173,7 +173,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     fecha_reg = models.DateField(_('Fecha Registro'), auto_now_add=True)
     is_active = models.BooleanField(_('Activo'), default=True)
     is_staff = models.BooleanField(_('Estado Staff'), default=False)
-    
+    is_municipio = models.BooleanField(_('Estado municipio'), default=False)    
+    is_revisor = models.BooleanField(_('Estado municipio'), default=False)
+    is_superuser = models.BooleanField(_('Estado municipio'), default=False)
+
     objects = AccountManager()
 
     USERNAME_FIELD = 'username'

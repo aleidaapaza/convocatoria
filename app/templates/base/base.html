@@ -1,0 +1,28 @@
+{% extends 'base/librerias.html' %}
+{% load static %}
+{% block cuerpo %}
+<main> 
+    <div class="container">
+        <hr>
+        <div class="d-flex flex-row-reverse pe-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb float-sm-right text-uppercase">
+                <li class="breadcrumb-item"><a href="#">INICIO</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{entity}}</li>
+            </ol>
+        </nav>
+        </div>
+        
+
+        <div class="container">
+            {% block contenido %}
+            
+            {% endblock contenido %}
+        </div>
+    </div>
+</main>    
+{% endblock %}
+
+{% block footer %}
+    {% include 'include/footer/footer.html' %}
+{% endblock %}

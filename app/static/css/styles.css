@@ -1,0 +1,14 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;/* Hace que el body ocupe toda la altura de la ventana */
+}
+main {
+    flex: 1; /* Permite que el contenido principal ocupe el espacio restante */
+}
+footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 1rem;
+    /* Opcional: agrega estilo adicional */
+}
