@@ -22,9 +22,3 @@ estado_proyecto = {
     ('SOLICITUD', 'SOLICITUD'),
     ('APROBADO', 'APROBADO'),
 }
-
-periodo_ejecucion = {
-    ('1', '1'),
-    ('2', '2'),
-    ('3', '3'),
-}
