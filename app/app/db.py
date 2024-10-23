@@ -3,7 +3,7 @@ POSTGRESQL = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'convocatoria20',
         'USER': 'postgres',
-        'PASSWORD': 'fonaSISadminConv20',
+        'PASSWORD': '10912248',
         'HOST': 'localhost',
         'PORT': '5432'
     }
