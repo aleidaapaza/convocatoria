@@ -13,3 +13,4 @@ class solicitud(TemplateView):
 
 class entidad(TemplateView):
     template_name = 'homepage/entidadTerritorial.html'
+    
