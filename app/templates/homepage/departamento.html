@@ -11,7 +11,7 @@
                     Estas son unas recomendaciones que se deben de tomar en cuenta para el llenado del formulario:
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Los archivos solicitados para subir <i class="text-danger">no deben de exeder los 2MB de peso</i></li>
-                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">Para registrar la solicitud se debe de completar <i class="text-info">todos los pasos </i> hasta que le <i class="text-black">APAREZCA LA CONFIRMACION DEL REGISTRO</i></li>
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -20,63 +20,80 @@
             </div>
         </div>
     </div>
-    <h1 class="text-center text-bg-primary">SELECCIONE SU DEPARTAMENTO</h1>
     <div class="row">
-        <div class="col-4">
-        <a href="{% url 'solicitud:Entidad_Territorial' 'LA PAZ' %}" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">LA PAZ</h3>            
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/laPaz.jpg' %}"/>
-        </a>
+        <div class="col-4 col-sm-2">
+            <div class="linea-pasos">
+                <ul>
+                    <li class="paso activo">Paso 1</li>
+                    <li class="paso">Paso 2</li>
+                    <li class="paso">Paso 3</li>
+                    <li class="paso">Paso 4</li>
+                    <li class="paso">FIN</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">BENI</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/beni.jpg' %}"/>
-        </a>
+        <div class="col-8 col-sm-10">
+            <h1 class="text-center text-bg-primary">SELECCIONE SU DEPARTAMENTO</h1>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '1' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">LA PAZ</h3>            
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/laPaz.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '2' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">BENI</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/beni.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '3' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/chuquisaca.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '4' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/cochabamba.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '5' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">ORURO</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/oruro.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '6' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">PANDO</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/pando.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '7' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/potosi.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '8' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/santaCruz.jpg' %}"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '9' %}" style="text-decoration: none; color: inherit;">
+                        <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
+                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/tarija.jpg' %}"/>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/chuquisaca.jpg' %}"/>
-        </a>
-        </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/cochabamba.jpg' %}"/>
-        </a>
-        </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">ORURO</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/oruro.jpg' %}"/>
-        </a>
-        </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">PANDO</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/pando.jpg' %}"/>
-        </a>
-        </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/potosi.jpg' %}"/>
-        </a>
-        </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/santaCruz.jpg' %}"/>
-        </a>
-        </div>
-        <div class="col-4">
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
-            <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/tarija.jpg' %}"/>
-        </a>
-        </div>
+    
     </div>
+    
 {% endblock contenido %}
 {% block js %}
 <script>

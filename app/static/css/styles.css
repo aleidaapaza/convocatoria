@@ -12,3 +12,56 @@ footer {
     padding: 1rem;
     /* Opcional: agrega estilo adicional */
 }
+
+
+.linea-pasos {
+    display: flex;
+    align-items: center;
+    flex-direction: column; /* Alinea los pasos verticalmente */
+    position: relative; /* Para posicionar la línea entre pasos */
+}
+
+.linea-pasos ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+}
+
+.linea-pasos li {
+    position: relative;
+    padding: 15px 20px;
+    background: #f2f2f2;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0; /* Margen entre los pasos */
+    width: 100%; /* Ocupa todo el ancho */
+}
+
+.linea-pasos li:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px; /* Grosor de la línea */
+    height: calc(100% + 20px); /* Altura de la línea entre pasos */
+    background: #ccc;
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Asegura que la línea esté detrás del texto */
+}
+
+.linea-pasos li:first-child:before {
+    display: none; /* Oculta la línea antes del primer paso */
+}
+
+.paso.activo {
+    background: #007BFF; /* Color para el paso activo */
+    color: white; /* Color del texto para el paso activo */
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+    .linea-pasos li {
+        padding: 10px; /* Reduce el padding en pantallas pequeñas */
+    }
+}

@@ -1,29 +1,67 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% block librerias %}
+    <style>
+        .card {
+            height: 100%;
+        }
+    </style>
+{% endblock  %}
 {% block contenido %}
     {% if not user.is_authenticated%}
-        <h1 class="text-center text-bg-primary">SELECCIONE ENTIDAD TERRITORIAL AUTONOMA</h1>
-    <div class="row p-5">
-        <div class="col-6 ">
-        <a href="{% url 'solicitud:Entidad_Territorial' 'LA PAZ' %}" style="text-decoration: none; color: inherit;">
-            <h4 class="p-5">GOBIERNO AUTÓNOMO DEPARTAMENTAL</h4>
-        </a>
+        <div class="row">
+            <div class="col-4 col-sm-2">
+                <div class="linea-pasos">
+                    <ul>
+                        <li class="paso">Paso 1</li>
+                        <li class="paso activo">Paso 2</li>
+                        <li class="paso">Paso 3</li>
+                        <li class="paso">Paso 4</li>
+                        <li class="paso">FIN</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-8 col-sm-10">
+                <div class="row">
+                    <h3 class="text-center text-bg-primary">SELECCIONE ENTIDAD TERRITORIAL AUTONOMA</h3>
+                    <div class="col-sm-12 col-md-6 p-3">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' dep '1' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO DEPARTAMENTAL</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 p-3">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' dep '1' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO MUNICIPAL</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 p-3">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' dep '1' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO REGIONAL</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 p-3">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' dep '1' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO INDIGENA ORIGINARIO CAMPESINO</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>                
+            </div>
         </div>
-        <div class="col-6">
-        <a href="{% url 'solicitud:Entidad_Territorial' 'LA PAZ' %}" style="text-decoration: none; color: inherit;">
-            <h4 class="p-5">GOBIERNO AUTÓNOMO MUNICIPAL</h4>
-        </a>
-        </div>
-        <div class="col-6">
-        <a href="{% url 'solicitud:Entidad_Territorial' 'LA PAZ' %}" style="text-decoration: none; color: inherit;">
-            <h4 class="p-5">GOBIERNO AUTÓNOMO REGIONAL</h4>
-        </a>
-        </div>
-        <div class="col-6">
-        <a href="{% url 'solicitud:Entidad_Territorial' 'LA PAZ' %}" style="text-decoration: none; color: inherit;">
-            <h4 class="p-5">GOBIERNO AUTÓNOMO INDIGENA ORIGINARIO CAMPESINO</h4>
-        </a>
-        </div>
-    </div>
     {% endif %}
 {% endblock %}
