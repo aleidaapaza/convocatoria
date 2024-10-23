@@ -26,9 +26,12 @@ class municipio(ListView):
     template_name = 'homepage/municipio.html'
 
     def get_context_data(self, **kwargs):
-        context = super(entidad, self).get_context_data(**kwargs)
+        context = super(municipio, self).get_context_data(**kwargs)
         departamento = self.kwargs.get('departamento', 0)
-        
+        entidad = self.kwargs.get('entidad',0)
+        municipios_f = model.
         context['dep'] = departamento
+        context['ent'] = entidad
+        
         context['entity'] = 'ENTIDAD TERRITORIAL'
         return context
