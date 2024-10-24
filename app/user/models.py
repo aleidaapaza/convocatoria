@@ -13,7 +13,7 @@ from app.settings import MEDIA_URL, STATIC_URL
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, AbstractUser
 from django.utils.translation import gettext_lazy as _
 
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save
 
 from user.upload import carnetdoc, asignaciondoc
 
@@ -36,7 +36,7 @@ class Persona(models.Model):
         self.nombre = (self.nombre).upper()
         self.apellido = (self.apellido).upper()
         self.cargo = (self.cargo).upper()
-        return super(EncargadoMAE, self).save(*args, **kwargs)
+        return super(Persona, self).save(*args, **kwargs)
     
     class Meta:
         verbose_name = _('Persona')
@@ -52,9 +52,10 @@ class Persona(models.Model):
         
 class EncargadoMAE (models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    persona = models.OneToOneField(Persona, on_delete=models.CASCADE, null=True, blank=True)
+    persona = models.OneToOneField(Persona, on_delete=models.CASCADE, null=False, blank=False)
     carnet = models.FileField(upload_to=carnetdoc, null=False, blank=False)
     asignacion = models.FileField(upload_to=asignaciondoc, null=False, blank=False)
+    correo = models.EmailField(null=False, blank=False, default="") 
     
     def __str__(self):
         return f' {self.slug}-{self.persona.nombre}-{self.persona.apellido}-{self.persona.celular}'
@@ -63,6 +64,10 @@ class EncargadoMAE (models.Model):
         verbose_name = _('EncargadoMAE')
         verbose_name_plural = _('EncargadosMAE')
         db_table = 'EncargadoMAE'
+        
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
 
 def set_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -70,10 +75,6 @@ def set_slug(sender, instance, *args, **kwargs):
             '{}'.format(str(uuid.uuid4())[:4])
         )
         instance.slug = slug
-
-def toJSON(self):
-        item = model_to_dict(self)
-        return item
 
 pre_save.connect(set_slug, sender=EncargadoMAE)
 
