@@ -1,18 +1,19 @@
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;/* Hace que el body ocupe toda la altura de la ventana */
-}
-main {
-    flex: 1; /* Permite que el contenido principal ocupe el espacio restante */
-}
 footer {
-    background-color: #f8f9fa;
-    text-align: center;
-    padding: 1rem;
-    /* Opcional: agrega estilo adicional */
-}
+    background-color: #44AAA2;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    color: white;    
+  }
 
+.baseim {
+    background: url("/static/img/fondo/fondoVerde.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
 
 .linea-pasos {
     display: flex;

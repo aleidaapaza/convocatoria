@@ -1,11 +1,12 @@
 {% load static %}
-<div style="background-color: #D0D850">
+<div style="background-color: #4da358">
 <ul class="nav nav-tabs">
-  <li class="nav-item">
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions"><i class="fa fa-align-justify" aria-hidden="true"></i></button>
+  <li class="nav-item d-flex align-items-center justify-content-center">
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+    <i class="fa fa-align-justify" aria-hidden="true"></i></button>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="#">REGISTRO DE SOLICITUD</a>
+  <li class="height-100 d-flex align-items-center justify-content-center p-3">
+    REGISTRO DE SOLICITUD
   </li>
 </ul>
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
@@ -16,7 +17,7 @@
   <div class="offcanvas-body">
     <ul class="nav flex-column">
   <li class="nav-item">
-    <a class="nav-link active" href="#">REGISTRO DE SOLICITUD</a>
+    <a class="nav-link active" href="{% url 'solicitud:Departamento' %}">REGISTRO DE SOLICITUD</a>
     <hr>
   </li>
   <li class="nav-item">

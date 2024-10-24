@@ -18,6 +18,10 @@ from solicitud.choices import departamento_s, entidad_s
 
 class solicitud(TemplateView):
     template_name = 'index.html'
+    def get_context_data(self, **kwargs):
+        context = super(solicitud, self).get_context_data(**kwargs)
+        context['entity'] = 'DEPARTAMENTO'
+        return context
 
 class entidad(TemplateView):
     template_name = 'homepage/entidadTerritorial.html'

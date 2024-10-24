@@ -14,7 +14,7 @@ class Municipios (models.Model):
     entidad_territorial = models.CharField(choices=entidad_territorial_autonoma, max_length=100 )
     nombre_municipio = models.CharField(max_length=255)
     estado = models.CharField(choices=estado_proyecto, max_length=255)
-    p_a= models.BooleanField(default=False)
+    p_a= models.BooleanField(_('Postulo Anteriormente'),default=False)
 
     def __str__(self):
         return f' {self.departamento}-{self.entidad_territorial}-{self.nombre_municipio}'
@@ -25,11 +25,11 @@ class Municipios (models.Model):
         db_table = 'Municipio'
 
 class Postulacion(models.Model):
+    slug = models.SlugField(null=False, blank=False, unique=True)
     municipio = models.ForeignKey(Municipios, related_name='Datos_base_proyecto', on_delete=models.CASCADE)
     mae = models.ForeignKey(EncargadoMAE, related_name='encargado_mae_p', on_delete=models.CASCADE)
     responsable = models.ForeignKey(ResponsableP, related_name='responsable_p', on_delete=models.CASCADE)
     fecha_registro = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(null=False, blank=False, unique=True)
 
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'

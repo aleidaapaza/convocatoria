@@ -18,10 +18,6 @@ from django.db.models.signals import pre_save
 from user.upload import carnetdoc, asignaciondoc
 
 # Create your models here.
-def validate_file_size(archivo):
-    limit = 2*1024*1024
-    if archivo.size > limit:
-        raise ValidationError('El tamaño del archivo no puede exceder los 2 MB')
 
 class Persona(models.Model):
     nombre = models.CharField(max_length=100, null=False, blank=False)
@@ -30,7 +26,7 @@ class Persona(models.Model):
     celular = models.IntegerField(null=False, blank=False)
 
     def __str__(self):
-        return f' {self.slug}-{self.nombre}-{self.apellido}-{self.celular}'
+        return f'{self.nombre} {self.apellido}'
     
     def save(self, *args, **kwargs):
         self.nombre = (self.nombre).upper()
@@ -84,7 +80,7 @@ class ResponsableP(models.Model):
     correo = models.EmailField(null=False, blank=False)
 
     def __str__(self):
-        return f' {self.slug}-{self.nombre}-{self.apellido}-{self.celular}'
+        return f'{self.persona.nombre} {self.persona.apellido}'
     
     class Meta:
         verbose_name = _('ResponsableP')
@@ -140,6 +136,7 @@ class AccountManager(BaseUserManager):
         extra_fields.setdefault('is_municipio', False)
         extra_fields.setdefault('is_revisor', True)
         extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('persona__celular', '000000000')
         persona = Persona.objects.create()
         extra_fields.setdefault('persona', persona)
         if extra_fields.get('is_staff') is not True:
@@ -157,8 +154,6 @@ class AccountManager(BaseUserManager):
         extra_fields.setdefault('is_municipio', False)
         extra_fields.setdefault('is_revisor', False)
         extra_fields.setdefault('is_superuser', True)
-        persona = Persona.objects.create()
-        extra_fields.setdefault('persona', persona)
         if extra_fields.get('is_staff') is not True:
             raise ValueError('El revisor debe tener is_staff=True.')
         if extra_fields.get('is_municipio') is True:
@@ -167,7 +162,11 @@ class AccountManager(BaseUserManager):
             raise ValueError('El revisor debe tener is_revisor=False.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('El revisor debe tener is_superuser=True.')
-        return SuperUser.objects.create(user=self._create_user(username, password, **extra_fields))
+        
+        return SuperUser.objects.create(
+            persona = Persona.objects.create(nombre = 'NOMBRE', apellido = 'APELLIDO', cargo = 'CARGO', celular = '000000'),
+            user=self._create_user(username, password, **extra_fields),
+            )
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('Usuario'), max_length=255, unique=True)
@@ -175,8 +174,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('Activo'), default=True)
     is_staff = models.BooleanField(_('Estado Staff'), default=False)
     is_municipio = models.BooleanField(_('Estado municipio'), default=False)    
-    is_revisor = models.BooleanField(_('Estado municipio'), default=False)
-    is_superuser = models.BooleanField(_('Estado municipio'), default=False)
+    is_revisor = models.BooleanField(_('Estado revisor'), default=False)
+    is_superuser = models.BooleanField(_('Estado superuser'), default=False)
 
     objects = AccountManager()
 
@@ -209,11 +208,11 @@ pre_save.connect(set_slug, sender=Revisor)
 
 class SuperUser(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    persona = models.OneToOneField(Persona, on_delete=models.CASCADE, null=True, blank=True)
-    user = models.OneToOneField(Persona,related_name="superuser_perfil",on_delete=models.CASCADE)
+    persona = models.OneToOneField(Persona, related_name="superuser_persona", on_delete=models.CASCADE)
+    user = models.OneToOneField(User,related_name="superuser_perfil", on_delete=models.CASCADE)
     
     def __str__(self):
-        return f' {self.slug}-{self.persona.nombre}-{self.persona.apellido}-{self.persona.celular}'
+        return f'{self.persona.nombre} {self.persona.apellido}'
     
     class Meta:
         verbose_name = _('SuperUser')
