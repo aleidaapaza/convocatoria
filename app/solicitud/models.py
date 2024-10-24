@@ -9,7 +9,7 @@ from solicitud.choices import departamentos, entidad_territorial_autonoma, estad
 from user.models import EncargadoMAE, ResponsableP
 # Create your models here.
 
-class Municipios (models.Model):
+class Municipios(models.Model):
     departamento = models.CharField(choices=departamentos, max_length=30)
     entidad_territorial = models.CharField(choices=entidad_territorial_autonoma, max_length=100 )
     nombre_municipio = models.CharField(max_length=255)
