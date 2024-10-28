@@ -15,7 +15,7 @@ class Municipios(models.Model):
     nombre_municipio = models.CharField(max_length=255)
     estado = models.CharField(choices=estado_proyecto, max_length=255)
     p_a= models.BooleanField(_('Postulo Anteriormente'),default=False)
-
+        
     def __str__(self):
         return f' {self.departamento}-{self.entidad_territorial}-{self.nombre_municipio}'
     

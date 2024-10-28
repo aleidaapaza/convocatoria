@@ -1,0 +1,37 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+    <div class="row col-md-6 card card-body">
+        {% for field in form %}
+            <div class="mb-3 row">
+                <div class="col-sm-4 col-form-label text-end">{{ field.label_tag }}</div>
+                    <div class="col-sm-8">
+                        <div class="">
+                            {{ field }}
+                        </div>
+                        <div class="">
+                            {% for error in field.errors %}
+                                <span style="color: red">({{ error }})</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+            </div>
+        {% endfor %}
+                                {% for field in form2 %}
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                        <div class="col-sm-8">
+                                            <div class="">
+                                                {{ field }}
+                                            </div>
+                                            <div class="">
+                                                {% for error in field.errors %}
+                                                    <span style="color: red">({{ error }})</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                
+                            </div>
+{% endblock %}

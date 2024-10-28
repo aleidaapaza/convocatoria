@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block contenido %}
-    {% if user.is_authenticated%}
+    {% if user.is_authenticated %}
         {% if user.is_municipio %}
             {% include "perfil/municipio.html" %}
         {% elif user.is_revisor%}

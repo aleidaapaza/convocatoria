@@ -19,20 +19,21 @@
 </head>
 <body class="baseim">
     <div class="">
-    {% block navbar %}
-        {% if user.is_authenticated%}
-            {% if user.is_municipio %}
-            {% include "include/navbar/municipio.html" %}
-            {% elif user.is_revisor%}
-            {% include "include/navbar/revisor.html" %}
-            {% elif user.is_superuser %}
-            {% include "include/navbar/superuser.html" %}
+        {% block navbar %}
+            {% if user.is_authenticated %}
+                {% if user.is_municipio %}
+                    {% include "include/navbar/municipio.html" %}
+                {% elif user.is_revisor%}
+                    {% include "include/navbar/revisor.html" %}
+                {% elif user.is_superuser %}
+                    {% include "include/navbar/superuser.html" %}
+                {% endif %}
+            {% else %}
+                {% include "include/navbar/home.html" %}
             {% endif %}
-        {% else %}
-            {% include "include/navbar/home.html" %}
-        {% endif %}
-    {% endblock  %}
+        {% endblock  %}
     </div>
+    
     {% block cuerpo %}
     
     {% endblock cuerpo %}

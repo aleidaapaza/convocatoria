@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    {% if user.is_authenticated %}
+        <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
+        {% block errores %}
+
+        {% endblock %}
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="row mt-2">
+                    {% block formulario %}
+                    
+                    {% endblock formulario %}
+                </div>
+                <div class="row text-center row mt-2">
+                    <div class="col">
+                        <button class="btn btn-success" type="submit">
+                        <i class="fas fa-save"></i>GUARDAR</button>
+                    </div>
+                    <div class="col">
+                        <a href="{{ accion2_url }}" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i>{{ accion2 }}</a>
+                    </div>
+                </div>
+            </form>
+        </div>    
+    {% else %}
+    
+    {% endif %}
+
+{% endblock contenido %}

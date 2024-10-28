@@ -1,0 +1,26 @@
+{% load static %}
+<div style="background-color: #4da358">
+    <ul class="nav nav-tabs">
+        <li class="nav-item d-flex align-items-center justify-content-center">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+            <i class="fa fa-align-justify" aria-hidden="true"></i></button>
+        </li>
+        <li class="height-100 d-flex align-items-center justify-content-center p-3">
+            {{ titulo }}
+        </li>
+    </ul>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">LISTA DE SOLICITUDES</a>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

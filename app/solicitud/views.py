@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, ListView
 from solicitud.models import Municipios, Postulacion
 from user.models import EncargadoMAE, ResponsableP, Persona
-from user.form import Reg_EncargadoMAE, Reg_ResponsableP, Reg_Persona_En, Reg_Persona_Res
+from user.form import Reg_EncargadoMAE, Reg_ResponsableP, Reg_Persona_Res, Reg_Persona_MAE
 from solicitud.choices import departamento_s, entidad_s
 
 
@@ -20,7 +20,6 @@ class solicitud(TemplateView):
     template_name = 'index.html'
     def get_context_data(self, **kwargs):
         context = super(solicitud, self).get_context_data(**kwargs)
-        context['entity'] = 'DEPARTAMENTO'
         return context
 
 class entidad(TemplateView):
@@ -35,21 +34,29 @@ class entidad(TemplateView):
 class municipio(ListView):
     model = Municipios
     template_name = 'homepage/municipio.html'
-
     def get_context_data(self, **kwargs):
         context = super(municipio, self).get_context_data(**kwargs)
         n_departamento = self.kwargs.get('departamento', 0)
+        print(n_departamento)
         departamentos = departamento_s(n_departamento)
+        print(departamentos)
         n_entidad = self.kwargs.get('entidad',0)
+        print(n_entidad)
         entidades = entidad_s(n_entidad)
-        municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial=entidades).filter(estado='NINGUNO').order_by('-nombre_municipio')        
+        print(entidades)
+        if n_entidad <3:
+            municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial=entidades).filter(estado='NINGUNO').order_by('-nombre_municipio')
+        else:
+            municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial='GOBIERNO AUTÓNOMO MUNICIPAL').filter(estado='NINGUNO').order_by('-nombre_municipio')
+        print(municipios_f)       
         if municipios_f.acount() == 0:
             context['object_list'] = 0
         else:
             context['object_list'] = municipios_f
         print(municipios_f)
         context['dep'] = departamentos
-        context['ent'] = entidades        
+        context['ent'] = entidades
+        context['n_ent'] = n_entidad        
         context['entity'] = 'ENTIDAD TERRITORIAL'
         return context
 
@@ -63,56 +70,85 @@ class Mae_Responsable(CreateView):
     second_model = EncargadoMAE
     three_model = ResponsableP
     four_model = Persona
-    template_name = 'homepage/responsable_MAE.html'
-    form_class = Reg_Persona_En
-    two_form = Reg_EncargadoMAE
-    three_form = Reg_Persona_Res
-    four_form = Reg_ResponsableP
+    template_name = 'homepage/MAE.html'
+    form_class = Reg_EncargadoMAE
+    second_form_class = Reg_Persona_MAE
+    three_form_class = Reg_ResponsableP
+    four_form_class = Reg_Persona_Res
 
     def get_context_data(self, **kwargs):
-        context = super(Mae_Responsable, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        n_municipio = self.kwargs.get('pk', 0)
+        n_entidad = self.kwargs.get('entidad', 0)
+        aux_municipio = Municipios.objects.get(id=n_municipio)
+        if n_entidad < 3:
+            context['aux_entidad'] = aux_municipio.entidad_territorial
+        else:
+            context['aux_entidad'] = entidad_s(n_entidad)
         if 'form' not in context:
-            context['form'] = self.form_class(self.request.GET)
-        if 'form1' not in context:
-            context['form1'] = self.two_form(self.request.GET)
+            context['form'] = self.form_class(self.request.GET, self.request.FILES)
         if 'form2' not in context:
-            context['form2'] = self.three_form(self.request.GET)
+            context['form2'] = self.second_form_class(self.request.GET)
         if 'form3' not in context:
-            context['form3'] = self.four_form(self.request.GET)
+            context['form3'] = self.three_form_class(self.request.GET)
+        if 'form4' not in context:
+            context['form4'] = self.four_form_class(self.request.GET)
 
-        context['titulo'] = 'Registro de encargado de la MAE y Responsable de Proyecto'
-        context['entity'] = 'Registro de encargado de la MAE y Responsable de Proyecto'
+        context['aux_departamento'] = aux_municipio.departamento
+        context['aux_municipio'] = aux_municipio.nombre_municipio
+        context['titulo'] = 'Registro de encargado de la MAE'
+        context['entity'] = 'Registro de encargado de la MAE'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('solicitud:Departamento')
+        context['accion2_url'] = reverse_lazy('solicitud:Index')
         return context
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object
         municipio_pk = kwargs['pk']
-        municipiobj = Municipios.objects.get(id=municipio_pk)
-        form = self.form_class(request.POST)
-        form1 = self.two_form(request.POST, request.FILES)
-        form2 = self.three_form(request.POST)
-        form3 = self.four_form(request.POST)
-        if form.is_valid() and form1.is_valid() and form2.is_valid() and form3.is_valid():
-            carnet_file = form1.cleaned_data.get('carnet')
-            asignacion_file = form1.cleaned_data.get('asignacion')
-            max_size = 2 * 1024 * 1024
+        n_entidad = kwargs['entidad']
 
+        if n_entidad < 3:
+            municipiobj = Municipios.objects.get(id=municipio_pk)
+        else:
+            municipio_aux = Municipios.objects.get(id=municipio_pk)
+            municipiobj = Municipios.objects.create(
+                departamento = municipio_aux.departamento,
+                entidad_territorial = n_entidad,
+                nombre_municipio = municipio_aux.nombre_municipio,
+                estado = 'SOLICITUD',
+                p_a = False,
+            )
+
+        form = self.form_class(request.POST, request.FILES)
+        form2 = self.second_form_class(request.POST)
+        form3 = self.three_form_class(request.POST)
+        form4 = self.four_form_class(request.POST)
+
+        if form.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+            carnet_file = form.cleaned_data.get('carnet')
+            asignacion_file = form.cleaned_data.get('asignacion')
+            max_size = 2 * 1024 * 1024
             if carnet_file.size > max_size or asignacion_file.size > max_size:
                 if carnet_file.size > max_size:
-                    form1.add_error('carnet', 'El archivo carnet no debe superar los 2 MB.')
+                    form2.add_error('carnet', 'El archivo carnet no debe superar los 2 MB.')
                 if asignacion_file.size > max_size:
-                    form1.add_error('asignacion', 'El archivo de asignacion no debe superar los 2 MB.')
-                return self.render_to_response(self.get_context_data(form=form, form1=form1, form2=form2, form3=form3))
+                    form2.add_error('asignacion', 'El archivo de asignacion no debe superar los 2 MB.')
+                return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3, form4=form4))
             
-            persona_mae = form.save()
-            persona_Responsable = form2.save()            
-            encar_Mae = form1.save(commit=False)
+            if form2.errors:  # Si hay errores en form2, retornar
+                return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3, form4=form4))
+
+            municipiobj.estado = 'SOLICITUD'
+            municipiobj.save()
+
+            encar_Mae = form.save(commit=False)
+            persona_mae = form2.save()
+            print('personaMAE',persona_mae)
             encar_Mae.persona = persona_mae
             encar_Mae.save()
             responsable_p = form3.save(commit=False)
+            persona_Responsable = form4.save()            
+            print('personaResponsable',persona_Responsable)
             responsable_p.persona = persona_Responsable
             responsable_p.save()
             postulacion_f = self.model.objects.create(
@@ -120,12 +156,11 @@ class Mae_Responsable(CreateView):
                 mae=encar_Mae,
                 responsable=responsable_p,
             )
-            id_post = postulacion_f.pk
+            id_post = postulacion_f.slug
             print(id_post,"esto es el id de la postulacion")
             return HttpResponseRedirect(reverse('solicitud:Confirmacion_solicitud', args=[id_post]))
         else:
-            return self.render_to_response(self.get_context_data(form=form, form1=form1, form2=form2, form3=form3))
-
+            return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3, form4=form4))
 
 class Confirmacion(TemplateView):
     template_name = 'homepage/confirmacionRegistro.html'
@@ -135,4 +170,15 @@ class Confirmacion(TemplateView):
         postulacion = Postulacion.objects.get(slug=slug)
         context['entity'] = 'confirmacion solicitud'
         context['postulacion'] = postulacion
+        return context
+    
+class ListaSolicitudes(ListView):
+    model = Postulacion
+    template_name = 'Postulaciones/lista.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'LISTA DE SOLICITUDES'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE SOLICITUDES'
+        context['object_list'] = self.model.objects.all()
         return context

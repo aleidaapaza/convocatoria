@@ -129,6 +129,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = 'user.User'
 
+X_FRAME_OPTIONS = 'ALLOWALL'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

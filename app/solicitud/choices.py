@@ -1,6 +1,6 @@
 departamentos = {
     ('LA PAZ', 'LA PAZ'),
-    ('ORURO ', 'ORURO'),
+    ('ORURO', 'ORURO'),
     ('POTOSI', 'POTOSI'),
     ('CHUQUISACA', 'CHUQUISACA'),
     ('COCHABAMBA', 'COCHABAMBA'),

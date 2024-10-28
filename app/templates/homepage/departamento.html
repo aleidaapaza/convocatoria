@@ -34,71 +34,77 @@
         </div>
         <div class="col-8 col-sm-10">
             <h1 class="text-center text-bg-success ">SELECCIONE SU DEPARTAMENTO</h1>
-            <div class="row p-5">
-                <div class="col-sm-2 col-md-2">
-                    <div class="card">
-                        <a href="{% url 'solicitud:Entidad_Territorial' '1' %}" style="text-decoration: none; color: inherit;">                            
-                            <div class="card-body border border-primary-subtle">
-                                <p class="card-title text-center">LA PAZ</p>
-                            </div>
-                            <img src="{% static 'img/departamento/laPaz.jpg' %}" class="card-img-top" alt="...">
-                        </a>
+            <div class="row align-items-start justify-content-center p-5">
+                <div class="col-sm-6 col-md-2 pt-3">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '1' %}" style="text-decoration: none; color: inherit;">
+                    <h3 class="text-center border border-primary-subtle">LA PAZ</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/laPaz.jpg' %}" class="card-img-top" alt="...">                        
                     </div>
-                </div>
-                <div class="col-sm-2 col-md-2">
-                    <div class="card">
-                        <a href="{% url 'solicitud:Entidad_Territorial' '2' %}" style="text-decoration: none; color: inherit;">
-                            <div class="card-body border border-primary-subtle">
-                                <h5 class="card-title text-center">BENI</h5>
-                            </div>
-                            <img src="{% static 'img/departamento/beni.jpg' %}" class="card-img-top" alt="...">
-                        </a>
-                    </div>                    
-                </div>
-                <div class="col-sm-2 col-md-3">
-                    <div class="card">
-                        <a href="{% url 'solicitud:Entidad_Territorial' '3' %}" style="text-decoration: none; color: inherit;">
-                            <div class="card-body border border-primary-subtle">
-                                <h5 class="card-title text-center">CHUQUISACA</h5>
-                            </div>
-                            <img src="{% static 'img/departamento/chuquisaca.jpg' %}" class="card-img-top" alt="...">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-sm-2 col-md-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '4' %}" style="text-decoration: none; color: inherit;">
-                        <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
-                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/cochabamba.jpg' %}"/>
                     </a>
                 </div>
-                <div class="col-sm-2 col-md-3">
+                <div class="col-sm-6 col-md-2 pt-3">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '2' %}" style="text-decoration: none; color: inherit;">
+                    <h3 class="text-center border border-primary-subtle">BENI</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/beni.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-2 pt-3">
                     <a href="{% url 'solicitud:Entidad_Territorial' '5' %}" style="text-decoration: none; color: inherit;">
-                        <h3 class="text-center border border-primary-subtle">ORURO</h3> 
-                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/oruro.jpg' %}"/>
+                    <h3 class="text-center border border-primary-subtle">ORURO</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/oruro.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
                     </a>
-                </div>
-                <div class="col-sm-2 col-md-3">
+                </div> 
+                <div class="col-sm-6 col-md-2 pt-3">
                     <a href="{% url 'solicitud:Entidad_Territorial' '6' %}" style="text-decoration: none; color: inherit;">
-                        <h3 class="text-center border border-primary-subtle">PANDO</h3> 
-                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/pando.jpg' %}"/>
+                    <h3 class="text-center border border-primary-subtle">PANDO</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/pando.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
                     </a>
-                </div>
-                <div class="col-sm-2 col-md-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '7' %}" style="text-decoration: none; color: inherit;">
-                        <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
-                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/potosi.jpg' %}"/>
-                    </a>
-                </div>
-                <div class="col-sm-2 col-md-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '8' %}" style="text-decoration: none; color: inherit;">
-                        <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
-                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/santaCruz.jpg' %}"/>
-                    </a>
-                </div>
-                <div class="col-sm-2 col-md-3">
+                </div>                 
+                <div class="col-sm-6 col-md-2 pt-3">
                     <a href="{% url 'solicitud:Entidad_Territorial' '9' %}" style="text-decoration: none; color: inherit;">
-                        <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
-                        <img class="img-fluid rounded mx-auto d-block" style="width: auto; height: 250px" src="{% static 'img/departamento/tarija.jpg' %}"/>
+                    <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/tarija.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
+                    </a>
+                </div>                  
+                <div class="col-sm-6 col-md-2 pt-3">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '7' %}" style="text-decoration: none; color: inherit;">
+                    <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/potosi.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
+                    </a>
+                </div>                  
+                <div class="col-sm-6 col-md-3 pt-3">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '3' %}" style="text-decoration: none; color: inherit;">
+                    <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/chuquisaca.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
+                    </a>
+                </div>                                  
+                <div class="col-sm-6 col-md-3 pt-3">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '4' %}" style="text-decoration: none; color: inherit;">
+                    <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/cochabamba.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
+                    </a>
+                </div>                                  
+                <div class="col-sm-6 col-md-3 pt-3">
+                    <a href="{% url 'solicitud:Entidad_Territorial' '8' %}" style="text-decoration: none; color: inherit;">
+                    <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
+                    <div class="card text-center">                                               
+                            <img src="{% static 'img/departamento/santaCruz.jpg' %}" class="card-img-top" alt="...">                        
+                    </div>
                     </a>
                 </div>
             </div>

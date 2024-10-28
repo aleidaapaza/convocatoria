@@ -48,7 +48,7 @@ class Persona(models.Model):
         
 class EncargadoMAE (models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    persona = models.OneToOneField(Persona, on_delete=models.CASCADE, null=False, blank=False)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, null=False, blank=False)
     carnet = models.FileField(upload_to=carnetdoc, null=False, blank=False)
     asignacion = models.FileField(upload_to=asignaciondoc, null=False, blank=False)
     correo = models.EmailField(null=False, blank=False, default="") 
@@ -76,7 +76,7 @@ pre_save.connect(set_slug, sender=EncargadoMAE)
 
 class ResponsableP(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    persona = models.OneToOneField(Persona, on_delete=models.CASCADE, null=True, blank=True)
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, null=False, blank=False)
     correo = models.EmailField(null=False, blank=False)
 
     def __str__(self):

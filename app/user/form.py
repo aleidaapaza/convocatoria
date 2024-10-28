@@ -1,7 +1,9 @@
 from django.forms import *
-from user.models import Persona, EncargadoMAE, ResponsableP
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from user.models import Persona, EncargadoMAE, ResponsableP, User, Revisor
 
-class Reg_Persona_En(ModelForm):
+class Reg_Persona_MAE(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.visible_fields():
@@ -15,11 +17,12 @@ class Reg_Persona_En(ModelForm):
         fields = '__all__'
         exclude = []
         labels = {
-            'nombre': 'Nombre(s)',
+            'nombre': 'Nombre(s) de la MAE',
             'apellido': 'Apellido(s)',
             'cargo': 'Cargo',
             'celular': 'N° de Celular',
         }
+
 class Reg_Persona_Res(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,7 +37,7 @@ class Reg_Persona_Res(ModelForm):
         fields = '__all__'
         exclude = []
         labels = {
-            'nombre': 'Nombre(s)',
+            'nombre': 'Nombre(s) del Responsable',
             'apellido': 'Apellido(s)',
             'cargo': 'Cargo',
             'celular': 'N° de Celular',
@@ -83,3 +86,26 @@ class Reg_ResponsableP(ModelForm):
             'correo': 'Correo Electrónico',
             }
 
+class UsuarioRev(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = User
+        fields = ['username']
+        labels = {
+            'username': 'Nombre de Usuario',
+        }
+
+class LoginForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    username = forms.CharField(max_length=150, label='Nombre de Usuario', widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre de usuario'}))
+    password = forms.CharField(max_length=255, label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña'}))

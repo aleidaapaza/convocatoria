@@ -15,28 +15,36 @@
                 </div>
             </div>
             <div class="col-8 col-sm-10">
+                <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_departamento }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_entidad }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA ENTIDAD EJECUTORIA</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_municipio }}</div>                            
+                </div>
                 <div class="row">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <h3 class="text-center text-bg-primary">REGISTRO DE LA MAE</h3>
                         <div class="row mt-2">
                             <div class="col-md-6 card card-body">
-                                {% for field in form %}
+                                {% for field2 in form2 %}
                                     <div class="mb-3 row">
-                                        <div class="col-sm-4 col-form-label text-end">{{ field.label_tag }}</div>
+                                        <div class="col-sm-4 col-form-label text-end">{{ field2.label_tag }}</div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                {{ field }}
+                                                {{ field2 }}
                                             </div>
                                             <div class="">
-                                                {% for error in field.errors %}
+                                                {% for error in field2.errors %}
                                                     <span style="color: red">({{ error }})</span>
                                                 {% endfor %}
                                             </div>
                                         </div>
                                     </div>
                                 {% endfor %}
-                                {% for field in form1 %}
+                                {% for field in form %}
                                     <div class="mb-3 row">
                                         <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
                                         <div class="col-sm-8">
@@ -50,47 +58,45 @@
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                                
+                                {% endfor %}                          
                             </div>
                         </div>
                         <h3 class="text-center text-bg-primary">REGISTRO DEL RESPONSABLE DEL PROYECTO</h3>
                         <div class="row mt-2">
                             <div class="col-md-6 card card-body">
-                                {% for field in form2 %}
+                                {% for field4 in form4 %}
                                     <div class="mb-3 row">
-                                        <div class="col-sm-4 col-form-label text-end">{{ field.label_tag }}</div>
+                                        <div class="col-sm-4 col-form-label text-end">{{ field4.label_tag }}</div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                {{ field }}
+                                                {{ field4 }}
                                             </div>
                                             <div class="">
-                                                {% for error in field.errors %}
-                                                    <span style="color: red">({{ error }})</span>
+                                                {% for error4 in field4.errors %}
+                                                    <span style="color: red">({{ error4 }})</span>
                                                 {% endfor %}
                                             </div>
                                         </div>
                                     </div>
                                 {% endfor %}
-                                {% for field in form3 %}
+                                {% for field3 in form3 %}
                                     <div class="mb-3 row">
-                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                        <div class="col-sm-4 col-form-labe text-end">{{ field3.label_tag }}</div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                {{ field }}
+                                                {{ field3 }}
                                             </div>
                                             <div class="">
-                                                {% for error in field.errors %}
-                                                    <span style="color: red">({{ error }})</span>
+                                                {% for error3 in field3.errors %}
+                                                    <span style="color: red">({{ error3 }})</span>
                                                 {% endfor %}
                                             </div>
                                         </div>
                                     </div>
                                 {% endfor %}
-                                
                             </div>
                         </div>
-                        <div class="container text-center row mt-2">
+                        <div class="row text-center row mt-2">
                             <div class="col">
                                 <button class="btn btn-success" type="submit"><i class="fas fa-save"></i>
                                     {{ accion }}</button>

@@ -35,19 +35,26 @@
                 </div>
             </div>
             <div class="col-8 col-sm-10">
+                <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ dep }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ ent }}</div>
+                            
+                </div>
                 <div class="row">
-                    <h3 class="text-center text-bg-primary">SELECCIONE EL MUNICIPIO</h3>
+                    <h3 class="text-center text-bg-primary">SELECCIONE EL NOMBRE DE LA ENTIDAD EJECUTORIA</h3>
                     {% if object_list != 0 %}
-                        {% for municipios in object_list %}
-                            <a href="{% url 'solicitud:Responsable_MAE' municipios.pk %}" style="text-decoration: none; color: inherit;">
-                                <div class="col-sm-3 col-md-3 p-3">
+                        {% for municipios in object_list %}                            
+                            <div class="col-sm-6 col-md-3 p-3">
+                                <a href="{% url 'solicitud:Responsable_MAE' municipios.pk n_ent %}" style="text-decoration: none; color: inherit;">
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 class="card-title text-center">{{municipios.nombre_municipio}}</h5>
                                         </div>
                                     </div>
-                                </div>
-                            </a>                                
+                                </a>       
+                            </div>                                                         
                         {% endfor %}
                     {% else %}
                         NO SE ENCONTRARON MUNICIPIOS
