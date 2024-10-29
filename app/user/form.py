@@ -58,19 +58,6 @@ class Reg_EncargadoMAE(ModelForm):
             'asignacion': 'Documento de Designación y NIT del GAM (escaneado en pdf y tamaño máximo 2 megas)',
             'correo': 'Correo Electrónico Domicilio Legal para notificación'
         }
-    def clean_documento(self):
-        carnetd = self.cleaned_data.get('carnet')
-        asignaciond = self.cleaned_data.get('asignacion')
-        if carnetd:
-            # Verifica el tamaño del archivo
-            if carnetd.size > 2 * 1024 * 1024:  # 2 MB en bytes
-                raise ValidationError("El archivo Carnet no puede exceder los 2 MB.")
-        if asignaciond:
-            # Verifica el tamaño del archivo
-            if asignaciond.size > 2 * 1024 * 1024:  # 2 MB en bytes
-                raise ValidationError("El archivo Asignacion no puede exceder los 2 MB.")
-
-        return carnetd, asignaciond
 
 class Reg_ResponsableP(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -109,3 +96,48 @@ class LoginForm(forms.Form):
 
     username = forms.CharField(max_length=150, label='Nombre de Usuario', widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre de usuario'}))
     password = forms.CharField(max_length=255, label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña'}))
+
+class Update_MAE(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+    class Meta:
+        model = EncargadoMAE
+        fields = '__all__'
+        exclude = ['slug', 'persona', 'correo']
+        labels = {
+            'carnet': 'Carnet de Indentidad MAE (escaneado en pdf y tamaño máximo 2 megas)',
+            'asignacion': 'Documento de Designación y NIT del GAM (escaneado en pdf y tamaño máximo 2 megas)',
+        }
+
+class User_Reg(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+        labels = {
+            'username': 'Nombre de Usuario',
+            'password1': 'Contraseña',
+            'password2': 'Confirmar Contraseña'
+        }
+
+        widgets = {
+            'username': TextInput(
+                attrs={
+                    'placeholder': 'Ingrese un Nombre de Usuario',
+                }
+            ),
+            'email': EmailInput(
+                attrs={
+                    'placeholder': 'Ingrse un Correo Electronico',
+                }
+            )
+        }

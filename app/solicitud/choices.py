@@ -20,6 +20,7 @@ entidad_territorial_autonoma = {
 estado_proyecto = {
     ('NINGUNO', 'NINGUNO'),
     ('SOLICITUD', 'SOLICITUD'),
+    ('RECHAZADO', 'RECHAZADO'),
     ('APROBADO', 'APROBADO'),
 }
 

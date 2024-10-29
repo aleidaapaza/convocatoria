@@ -47,7 +47,7 @@
                     {% if object_list != 0 %}
                         {% for municipios in object_list %}                            
                             <div class="col-sm-6 col-md-3 p-3">
-                                <a href="{% url 'solicitud:Responsable_MAE' municipios.pk n_ent %}" style="text-decoration: none; color: inherit;">
+                                <a href="{% url 'solicitud:MAE' municipios.pk n_ent %}" style="text-decoration: none; color: inherit;">
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 class="card-title text-center">{{municipios.nombre_municipio}}</h5>

@@ -30,6 +30,7 @@ class Postulacion(models.Model):
     mae = models.ForeignKey(EncargadoMAE, related_name='encargado_mae_p', on_delete=models.CASCADE)
     responsable = models.ForeignKey(ResponsableP, related_name='responsable_p', on_delete=models.CASCADE)
     fecha_registro = models.DateTimeField(auto_now_add=True)
+    estado = models.BooleanField(default=False)
 
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'

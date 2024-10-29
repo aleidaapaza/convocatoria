@@ -3,20 +3,9 @@
 {% block contenido %}
     {% if not user.is_authenticated%}
         <div class="row">
-            <div class="col-4 col-sm-2">
-                <div class="linea-pasos">
-                    <ul>
-                        <li class="paso">Paso 1</li>
-                        <li class="paso">Paso 2</li>
-                        <li class="paso">Paso 3</li>
-                        <li class="paso">Paso 4</li>
-                        <li class="paso activo">FIN</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-8 col-sm-10">
+            <div class="col-6 col-sm-12">
                 <div class="row d-flex">
-                    <h1 class="text-center text-bg-success ">DATOS REGISTRADOS Y ENVIADOS</h1>                     
+                    <h1 class="text-center text-bg-success ">DATOS</h1>                     
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>
@@ -87,6 +76,8 @@
                         </a>
                     </div>
                 </div>               
+            </div>
+            <div class="col-6 col-sm-12">
             </div>
         </div>
     {% endif %}
