@@ -17,7 +17,7 @@ class Reg_Persona_MAE(ModelForm):
         fields = '__all__'
         exclude = []
         labels = {
-            'nombre': 'Nombre(s) de la MAE',
+            'nombre': 'Nombre(s)',
             'apellido': 'Apellido(s)',
             'cargo': 'Cargo',
             'celular': 'N° de Celular',
@@ -97,12 +97,15 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=150, label='Nombre de Usuario', widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre de usuario'}))
     password = forms.CharField(max_length=255, label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña'}))
 
-class Update_MAE(forms.Form):
+class Update_MAE(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
             form.field.widget.attrs['autocomplete'] = 'off'
+        self.fields['carnet'].required = False
+        self.fields['asignacion'].required = False
+
     class Meta:
         model = EncargadoMAE
         fields = '__all__'
@@ -111,6 +114,7 @@ class Update_MAE(forms.Form):
             'carnet': 'Carnet de Indentidad MAE (escaneado en pdf y tamaño máximo 2 megas)',
             'asignacion': 'Documento de Designación y NIT del GAM (escaneado en pdf y tamaño máximo 2 megas)',
         }
+        
 
 class User_Reg(UserCreationForm):
 
@@ -141,3 +145,15 @@ class User_Reg(UserCreationForm):
                 }
             )
         }
+
+class update_Revisor(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = Revisor
+        exclude = '__all__'
+        

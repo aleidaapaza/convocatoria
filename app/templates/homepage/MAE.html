@@ -27,7 +27,7 @@
                 <div class="row">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <h3 class="text-center text-bg-primary">{{titulo }}</h3>
+                        <h3 class="text-center text-bg-primary">{{ titulo }}</h3>
                         <div class="row mt-2">
                             <div class="col-md-6 card card-body">
                                 {% for field2 in form2 %}

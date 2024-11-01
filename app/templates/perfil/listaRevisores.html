@@ -1,0 +1,28 @@
+{% extends 'base/baseListasDatos.html' %}
+{% load static %}
+{% block thead %}
+    <tr>
+        <th scope="col">NOMBRE</th>
+        <th scope="col">APELLIDO</th>
+        <th scope="col">CARGO</th>
+        <th scope="col">ULTIMA HORA DE CONEXION</th>
+        <th scope="col">VER/EDITAR</th>
+    </tr>
+
+{% endblock %}
+{% block tbody %}
+    {% for postulacion in object_list %}
+        <tr>
+            <td> {{ postulacion.persona.nombre }}</td>
+            <td> {{ postulacion.persona.apellido }} </td>
+            <td> {{ postulacion.persona.cargo }}</td>
+            <td> {{ postulacion.user.last_login }}</td>
+            <td>
+                <a href=" {% url 'user:actualizar_Revisor' postulacion.slug %} " type="button"
+                   class="btn btn-primary btn-xs">
+                   <i class="fas fa-edit"></i> 
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

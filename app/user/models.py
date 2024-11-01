@@ -46,7 +46,7 @@ class Persona(models.Model):
         item = model_to_dict(self)
         return item
         
-class EncargadoMAE (models.Model):
+class EncargadoMAE(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
     persona = models.ForeignKey(Persona, on_delete=models.CASCADE, null=False, blank=False)
     carnet = models.FileField(upload_to=carnetdoc, null=False, blank=False)
@@ -80,7 +80,7 @@ class ResponsableP(models.Model):
     correo = models.EmailField(null=False, blank=False)
 
     def __str__(self):
-        return f'{self.persona.nombre} {self.persona.apellido}'
+        return f'{self.correo} {self.persona.nombrecompleto}'
     
     class Meta:
         verbose_name = _('ResponsableP')
@@ -170,7 +170,7 @@ class AccountManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('Usuario'), max_length=255, unique=True)
-    fecha_reg = models.DateField(_('Fecha Registro'), auto_now_add=True)
+    fecha_registro = models.DateTimeField(_('Fecha Registro'), auto_now_add=True)
     is_active = models.BooleanField(_('Activo'), default=True)
     is_staff = models.BooleanField(_('Estado Staff'), default=False)
     is_municipio = models.BooleanField(_('Estado municipio'), default=False)    

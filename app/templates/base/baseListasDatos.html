@@ -7,6 +7,11 @@
     <div class="row content-header text-center bg bg-primary">
         <h4 class="text-uppercase font-weight-bold">{{ titulo }}</h4>
     </div>
+    {% if entity_registro %}
+        <div class="col-md-3 mt-2">
+            <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
+        </div>
+    {% endif %}
     <div class="card card-default mt-3 mb-3">
         <!-- /.card-header style="height: 400px; -->
         <div class="card-body table-responsive-md p-0 mt-3">

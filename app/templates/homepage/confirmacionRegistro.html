@@ -3,6 +3,7 @@
 {% block contenido %}
     {% if not user.is_authenticated%}
         <div class="row">
+            {% if not postulacion.modificacion %}
             <div class="col-4 col-sm-2">
                 <div class="linea-pasos">
                     <ul>
@@ -10,17 +11,27 @@
                         <li class="paso">Paso 2</li>
                         <li class="paso">Paso 3</li>
                         <li class="paso">Paso 4</li>
+                        <li class="paso">Paso 5</li>
                         <li class="paso activo">FIN</li>
                     </ul>
                 </div>
             </div>
+            {% else %}
+            {% endif %}            
             <div class="col-8 col-sm-10">
                 <div class="row d-flex">
-                    <h1 class="text-center text-bg-success ">DATOS REGISTRADOS Y ENVIADOS</h1>                     
+                    <h1 class="text-center text-bg-success ">DATOS REGISTRADOS Y ENVIADOS</h1>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CODIGO DE REGISTRO</div>
+                            <div class="col-md-8 col-sm-12">
+                            <h4 class= " bg-white d-flex align-items-center border border-success-subtle">{{postulacion.slug}}</h4>
+                            <p>Guarde este codigo en el caso de que se tenga que modificar algun campo</p>
+                            </div>
+                        </div>
+                        <hr>                
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>
-                            
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>                            
                         </div>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
@@ -33,7 +44,7 @@
                         <hr>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.nombre}}{{postulacion.mae.nombre.persona.apellido}}</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.nombre}} {{postulacion.mae.persona.apellido}}</div>
                         </div>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DE LA MAE</div>

@@ -1,1 +1,71 @@
-municipio
+                <div class="row d-flex">
+                    <h4 class="text-center text-bg-info ">DATOS PROPORCIONADOS</h4>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO CARNET</div>
+                            <div class="col-md-8 col-sm-12">
+                            <a href="{{ postulacion.mae.asignacion.url }}" target="_blank">
+                                <button type="button" class="btn btn-secondary">Abrir PDF</button>
+                            </a>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO DESIGNACION</div>
+                            <div class="col-md-8 col-sm-12">
+                            <a href="{{ postulacion.mae.carnet.url }}" target="_blank">
+                                <button type="button" class="btn btn-secondary">Abrir PDF</button>
+                            </a>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>                            
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.entidad_territorial}}</div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA ENTIDAD EJECUTORIA</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.nombre_municipio}}</div>
+                        </div>
+                        <hr>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA MAE</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.nombre}}{{postulacion.mae.nombre.persona.apellido}}</div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DE LA MAE</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.cargo}}</div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CELULAR DE LA MAE</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.celular}}</div>
+                      </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DOMICILIO LEGAL PARA NOTIFICACION</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.correo}}</div>
+                        </div>
+                        <hr>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DEL RESPONSABLE DEL PROYECTO</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.nombre}} {{postulacion.responsable.persona.apellido}}</div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DEL RESPONSABLE DEL PROYECTO</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.cargo}}</div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">N° DE CELULAR DEL RESPONSABLE DEL PROYECTO</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.celular}}</div>
+                        </div>                        
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DEL RESPONSABLE DEL PROYECTO</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.correo}}</div>
+                        </div>
+                        <hr>                                         
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">FECHA Y HORA DEL ENVIO</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.fecha_registro}}</div>
+                        </div>
+                </div>  

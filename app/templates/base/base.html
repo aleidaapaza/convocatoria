@@ -8,12 +8,12 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb float-sm-right text-uppercase">
                 <li class="breadcrumb-item"><a href="{% url 'solicitud:Index' %}">INICIO</a></li>
-                <li class="breadcrumb-item {% if activate == true %} active {% endif %}" {% if activate == true %} aria-current="page" {% else %} href="{{entity_url}}" {% endif %}>{{entity}}</li>
+                <li class="breadcrumb-item {% if activate %} active {% endif %}" {% if activate %} aria-current="page" {% else %} href="{{entity_url}}" {% endif %}>{{entity}}</li>
                 {% if entity2 %}
-                    <li class="breadcrumb-item {% if activate2 == true %} active {% endif %}" {% if activate2 == true %} aria-current="page" {% else %} href="{{entity2_url}}" {% endif %}>{{entity2}}</li>
+                    <li class="breadcrumb-item {% if activate2 %} active {% endif %}" {% if activate2 %} aria-current="page" {% else %} href="{{entity2_url}}" {% endif %}>{{entity2}}</li>
                 {% endif %}
                 {% if entity3 %}
-                    <li class="breadcrumb-item {% if activate3 == true %} active {% endif %}" {% if activate3 == true %} aria-current="page" {% else %} href="{{entity3_url}}" {% endif %}>{{entity3}}</li>
+                    <li class="breadcrumb-item {% if activate3%} active {% endif %}" {% if activate3 %} aria-current="page" {% else %} href="{{entity3_url}}" {% endif %}>{{entity3}}</li>
                 {% endif %}
             </ol>
         </nav>

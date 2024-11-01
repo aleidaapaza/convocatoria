@@ -1,15 +1,118 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block contenido %}
-    {% if not user.is_authenticated%}
+    {% if user.is_authenticated%}
+        <div class="row p-4">
+            <div class="col">
+                <a href="{% url 'solicitud:ListaSolicitud'%}" class="btn btn-danger">
+                    <i class="fas fa-undo-alt"></i> REGRESAR A LA LISTA
+                </a>
+            </div>
+        </div>
         <div class="row">
-            <div class="col-6 col-sm-12">
+            <div class="col-md-6 col-sm-12 mb- pe-3">
+            {% if postulacion.municipio.estado == 'SOLICITUD' %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h4 class="text-center text-bg-success">CAMBIAR DATOS</h4>
+                    {% for field in form2 %}
+                        <div class="mb-3 row">
+                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">
+                                    <div class="">
+                                        {{ field }}
+                                    </div>
+                                <div class="">
+                                    {% for error in field.errors %}
+                                        <span style="color: red">({{ error }})</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %} 
+                    <h4 class="text-center text-bg-success">HABILITAR USUARIOS</h4>
+                    {% for field in form %}
+                        <div class="mb-3 row">
+                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">
+                                    <div class="">
+                                        {{ field }}
+                                    </div>
+                                <div class="">
+                                    {% for error in field.errors %}
+                                        <span style="color: red">({{ error }})</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}  
+                    {% for field in form3 %}
+                        <div class="mb-3 row">
+                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">
+                                    <div class="">
+                                        {{ field }}
+                                    </div>
+                                <div class="">
+                                    {% for error in field.errors %}
+                                        <span style="color: red">({{ error }})</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="row text-center row mt-2">
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">
+                            <i class="fas fa-save"></i>GUARDAR</button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">ESTADO DE LA POSTULACION</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">
+                    {% if postulacion.estado %}
+                        APROBADO
+                    {% else %}
+                        RECHAZADO
+                    {% endif %}
+                    </div>                            
+                </div>
+                <div class="mb-3 row">
+                    {% if userMun %}
+                        <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE USUARIO</div>
+                        <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{userMun.username}}</div>
+                    {% else %}
+                    {% endif %}
+                                                
+                </div>
+            {% endif %}                
+            </div>
+
+            <div class="col-md-6 col-sm-12">
                 <div class="row d-flex">
-                    <h1 class="text-center text-bg-success ">DATOS</h1>                     
+                    <h4 class="text-center text-bg-info ">DATOS PROPORCIONADOS</h4>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO CARNET</div>
+                            <div class="col-md-8 col-sm-12">
+                            <a href="{{ postulacion.mae.asignacion.url }}" target="_blank">
+                                <button type="button" class="btn btn-secondary">Abrir PDF</button>
+                            </a>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO DESIGNACION</div>
+                            <div class="col-md-8 col-sm-12">
+                            <a href="{{ postulacion.mae.carnet.url }}" target="_blank">
+                                <button type="button" class="btn btn-secondary">Abrir PDF</button>
+                            </a>
+                            </div>
+                        </div>
+                        <hr>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>
-                            
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>                            
                         </div>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
@@ -31,7 +134,7 @@
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">CELULAR DE LA MAE</div>
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.celular}}</div>
-                        </div>
+                      </div>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DOMICILIO LEGAL PARA NOTIFICACION</div>
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.correo}}</div>
@@ -58,27 +161,8 @@
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">FECHA Y HORA DEL ENVIO</div>
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.fecha_registro}}</div>
                         </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-sm-12">
-                            <iframe src="{{ postulacion.mae.asignacion.url }}#toolbar=0"
-                            width="100%" height="500px"></iframe>
-                    </div>                    
-                    <div class="col-md-6 col-sm-12">
-                            <iframe src="{{ postulacion.mae.carnet.url }}#toolbar=0"
-                            width="100%" height="500px"></iframe>
-                    </div>
-                </div>
-                <div>
-                    <div class="col">
-                        <a href="{% url 'solicitud:Index'%}" class="btn btn-danger">
-                        <i class="fas fa-undo-alt"></i>Regresar al INICIO
-                        </a>
-                    </div>
-                </div>               
-            </div>
-            <div class="col-6 col-sm-12">
+                </div>                              
             </div>
         </div>
     {% endif %}
-{% endblock contenido %}
+{% endblock contenido %}  

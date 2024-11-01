@@ -1,8 +1,8 @@
 from django.forms import *
 from django import forms
-from solicitud.models import Postulacion
+from solicitud.models import Postulacion, Municipios
 
-class Update_Postulacion(forms.Form):
+class Update_Postulacion(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.visible_fields():
@@ -15,3 +15,14 @@ class Update_Postulacion(forms.Form):
         labels = {
             'estado': '¿Aprobar el proyecto?',
         }
+
+class update_Post(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = Postulacion
+        exclude = '__all__'

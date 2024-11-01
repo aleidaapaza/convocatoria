@@ -9,8 +9,8 @@ class municipiosAdm(admin.ModelAdmin):
     search_fields = ('departamento', 'entidad_territorial',)
 
 class postulacionAdm(admin.ModelAdmin):
-    fields = ('municipio', 'mae', 'responsable',)
-    list_display = ('municipio', 'mae', 'responsable', 'fecha_registro',)
+    fields = ('municipio', 'mae', 'responsable', 'estado')
+    list_display = ('municipio', 'fecha_registro',)
     search_fields = ('municipio', 'mae',)
     
 admin.site.register(Municipios, municipiosAdm)

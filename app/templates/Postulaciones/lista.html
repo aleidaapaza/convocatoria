@@ -26,8 +26,15 @@
             <td> {{ postulacion.fecha_registro }}</td>
             <td> {{ postulacion.municipio.estado }}</td>
             <td>
-                <a href="" type="button"
-                   class="btn btn-primary btn-xs"><i class="fas fa-edit"></i></a>
+                <a href=" {% url 'solicitud:Ficha_solicitud' postulacion.slug %} " type="button"
+                   class="btn btn-primary btn-xs">
+                   {% if postulacion.municipio.estado == 'SOLICITUD' %}
+                   <i class="fas fa-edit"></i>
+                   {% else %}
+                   <i class="fa fa-eye"></i>
+                   {% endif %}
+                   
+                </a>
             </td>
         </tr>
     {% endfor %}

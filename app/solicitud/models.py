@@ -17,7 +17,7 @@ class Municipios(models.Model):
     p_a= models.BooleanField(_('Postulo Anteriormente'),default=False)
         
     def __str__(self):
-        return f' {self.departamento}-{self.entidad_territorial}-{self.nombre_municipio}'
+        return f' {self.departamento}-{self.entidad_territorial}-{self.nombre_municipio}-{self.estado}'
     
     class Meta:
         verbose_name = _('Municipio')
@@ -30,8 +30,9 @@ class Postulacion(models.Model):
     mae = models.ForeignKey(EncargadoMAE, related_name='encargado_mae_p', on_delete=models.CASCADE)
     responsable = models.ForeignKey(ResponsableP, related_name='responsable_p', on_delete=models.CASCADE)
     fecha_registro = models.DateTimeField(auto_now_add=True)
-    estado = models.BooleanField(default=False)
-
+    estado = models.BooleanField(null=True, blank=True)
+    modificacion = models.BooleanField(default=False)
+    
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'
     

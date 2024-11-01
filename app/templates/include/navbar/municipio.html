@@ -1,0 +1,59 @@
+{% load static %}
+<div style="background-color: #4da358">
+    <ul class="nav nav-tabs">
+        <li class="nav-item d-flex align-items-center justify-content-center">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+            <i class="fa fa-align-justify" aria-hidden="true"></i></button>
+        </li>
+        <li class="height-100 d-flex align-items-center justify-content-center p-3">
+            {{ titulo }}
+        </li>
+    </ul>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">DATOS DE POSTULACION</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:registro_Base' postulacion.slug %}">DATOS PRINCIPALES DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:registro_justificacion' postulacion.slug %}">ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-IDEA DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-PRESUPUESTO REFERENCIAL</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-CONCLUSIONES Y RECOMENDACIONES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-DECLARACION JURADA</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

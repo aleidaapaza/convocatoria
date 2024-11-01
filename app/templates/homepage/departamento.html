@@ -1,6 +1,7 @@
 {% load static%}
 {% block contenido %}
     <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+        
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -20,6 +21,22 @@
             </div>
         </div>
     </div>
+    <div class"row ">
+        <div class="mb-3 row">
+            <div class="col-md-8 col-sm-8 fw-bold col-form-label text-end">INGRESA EL CODIGO PARA MODIFICAR TU SOLICITUD</div>
+            <div class="col-md-4 col-sm-4 align-items-center ">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                    <input type="text" id="campo" class='form-control form-control-sm font-weight-bold border border-info' placeholder="Escribe aquí el codigo">
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                    <button onclick="redirigirConDato()" class="btn btn-primary ">Enviar</button>
+                    </div>
+                </div>
+                
+            </div>                            
+        </div>
+    </div>
     <div class="row">
         <div class="col-4 col-sm-2">
             <div class="linea-pasos">
@@ -28,12 +45,13 @@
                     <li class="paso">Paso 2</li>
                     <li class="paso">Paso 3</li>
                     <li class="paso">Paso 4</li>
+                    <li class="paso">Paso 5</li>
                     <li class="paso">FIN</li>
                 </ul>
             </div>
         </div>
         <div class="col-8 col-sm-10">
-            <h1 class="text-center text-bg-success ">SELECCIONE SU DEPARTAMENTO</h1>
+            <h4 class="text-center text-bg-success ">SELECCIONE SU DEPARTAMENTO</h4>
             <div class="row align-items-start justify-content-center p-5">
                 <div class="col-sm-6 col-md-2 pt-3">
                     <a href="{% url 'solicitud:Entidad_Territorial' '1' %}" style="text-decoration: none; color: inherit;">
@@ -119,5 +137,15 @@
         var myModal = new bootstrap.Modal(document.getElementById('miModal'));
         myModal.show();
     });
+</script>
+<script>
+        function redirigirConDato() {
+            const campoDatos = document.getElementById('campo').value;  // Obtiene el valor del campo
+            const urlBase = "{% url 'solicitud:Actualizar_Ficha' 0 %}";  // Usa un valor placeholder
+
+            // Construye la URL con el valor del campo
+            const urlCompleta = urlBase.replace('0', encodeURIComponent(campoDatos));
+            window.location.href = urlCompleta;  // Redirige a la nueva URL
+        }
 </script>
 {% endblock js %}
