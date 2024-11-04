@@ -1,0 +1,45 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+    <div class="row card card-body">
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>OBJETIVO ESPECÍFICO</th>
+                        <th>COMPONENTE</th>
+                        <th>SITUACIÓN ACTUAL/LÍNEA DE BASE</th>
+                        <th>INDICADOR</th>
+                        <th>META</th>
+                    </tr>
+                </thead>
+                <tbody id="product-rows">
+                    {% for objetivo in objetivos_esp %}
+                        <tr>
+                            <td><textarea name="objetivo_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.objetivo }}</textarea></td>
+                            <td><textarea name="componente_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.componente }}</textarea></td>
+                            <td><textarea name="linea_base_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.linea_base }}</textarea></td>
+                            <td><textarea name="indicador_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.indicador }}</textarea></td>
+                            <td><textarea name="meta_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.meta }}</textarea></td>                             
+                            <td>
+                            <form method="post" action="{% url 'proyecto:eliminar_objetivo' objetivo.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                                              
+    </div>
+{% endblock %}
+
+{% block funcScript %}
+<script>
+    
+    function removeRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+{% endblock %}

@@ -28,8 +28,9 @@ class solicitud(TemplateView):
                 user_sl = self.request.user.username_proyecto.slug
                 context['slug']=user_sl
                 print(user_sl)
-                postulacion_p = Postulacion.objects.get(slug = user_sl)
+                postulacion_p = Postulacion.objects.get(slug =user_sl)
                 print(postulacion_p)
+                context['proyecto'] = postulacion_p
                 context['postulacion'] = postulacion_p
             elif self.request.user.is_revisor:
                 user_sl = self.request.user.revisor_perfil.slug
@@ -400,8 +401,6 @@ class Act_Ficha_MAE(UpdateView):
             return HttpResponseRedirect(reverse('solicitud:Actualizar_Ficha_eNC', args=[slug]))
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
-
-
 
 class Act_ficha_Resp(UpdateView):
     model=Postulacion 

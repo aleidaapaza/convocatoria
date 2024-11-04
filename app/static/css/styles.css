@@ -1,11 +1,11 @@
 .container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Asegura que la altura mínima sea de 100% de la ventana */
+    min-height: 80vh; /* Asegura que la altura mínima sea de 100% de la ventana */
 }
 main {
     flex: 1; /* Permite que el contenido principal ocupe el espacio restante */
-    padding: 20px;
+    padding: 10px;
 }
 footer {
     background-color: #44AAA2;    
@@ -14,6 +14,11 @@ footer {
     height: 40px;
     color: white;    
   }
+
+a {
+    color: inherit; /* Hereda el color del texto */
+    text-decoration: none; /* Elimina el subrayado */
+}
 
 .baseim {
     background: url("/static/img/fondo/fondoVerde.jpg") no-repeat center center fixed;

@@ -1,9 +1,56 @@
 <div class="row d-flex">
-    <h4 class="text-center text-bg-info ">PERFIL</h4>
     <div class="mb-3 row">
-        <div class="col-md-3 col-sm-6 fw-bold col-form-label">username</div>
-        <div class="col-md-3 col-sm-6 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.user.username}}</div>
-        <div class="col-md-3 col-sm-6 fw-bold col-form-label">Nombre completo</div>
-        <div class="col-md-3 col-sm-6 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.persona.nombrecompleto}}</div>
+        <div class="col-md-4 col-sm-12">
+            <hr>
+            <h4 class="text-center">PERFIL</h4>
+            <hr>
+        </div>        
+        <div class="col-md-8 col-sm-12">
+            <hr>
+            <div class="row">
+                
+                <div class="col-md-12 col-sm-12 pb-4">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4"><p class="fw-bold">NOMBRE(S)</p></div>
+                        <div class="col-md-10 col-sm-8">
+                        <input class="form-control" type="text" value="{{postulacion.persona.nombre}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 pb-4">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4"><p class="fw-bold">APELLIDO(S)</p></div>
+                        <div class="col-md-10 col-sm-8">
+                        <input class="form-control" type="text" value="{{postulacion.persona.apellido}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 pb-4">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4"><p class="fw-bold">CARGO</p></div>
+                        <div class="col-md-10 col-sm-8">
+                        <input class="form-control" type="text" value="{{postulacion.persona.cargo}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                </div>                
+                <div class="col-md-12 col-sm-12 pb-4">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4"><p class="fw-bold">CONTACTO</p></div>
+                        <div class="col-md-10 col-sm-8">
+                        <input class="form-control" type="text" value="{{postulacion.persona.celular}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 pb-4">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4"><p class="fw-bold">USUARIO(S)</p></div>
+                        <div class="col-md-10 col-sm-8">
+                        <input class="form-control" type="text" value="{{postulacion.user.username}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
-</div>superuser
+</div>

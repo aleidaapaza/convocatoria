@@ -3,6 +3,20 @@
 {% block contenido %}
     {% if user.is_authenticated %}
         <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
+        {% if entity_registro %}
+            <div class="col-md-3 mt-2">
+                <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
+            </div>
+        {% endif %} 
+        {% if error_messages %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for message in error_messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         {% block errores %}
 
         {% endblock %}
@@ -17,7 +31,7 @@
                 <div class="row text-center row mt-2">
                     <div class="col">
                         <button class="btn btn-success" type="submit">
-                        <i class="fas fa-save"></i>GUARDAR</button>
+                        <i class="fas fa-save"></i>{{accion}}</button>
                     </div>
                     <div class="col">
                         <a href="{{ accion2_url }}" class="btn btn-danger">

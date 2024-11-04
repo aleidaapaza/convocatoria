@@ -18,13 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-
+from proyecto.views import descargar_archivo
 
 urlpatterns = [
     path('',include('solicitud.urls')),
     path('admin/', admin.site.urls),
     path('userl/',include('user.urls')),
     path('proyecto/',include('proyecto.urls')),
+    path('descargar_modelo_acta/<slug:slug>/<int:id>', descargar_archivo, name='descargar_modeloacta'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

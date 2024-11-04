@@ -1,0 +1,44 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+    <div class="row card card-body">        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>COMUNIDADES BENEFICIARIAS</th>
+                    <th>SUBIR ACTA</th>
+                    <th>EN EL CASO DE NO TENER, JUSTIFICAR</th>
+                </tr>
+            </thead>
+            <tbody id="product-rows">
+                {% for acta in modelo_acta %}
+                    <tr>
+                        <td>
+                            <input type="hidden" name="comunidades_{{ forloop.counter0 }}" value="{{ acta.comunidades }}">
+                            <input type="text" value="{{ acta.comunidades }}" 
+                                   class="form-control form-control-sm font-weight-bold border border-info" disabled>
+                        </td>      
+                        
+                         <td><input type="file" name="si_acta_{{ forloop.counter0 }}" 
+                        class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off">
+                            {% if acta.si_acta %}
+                            <a href="{% url 'descargar_modeloacta' acta.slug acta.id %}" class="btn btn-primary">
+                                Descargar Archivo
+                            </a>
+                            {% else %}
+                            {% endif %}                            
+                            </td>
+                        <td><textarea name="no_acta_{{ forloop.counter0 }}" cols="30" rows="4" 
+                        class="form-control form-control-sm font-weight-bold border border-info">{{ acta.no_acta }}</textarea></td>
+                        <td>
+                        <form method="post" action="{% url 'proyecto:eliminar_modeloActa' acta.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

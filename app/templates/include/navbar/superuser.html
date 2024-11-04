@@ -1,12 +1,21 @@
 {% load static %}
 <div style="background-color: #4da358">
-    <ul class="nav nav-tabs">
-        <li class="nav-item d-flex align-items-center justify-content-center">
+    <ul class="nav nav-tabs d-flex justify-content-between w-100">
+        <li class="nav-item d-flex align-items-center">
             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-            <i class="fa fa-align-justify" aria-hidden="true"></i></button>
+                <i class="fa fa-align-justify" aria-hidden="true"></i>
+            </button>
         </li>
         <li class="height-100 d-flex align-items-center justify-content-center p-3">
-            {{ titulo }}
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" class="nav-link font-weight-bold"><i class="fas fa-user-alt"></i>Bienvenido {{ request.user.username }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'user:Logout' %}" class="nav-link  font-weight-bold"><i class="fas fa-sign-in-alt"></i>Cerrar sesion</a>
+                </li>
+            </ul>
         </li>
     </ul>
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">

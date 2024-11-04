@@ -1,0 +1,50 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+    <div class="row card card-body">
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>OBJETIVO ESPECÍFICO</th>
+                        <th>COMPONENTE</th>
+                        <th>SITUACIÓN ACTUAL/LÍNEA DE BASE</th>
+                        <th>INDICADOR</th>
+                        <th>META</th>
+                    </tr>
+                </thead>
+                <tbody id="product-rows">
+                    <tr>
+                        <td><textarea name="objetivo" cols="30" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="componente" cols="30" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="linea_base" cols="30" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="indicador" cols="30" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="meta" cols="30" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-primary" id="add-row">Añadir Producto</button>                                       
+    </div>
+{% endblock %}
+
+{% block funcScript %}
+<script>
+        document.getElementById('add-row').addEventListener('click', function() {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><textarea name="objetivo" cols="40" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="componente" cols="40" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="linea_base" cols="40" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="indicador" cols="40" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><textarea name="meta" cols="40" rows="6" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off" required></textarea></td>
+                        <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+            `;
+            document.getElementById('product-rows').appendChild(newRow);
+        });
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+</script>
+{% endblock %}

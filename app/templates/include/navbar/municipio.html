@@ -21,19 +21,28 @@
                     <hr>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_Base' postulacion.slug %}">DATOS PRINCIPALES DEL PROYECTO</a>
+                    <a class="nav-link active" href="{% url 'proyecto:registro_Base' proyecto.slug %}">DATOS PRINCIPALES DEL PROYECTO</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_justificacion' postulacion.slug %}">ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</a>
+                    <a class="nav-link active" href="{% url 'proyecto:registro_justificacion' proyecto.slug %}">ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-IDEA DEL PROYECTO</a>
+                    <a class="nav-link active" href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}">ITCP-IDEA DEL PROYECTO</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</a>
+                    <a class="nav-link active" href="{% url 'proyecto:registro_obj_especifico' proyecto.slug %}">ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)</a>
+                    <a class="nav-link active" href="{% url 'proyecto:registro_Beneficios' proyecto.slug %}">ITCP-IDEA DEL PROYECTO - BENEFICIOS ESPERADOS DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:registro_Beneficiarios' proyecto.slug %}">ITCP-IDEA DEL PROYECTO - BENEFICIARIOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:registro_ModeloActa' proyecto.slug %}">ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:registro_DerechoPropietario' proyecto.slug %}">ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'solicitud:Index' %}">ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</a>

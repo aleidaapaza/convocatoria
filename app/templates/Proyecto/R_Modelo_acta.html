@@ -1,0 +1,44 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+    <div class="row card card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>COMUNIDADES BENEFICIARIAS</th>
+                    <th>SUBIR ACTA</th>
+                    <th>EN EL CASO DE NO TENER, JUSTIFICAR</th>
+                </tr>
+            </thead>
+            <tbody id="product-rows">
+                <tr>
+                    <td><input type="text" name="comunidad" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                    <td><input type="file" name="siacta" class="form-control form-control-sm font-weight-bold border border-info" autocomplete="off"></td>
+                    <td><textarea name="noacta" cols="30" rows="4" class="form-control form-control-sm border border-info" autocomplete="off"></textarea></td>
+                    <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-primary" id="add-row">Añadir</button>                                             
+    </div>
+{% endblock %}
+
+{% block funcScript %}
+<script>
+        document.getElementById('add-row').addEventListener('click', function() {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" name="comunidad" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                <td><input type="file" name="siacta" class="form-control form-control-sm border border-info" autocomplete="off"></td>
+                <td><textarea name="noacta" cols="30" rows="4" class="form-control form-control-sm border border-info" autocomplete="off"></textarea></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>                
+            `;
+            document.getElementById('product-rows').appendChild(newRow);
+        });
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+</script>
+{% endblock %}
