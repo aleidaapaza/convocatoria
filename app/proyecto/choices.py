@@ -17,23 +17,21 @@ nivel= [
 ]
 
 temporalidad = [
-    ("Ninguno", "Ninguno"),
-    ("Bajo", "Bajo"),
-    ("Medio", "Medio"),
-    ("Alto", "Alto"),
+    ("Transitorio", "Transitorio"),
+    ("Permanente", "Permanente"),
 ]
 
 riesgos = [
-    ("Granizadas", ""),
-    ("Heladas", ""),
-    ("Sequias", ""),
-    ("Inundaciones", ""),
-    ("Derrumbes", ""),
-    ("Incendios forestales", ""),
-    ("Desertificacion", ""),
-    ("Erosion de suelos y/o suelos degradados", ""),
-    ("Vientos fuertes", ""),
-    ("Deslizamientos", ""),
-    ("Plagas y enfermedades", ""),
-    ("Sanitarias", ""),
+    ("Granizadas", "Granizadas"),
+    ("Heladas", "Heladas"),
+    ("Sequias", "Sequias"),
+    ("Inundaciones", "Inundaciones"),
+    ("Derrumbes", "Derrumbes"),
+    ("Incendios forestales", "Incendios forestales"),
+    ("Desertificacion", "Desertificacion"),
+    ("Erosion de suelos y/o suelos degradados", "Erosion de suelos y/o suelos degradados"),
+    ("Vientos fuertes", "Vientos fuertes"),
+    ("Deslizamientos", "Deslizamientos"),
+    ("Plagas y enfermedades", "Plagas y enfermedades"),
+    ("Sanitarias", "Sanitarias"),
 ]

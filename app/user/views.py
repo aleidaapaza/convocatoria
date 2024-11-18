@@ -29,7 +29,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 message = f'Hello {user.username}! inicio sesion'
-                return redirect('solicitud:Index')
+                return redirect('convocatoria:Index')
             else:
                 message = 'Error al iniciar sesion. Verificar que el usuario y la contraseña hayan sido introducidas de la manera correcta'
 
@@ -38,7 +38,7 @@ class LoginView(View):
 def cierreSesion(request):
     logout(request)
     messages.success(request, 'sesion finalizada exitosamente')
-    return redirect('solicitud:Index')
+    return redirect('convocatoria:Index')
 
 class ListaRevisores(ListView):
     model = Revisor
@@ -71,7 +71,7 @@ class RegistroRev(CreateView):
         context['form2'] = self.second_form_class(self.request.GET)      
         context['titulo'] = 'REGISTRO DE REVISORES'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('solicitud:Index')
+        context['accion2_url'] = reverse_lazy('convocatoria:Index')
         context['activate'] = True
         context['entity'] = 'REGISTRO DE REVISORES'
         return context
@@ -119,9 +119,9 @@ class ActualizacionRev(UpdateView):
         context['activate'] = False
         context['entity'] = 'ACTUALIZAR DATOS DEL REVISOR'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('solicitud:Index')
+        context['accion2_url'] = reverse_lazy('convocatoria:Index')
         context['entity'] = 'REGISTRO DE REVISORES'
-        context['entity_url'] = reverse_lazy('solicitud:Index') 
+        context['entity_url'] = reverse_lazy('convocatoria:Index') 
         return context 
 
     def post(self, request, *args, **kwargs):

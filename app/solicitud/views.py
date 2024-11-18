@@ -1,5 +1,6 @@
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
+from datetime import datetime
 
 # Create your views here.
 
@@ -10,44 +11,16 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 
 from django.views.generic import CreateView, ListView, UpdateView
+
 from solicitud.models import Municipios, Postulacion
 from user.models import EncargadoMAE, ResponsableP, Persona, User, Revisor, SuperUser
 from proyecto.models import DatosProyectoBase
+from convocatoria.models import Convocatoria
 
 from user.form import Reg_EncargadoMAE, Reg_ResponsableP, Reg_Persona_Res, Reg_Persona_MAE, User_Reg, Update_MAE
 from solicitud.form import Update_Postulacion, update_Post
 from solicitud.choices import departamento_s, entidad_s
 
-
-class solicitud(TemplateView):
-    template_name = 'index.html'
-    def get_context_data(self, **kwargs):
-        context = super(solicitud, self).get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            if self.request.user.is_municipio:
-                user_sl = self.request.user.username_proyecto.slug
-                context['slug']=user_sl
-                print(user_sl)
-                postulacion_p = Postulacion.objects.get(slug =user_sl)
-                print(postulacion_p)
-                context['proyecto'] = postulacion_p
-                context['postulacion'] = postulacion_p
-            elif self.request.user.is_revisor:
-                user_sl = self.request.user.revisor_perfil.slug
-                context['slug']=user_sl
-                print(user_sl)
-                postulacion_p = Revisor.objects.get(slug = user_sl)
-                print(postulacion_p)
-                context['postulacion'] = postulacion_p
-            elif self.request.user.is_superuser:
-                user_sl = self.request.user.superuser_perfil.slug
-                context['slug']=user_sl
-                print(user_sl)
-                postulacion_p = SuperUser.objects.get(slug = user_sl)
-                print(postulacion_p)
-                context['postulacion'] = postulacion_p
-        
-        return context
 
 class entidad(TemplateView):
     template_name = 'homepage/entidadTerritorial.html'
@@ -56,6 +29,14 @@ class entidad(TemplateView):
         departamento = self.kwargs.get('departamento', 0)
         context['dep'] = departamento
         context['entity'] = 'ENTIDAD TERRITORIAL'
+        fecha = Convocatoria.objects.get(estado=True)
+        context['convocatoria']=fecha
+        fechaHoy = datetime.now()
+        print(fechaHoy, 'fecha actual')
+        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
+        fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
+        context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
+
         return context
 
 class municipio(ListView):
@@ -64,18 +45,21 @@ class municipio(ListView):
     def get_context_data(self, **kwargs):
         context = super(municipio, self).get_context_data(**kwargs)
         n_departamento = self.kwargs.get('departamento', 0)
-        print(n_departamento)
         departamentos = departamento_s(n_departamento)
-        print(departamentos)
         n_entidad = self.kwargs.get('entidad',0)
-        print(n_entidad)
         entidades = entidad_s(n_entidad)
-        print(entidades)
         if n_entidad <3:
             municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial=entidades).filter(estado='NINGUNO').order_by('-nombre_municipio')
         else:
             municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial='GOBIERNO AUTÓNOMO MUNICIPAL').filter(estado='NINGUNO').order_by('-nombre_municipio')
-        print(municipios_f)       
+        fecha = Convocatoria.objects.get(estado=True)
+        context['convocatoria']=fecha
+        fechaHoy = datetime.now()
+        print(fechaHoy, 'fecha actual')
+        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
+        fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
+        context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
+
         if municipios_f.acount() == 0:
             context['object_list'] = 0
         else:
@@ -118,7 +102,14 @@ class mae_r(CreateView):
         context['entity'] = 'Registro de encargado de la MAE'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('solicitud:Index')
+        context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        fecha = Convocatoria.objects.get(estado=True)
+        context['convocatoria']=fecha
+        fechaHoy = datetime.now()
+        print(fechaHoy, 'fecha actual')
+        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
+        fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
+        context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
         return context
 
     def post(self, request, *args, **kwargs):
@@ -137,10 +128,8 @@ class mae_r(CreateView):
                 estado = 'SOLICITUD',
                 p_a = False,
             )
-
         form = self.form_class(request.POST, request.FILES)
         form2 = self.second_form_class(request.POST)
-
         if form.is_valid() and form2.is_valid():
             carnet_file = form.cleaned_data.get('carnet')
             asignacion_file = form.cleaned_data.get('asignacion')
@@ -150,11 +139,9 @@ class mae_r(CreateView):
                     form.add_error('carnet', 'El archivo carnet no debe superar los 2 MB.')
                 if asignacion_file.size > max_size:
                     form.add_error('asignacion', 'El archivo de asignacion no debe superar los 2 MB.')                    
-                return self.render_to_response(self.get_context_data(form=form, form2=form2))
-            
+                return self.render_to_response(self.get_context_data(form=form, form2=form2))            
             municipiobj.estado = 'SOLICITUD'
             municipiobj.save()
-
             encar_Mae = form.save(commit=False)
             persona_mae = form2.save()
             print('personaMAE',persona_mae)
@@ -170,10 +157,12 @@ class mae_r(CreateView):
                 persona = personaResp,
                 correo = 'correo@gn.com'
             )
+            convocatoria = Convocatoria.objects.get(estado=True)
             postulacion_f = self.model.objects.create(
                 municipio=municipiobj,
                 mae=encar_Mae,
                 responsable=responsablePr,
+                convocatoria=convocatoria,
             )
             id_post = postulacion_f.slug
             print(id_post,"esto es el id de la postulacion")
@@ -202,20 +191,23 @@ class ResponsableProy(UpdateView):
         context['entity'] = 'Registro de encargado del proyecto'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('solicitud:Index')
-
+        context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        fecha = Convocatoria.objects.get(estado=True)
+        context['convocatoria']=fecha
+        fechaHoy = datetime.now()
+        print(fechaHoy, 'fecha actual')
+        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
+        fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
+        context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
         return context
-
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         slug = self.kwargs.get('slug', None)
         postulacion_pr = self.model.objects.get(slug=slug)
         responsable_pr = self.second_model.objects.get(slug = postulacion_pr.responsable.slug)
         persona_resp = self.three_model.objects.get(id = responsable_pr.persona.id)
-
         form = self.form_class(request.POST, instance = responsable_pr)
         form2 = self.second_form_class(request.POST, instance = persona_resp)
-
         if form.is_valid() and form2.is_valid():
             form2.save()
             form.save()          
@@ -233,8 +225,26 @@ class Confirmacion(TemplateView):
         postulacion = Postulacion.objects.get(slug=slug)
         context['entity'] = 'confirmacion solicitud'
         context['postulacion'] = postulacion
+        fecha = Convocatoria.objects.get(estado=True)
+        context['convocatoria']=fecha
+        fechaHoy = datetime.now()
+        print(fechaHoy, 'fecha actual')
+        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
+        fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
+        context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
         return context
     
+class ListaCompleta(ListView):
+    model = Postulacion
+    template_name = 'Postulaciones/lista.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'LISTA COMPLETA'
+        context['activate'] = True
+        context['entity'] = 'LISTA COMPLETA'
+        context['object_list'] = self.model.objects.all()
+        return context
+
 class ListaSolicitudes(ListView):
     model = Postulacion
     template_name = 'Postulaciones/lista.html'
@@ -243,9 +253,20 @@ class ListaSolicitudes(ListView):
         context['titulo'] = 'LISTA DE SOLICITUDES'
         context['activate'] = True
         context['entity'] = 'LISTA DE SOLICITUDES'
-        context['object_list'] = self.model.objects.all()
+        context['object_list'] = self.model.objects.filter(estado=None)
         return context
 
+class ListaRechazados(ListView):
+    model = Postulacion
+    template_name = 'Postulaciones/lista.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'LISTA NO APROBADOS'
+        context['activate'] = True
+        context['entity'] = 'LISTA NO APROBADOS'
+        context['object_list'] = self.model.objects.filter(estado=False)
+        return context
+    
 class fichaSolicitud(UpdateView):
     model = Postulacion
     second_model = EncargadoMAE
@@ -271,6 +292,8 @@ class fichaSolicitud(UpdateView):
                 datosP = self.four_model.objects.get(slug=slug)
                 user = self.third_model.objects.get(id=datosP.user.id)
                 context['userMun'] = user
+            else:
+                context['password'] = 'La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo'
         context['postulacion'] = postulacion_p
         context['titulo'] = 'Registro de encargado del proyecto'
         context['activate'] = False
@@ -305,9 +328,15 @@ class fichaSolicitud(UpdateView):
             estado_post = form.cleaned_data.get('estado')
             print('estado', estado_post)
             if estado_post:
+                print(estado_post,'estado')
                 form.save()
                 if  form3.is_valid():
                     user_Pr = form3.save(commit=False)
+                    print(user_Pr.username, "username")
+                    user_Pr.password = '{}{}'.format(user_Pr.username, slug)
+                    print("contraseña", user_Pr.password)
+                    user_Pr.set_password(user_Pr.password)
+                    print("contraseña has", user_Pr.password)
                     user_Pr.is_municipio = True
                     user_Pr.save()
                     datos_proyecto = self.four_model.objects.create(
@@ -352,7 +381,7 @@ class Act_Ficha_MAE(UpdateView):
         postulacion_p = get_object_or_404(self.model, slug=slug)
 
         if postulacion_p.modificacion:
-            return redirect('solicitud:Index')
+            return redirect('convocatoria:Index')
 
         return super().get(request, *args, **kwargs)
 
@@ -373,10 +402,8 @@ class Act_Ficha_MAE(UpdateView):
         context['activate'] = False
         context['entity'] = 'ACTUALIZAR DATOS DE LA SOLICITUD'
         context['entity2'] = 'DATOS MAE'
-        context['entity_url'] = reverse_lazy('solicitud:Index') 
+        context['entity_url'] = reverse_lazy('convocatoria:Index') 
         return context 
-    
-    
     
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -429,7 +456,7 @@ class Act_ficha_Resp(UpdateView):
         context['activate'] = False
         context['entity'] = 'ACTUALIZAR DATOS DE LA SOLICITUD'
         context['entity2'] = 'DATOS RESPONSABLE DEL PROYECTO'
-        context['entity_url'] = reverse_lazy('solicitud:Index') 
+        context['entity_url'] = reverse_lazy('convocatoria:Index') 
         return context 
     
     

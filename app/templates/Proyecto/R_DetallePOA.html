@@ -1,0 +1,21 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+    <div class="row card card-body">
+        {% for field in form %}
+            <div class="mb-3 row">
+                <div class="col-4 text-end fw-bold">{{ field.label_tag }}</div>
+                <div class="col-8">
+                    <div class="">
+                        {{ field }}
+                    </div>
+                        <div class="">
+                            {% for error in field.errors %}
+                                <span style="color: red">({{ error }})</span>
+                            {% endfor %}
+                        </div>
+                </div>
+            </div>
+        {% endfor %}                              
+    </div>
+{% endblock %}

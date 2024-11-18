@@ -18,15 +18,19 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from proyecto.views import descargar_archivo
+from proyecto.view.itcp4 import descargar_archivo
+from proyecto.view.itcp5 import descargar_archivo_der
+from proyecto.view.itcp11 import descargar_docDeclaracion
 
 urlpatterns = [
-    path('',include('solicitud.urls')),
+    path('',include('convocatoria.urls')),
+    path('solicitud/',include('solicitud.urls')),
     path('admin/', admin.site.urls),
     path('userl/',include('user.urls')),
     path('proyecto/',include('proyecto.urls')),
     path('descargar_modelo_acta/<slug:slug>/<int:id>', descargar_archivo, name='descargar_modeloacta'),
-
+    path('descargar_derecho_prop/<slug:slug>/<int:id>', descargar_archivo_der, name='descargar_derechoProp'),
+    path('descargar_dclaracion/<slug:slug>/<int:num>', descargar_docDeclaracion, name='descargar_docDeclaracion'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

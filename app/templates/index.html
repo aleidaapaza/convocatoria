@@ -3,11 +3,11 @@
 {% block contenido %}
     {% if user.is_authenticated %}
         {% if user.is_municipio %}
-            {% include "perfil/municipio.html" %}
+            {% include "index/municipio.html" %}
         {% elif user.is_revisor%}
             {% include "perfil/revisor.html" %}
         {% elif user.is_superuser %}
-            {% include "perfil/superuser.html" %}
+            {% include "index/superuser.html" %}
         {% endif %}
     {% else %}
             {% include "homepage/departamento.html" %}

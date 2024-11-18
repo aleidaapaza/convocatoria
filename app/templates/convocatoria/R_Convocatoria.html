@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    <div class="row">
+            <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="row mt-2">
+                    <h3 class="text-center text-bg-primary">{{ titulo }}</h3>
+                    <hr>
+                    {% for field in form %}
+                        <div class="mb-3 row">
+                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">
+                                    <div class="">
+                                        {{ field }}
+                                    </div>
+                                <div class="">
+                                    {% for error in field.errors %}
+                                        <span style="color: red">({{ error }})</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <hr>
+                <div class="row text-center row mt-2">
+                    <div class="col">
+                        <button class="btn btn-success" type="submit">
+                        <i class="fas fa-save"></i>{{accion}}</button>
+                    </div>
+                    <div class="col">
+                        <a href="{{accion2_url}}" class="btn btn-danger">
+                        <i class="fas fa-undo-alt"></i>
+                        {{accion2}}</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+{% endblock %}

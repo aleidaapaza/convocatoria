@@ -1,0 +1,147 @@
+{% load static%}
+{% block contenido %}
+<div class="row d-flex">
+    <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-primary me-md-2" type="button" href="{% url 'proyecto:registro_Base' proyecto.slug %}">Empezar/continuar el registro</a>
+        <a class="btn btn-primary" type="button">Enviar los datos</a>
+        <a class="btn btn-primary" type="button">GenerarPdf</a>
+    </div>
+    <div class="mb-3 row">
+        <div class="card card-default mt-3 mb-3">
+        <!-- /.card-header style="height: 400px; -->
+        <div class="card-body table-responsive-md p-0 mt-3">
+            <table class="table table-striped table-bordered table-hover text-wrap" id="myTable">
+                <thead class="bg-info">
+                    <tr>
+                        <th scope="col">Nro</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">PORCENTAJE DE AVANCE</th>
+                    </tr>
+                </thead>
+                <tbody class="font-weight-bold">
+                    <tr>
+                        <td>00</td>
+                        <td>DATOS DE POSTULACION</td>
+                        <td>100%</td>
+                    </tr>
+                    <tr>
+                        <td>01</td>
+                        <td>DATOS PRINCIPALES DEL PROYECTO</td>
+                        <td>
+                        {% if datosProyecto > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</td>
+                        <td>
+                        {% if justificacion > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03</td>
+                        <td>ITCP-IDEA DEL PROYECTO</td>
+                        <td>
+                        {% if ideaProyecto > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03.1</td>
+                        <td>OBJETIVOS SECUNDARIOS</td>
+                        <td>
+                        {% if objetivoEsp > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03.2</td>
+                        <td>BENEFICIOS ESPERADOS DEL PROYECTO</td>
+                        <td>
+                        {% if beneficio %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>03.3</td>
+                        <td>BENEFICIARIOS</td>
+                        <td>
+                        {% if beneficiario > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>04</td>
+                        <td>ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</td>
+                        <td>
+                        {% if modeloActa > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>05</td>
+                        <td>ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)</td>
+                        <td>
+                        {% if DerechoPropie > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>06</td>
+                        <td>ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</td>
+                        <td>
+                        {% if impactoAmbiental > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>07</td>
+                        <td>ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES</td>
+                        <td>
+                        {% if riesgoDesastre > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>08</td>
+                        <td>ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO</td>
+                        <td>
+                        {% if detallePoa > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>09</td>
+                        <td>ITCP-PRESUPUESTO REFERENCIAL</td>
+                        <td>
+                        {% if Presupuesto > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>ITCP-CONCLUSIONES Y RECOMENDACIONES</td>
+                        <td>
+                        {% if conclusion > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>ITCP-DECLARACION JURADA</td>
+                        <td>
+                        {% if declaracion > 0 %}100%
+                        {% else %}0%{% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>        
+    </div>
+</div>
+{% endblock contenido %}

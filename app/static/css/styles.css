@@ -79,3 +79,13 @@ a {
         padding: 10px; /* Reduce el padding en pantallas pequeñas */
     }
 }
+
+.contador {
+    font-family: Arial, sans-serif;
+    font-size: 40px;
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #ccc;
+    display: inline-block;
+    margin-top: 50px;
+}

@@ -1,0 +1,115 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block contenido %}
+    <form method="POST" action="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}" id="riesgosForm">
+        {% csrf_token %}
+        <table class="table" id="dynamicTable">
+            <thead>
+                <tr>
+                    <th>Riesgo</th>
+                    <th>Nivel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas dinámicas se agregarán aquí -->
+            </tbody>
+        </table>
+        
+        <!-- Campo slug oculto -->
+        <input type="hidden" name="slug" value="{{ form.slug.value|default_if_none:'' }}" />
+
+        <!-- Botón para agregar una nueva fila -->
+        <button type="button" class="btn btn-primary" id="addRowBtn">Añadir Fila</button>                                       
+
+        <div class="row text-center row mt-2">
+            <div class="col">
+                <button class="btn btn-success" type="submit">
+                <i class="fas fa-save"></i>{{accion}}</button>
+            </div>
+            <div class="col">
+                <a href="{{ accion2_url }}" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>{{ accion2 }}</a>
+            </div>
+        </div>
+    </form>
+{% endblock contenido %}
+
+{% block funcScript %}
+<script>
+    // Datos de los riesgos y niveles
+    const riesgos = [
+        {% for riesgo in form.fields.riesgo.choices %}
+            ["{{ riesgo.0 }}", "{{ riesgo.1 }}"],
+        {% endfor %}
+    ];
+
+    const niveles = [
+        {% for nivel in form.fields.nivel.choices %}
+            ["{{ nivel.0 }}", "{{ nivel.1 }}"],
+        {% endfor %}
+    ];
+
+    // Función para generar un <select> dinámico con un nombre configurable
+    function generateSelect(options, name = '', selectedValue = '') {
+        const select = document.createElement('select');
+        select.name = name; // Asignar el nombre dinámicamente
+        select.classList.add('form-select', 'font-weight-bold', 'border', 'border-info');
+
+        options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option[0];
+            opt.textContent = option[1];
+            if (option[0] === selectedValue) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+        return select;
+    }
+
+    // Función para agregar una nueva fila
+    function addRow() {
+        const tableBody = document.querySelector('#dynamicTable tbody');
+        const row = document.createElement('tr');
+
+        // Columna de Riesgo
+        const cell1 = document.createElement('td');
+        const selectRiesgo = generateSelect(riesgos, 'riesgo'); // Usamos 'riesgo' como name
+        cell1.appendChild(selectRiesgo);
+        row.appendChild(cell1);
+
+        // Columna de Nivel
+        const cell2 = document.createElement('td');
+        const selectNivel = generateSelect(niveles, 'nivel'); // Usamos 'nivel' como name
+        cell2.appendChild(selectNivel);
+        row.appendChild(cell2);
+
+        // Columna de Eliminar (con el botón)
+        const cell3 = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.classList.add('btn', 'btn-danger');
+        deleteButton.textContent = 'Eliminar';
+        deleteButton.onclick = function() {
+            removeRow(deleteButton);
+        };
+        cell3.appendChild(deleteButton);
+        row.appendChild(cell3);
+
+        // Agregar la fila a la tabla
+        tableBody.appendChild(row);
+    }
+
+    // Evento para añadir una fila cuando se hace clic en el botón
+    document.getElementById('addRowBtn').addEventListener('click', addRow);
+
+    // Al cargar la página, añadir una fila por defecto
+    window.onload = addRow;
+
+    function removeRow(button) {
+        const row = button.closest('tr'); // Encuentra la fila más cercana
+        row.remove(); // Elimina la fila
+    }
+</script>
+{% endblock %}

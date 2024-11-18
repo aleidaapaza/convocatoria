@@ -1,4 +1,7 @@
-                <div class="row d-flex">
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+<div class="row d-flex">
                     <h4 class="text-center text-bg-info ">DATOS PROPORCIONADOS</h4>
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO CARNET</div>
@@ -69,3 +72,4 @@
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.fecha_registro}}</div>
                         </div>
                 </div>  
+{% endblock contenido %}

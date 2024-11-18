@@ -26,8 +26,21 @@
         <div class="offcanvas-body">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' %}">LISTA DE SOLICITUDES</a>
+                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}">INICIO</a>
                     <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'convocatoria:lista_convocatoria' %}">LISTA DE CONVOCATORIAS</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaCompleta' %}">LISTA COMPLETA</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' %}">LISTA DE SOLICITUDES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaRechazados' %}">LISTA DE NO APROBADOS</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}">LISTA DE APROBADOS</a>

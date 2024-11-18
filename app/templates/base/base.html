@@ -7,7 +7,7 @@
         <div class="d-flex flex-row-reverse pe-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb float-sm-right text-uppercase">
-                <li class="breadcrumb-item"><a href="{% url 'solicitud:Index' %}">INICIO</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'convocatoria:Index' %}">INICIO</a></li>
                 <li class="breadcrumb-item {% if activate %} active {% endif %}" {% if activate %} aria-current="page" {% else %} href="{{entity_url}}" {% endif %}>{{entity}}</li>
                 {% if entity2 %}
                     <li class="breadcrumb-item {% if activate2 %} active {% endif %}" {% if activate2 %} aria-current="page" {% else %} href="{{entity2_url}}" {% endif %}>{{entity2}}</li>

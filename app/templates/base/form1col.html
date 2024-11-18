@@ -8,6 +8,7 @@
                 <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
             </div>
         {% endif %} 
+        <hr>
         {% if error_messages %}
             <div class="alert alert-danger">
                 <ul>
@@ -17,6 +18,18 @@
                 </ul>
             </div>
         {% endif %}
+
+        {% if messages %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <hr>
         {% block errores %}
 
         {% endblock %}

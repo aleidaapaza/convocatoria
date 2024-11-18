@@ -160,7 +160,6 @@ class Beneficiario(models.Model):
         total = self.total_t()
         return (self.total_mujeres() / total * 100) if total > 0 else 0
     
-
 class Modelo_Acta(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=False)    
     comunidades = models.CharField(null=False, blank=False)
@@ -179,7 +178,7 @@ class Modelo_Acta(models.Model):
         verbose_name_plural = 'Modelo_Actas'
 
 class Derecho_propietario(models.Model):
-    slug = models.SlugField(null=False, blank=False, unique=True)    
+    slug = models.SlugField(null=False, blank=False, unique=False)    
     descripcion = models.TextField(null=False, blank=False)
     si_registro = models.FileField(upload_to=docDerechoPropietario, null=True, blank = True)
     no_registro = models.TextField(null=True, blank=True)
@@ -271,12 +270,11 @@ class Conclusion_recomendacion(models.Model):
 
 class Declaracion_jurada(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     declaracion = models.FileField(upload_to=docDeclaracionjurada)
     itcp = models.FileField(upload_to=docDeclaracionjurada)
     carta = models.FileField(upload_to=docDeclaracionjurada)
-    consultoria = models.FileField(upload_to=docDeclaracionjurada)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -287,17 +285,49 @@ class Declaracion_jurada(models.Model):
         verbose_name = 'Declaracion_jurada'
         verbose_name_plural = 'Declaraciones_juradas'
 
+class PresupuestoReferencial(models.Model):
+    slug = models.SlugField(null=False, blank=False, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    elab_sol = models.DecimalField(max_digits=10, decimal_places=2)    
+    elab_fona = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    elab_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    elab_fona_p = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    elab_sol_p = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    elab_total_p = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    ejec_fona = models.DecimalField(max_digits=10, decimal_places=2)
+    ejec_sol = models.DecimalField(max_digits=10, decimal_places=2)
+    ejec_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    ejec_fona_p = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    ejec_sol_p = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    ejec_total_p = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-'''
+    def __str__(self):
+        return f'{self.slug}'
+
+    class Meta:
+        db_table = 'PresupuestoReferencial'
+        managed = True
+        verbose_name = 'PresupuestoReferencial'
+        verbose_name_plural = 'PresupuestosReferenciales'
+
 class Proyecto(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE)
-    postulacion = models.ForeignKey(Postulacion, on_delete=models.CASCADE)
-    
+    fechaenvio = models.DateTimeField(auto_now_add=True)
+    postulacion = models.ForeignKey(Postulacion, on_delete=models.CASCADE, related_name='proyecto_postulacion')
+    datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='proyecto_DatosBase')
+    justificacion = models.ForeignKey(Justificacion, on_delete=models.CASCADE, related_name='proyecto_justificacion')
+    ideaProyecto = models.ForeignKey(Idea_Proyecto, on_delete=models.CASCADE, related_name='proyecto_idea')
+    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, related_name='proyecto_beneficiario')
+    impactoAmbiental = models.ForeignKey(Impacto_ambiental, on_delete=models.CASCADE, related_name='proyecto_impactoAmbiental')
+    detallePoa = models.ForeignKey(Detalle_POA, on_delete=models.CASCADE, related_name='proyecto_DetallePoa')
+    conclusion = models.ForeignKey(Conclusion_recomendacion, on_delete=models.CASCADE, related_name='proyecto_conclusionR')
+    declaracionJurada = models.ForeignKey(Declaracion_jurada, on_delete=models.CASCADE, related_name='proyecto_DeclaracionJ')
+    presupuestoRef = models.ForeignKey(PresupuestoReferencial, on_delete=models.CASCADE, related_name='proyecto_preupuestoRef')
+    aceptar = models.BooleanField()
+# = models.ForeignKey(, on_delete=models.CASCADE, related_name='proyecto_')
+        
     class Meta:
         verbose_name = _('Proyecto')
         verbose_name_plural = _('Proyectos')
         db_table = 'Proyecto'
-'''
-
-

@@ -16,7 +16,7 @@ class R_Modelo_Acta(CreateView):
         context['entity2'] = 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('solicitud:Index')
+        context['accion2_url'] = reverse_lazy('convocatoria:Index')
         return context
     
     def post(self, request, *args, **kwargs):

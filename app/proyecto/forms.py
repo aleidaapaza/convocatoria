@@ -2,7 +2,10 @@ from django.forms import *
 from django import forms
 
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
-                             Modelo_Acta)
+                             Modelo_Acta, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
+                             Conclusion_recomendacion, Declaracion_jurada)
+
+from proyecto.choices import riesgos, nivel
 
 class Reg_DatosBase(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -133,5 +136,82 @@ class R_ModeloActa(ModelForm):
             'comunidades': 'Comunidades',
             'si_acta': 'Ingresar el acta',
             'no_acta': 'Si no se tiene, Justificar',
-
         }
+
+class R_Impacto_Ambiental(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = Impacto_ambiental
+        fields = '__all__'
+        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
+
+class Rg_RiesgoDesastre(forms.ModelForm):    
+    class Meta:
+        model = Riesgo_desastre
+        fields = ['riesgo', 'nivel']  # Usaremos estos campos
+
+    # Agregamos los selects con las opciones disponibles
+    riesgo = forms.ChoiceField(choices=riesgos)
+    nivel = forms.ChoiceField(choices=nivel)
+
+class R_DetallePOA(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['descripcion'].widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+        self.fields['descripcion'].widget.attrs['rows'] = '3'
+
+    class Meta:
+        model = Detalle_POA
+        fields = '__all__'
+        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
+        labels = {
+            'descripcion': 'DETALLE',
+        }
+
+class R_ConclusionRecomen(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['conclusion'].widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+        self.fields['conclusion'].widget.attrs['rows'] = '8'
+        self.fields['recomendacion'].widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+        self.fields['recomendacion'].widget.attrs['rows'] = '8'
+
+    class Meta:
+        model = Conclusion_recomendacion
+        fields = '__all__'
+        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
+        labels = {
+            'conclusion': 'CONCLUSION',
+            'recomendacion': 'RECOMENDACION',
+        }
+
+class R_Declaracion_jurada(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = Declaracion_jurada
+        fields = '__all__'
+        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
+
+class R_PresupuestoReferencial(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = Declaracion_jurada
+        fields = '__all__'
+        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
+
+        

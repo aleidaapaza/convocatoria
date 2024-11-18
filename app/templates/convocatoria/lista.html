@@ -1,0 +1,39 @@
+{% extends 'base/baseListasDatosC.html' %}
+{% load static %}
+{% block thead %}
+    <tr>
+        <th scope="col">CODIGO</th>
+        <th scope="col">NOMBRE</th>
+        <th scope="col">FECHA DE LANZAMIENTO</th>
+        <th scope="col">FECHA DE CIERRE</th>
+        <th scope="col">MONTO MAXIMO ELABORACION EDTP</th>
+        <th scope="col">MONTO MAXIMO EJECUCION EDTP</th>
+        <th scope="col">Estado</th>
+        <th scope="col">VER/EDITAR</th>
+    </tr>
+
+{% endblock %}
+{% block tbody %}
+    {% if object_list %}
+        {% for convocatoria in object_list %}
+        <tr>
+            <td> {{ convocatoria.slug }}</td>
+            <td> {{ convocatoria.nombre }} </td>
+            <td> {{ convocatoria.fechaLanzamiento }} </td>
+            <td> {{ convocatoria.fechaCierre }} </td>
+            <td> {{ convocatoria.montoElabEDTP }} </td>
+            <td> {{ convocatoria.montoEjecEDTP }} </td>
+            <td> {{ convocatoria.estado }} </td>
+            <td>
+                <a href=" {% url 'convocatoria:Actualizar_convocatoria' convocatoria.slug %} " type="button"
+                   class="btn btn-primary btn-xs">
+                   <i class="fas fa-edit"></i>                   
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+    <p>No se tiene registro de convocatorias</p>
+    {% endif %}
+    
+{% endblock %}

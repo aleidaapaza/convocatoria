@@ -9,6 +9,7 @@
                 </a>
             </div>
         </div>
+        <h4>CODIGO: {{postulacion.slug}} </h4>
         <div class="row">
             <div class="col-md-6 col-sm-12 mb- pe-3">
             {% if postulacion.municipio.estado == 'SOLICITUD' %}
@@ -57,10 +58,18 @@
                                     {% for error in field.errors %}
                                         <span style="color: red">({{ error }})</span>
                                     {% endfor %}
+                                    {% if field.help_text %}
+                                    <small style="color: grey">{{ field.help_text }}</small>
+                                {% endif %}
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
+                    {% if password %}
+                    <p class='bg-warning'>La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo</p>
+                    {% else %}
+                    {% endif %}
+                    
                     <div class="row text-center row mt-2">
                         <div class="col">
                             <button class="btn btn-success" type="submit">

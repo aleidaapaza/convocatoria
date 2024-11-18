@@ -116,21 +116,19 @@ class Update_MAE(ModelForm):
         }
         
 
-class User_Reg(UserCreationForm):
+class User_Reg(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control font-weight-bold border border-info'
             form.field.widget.attrs['autocomplete'] = 'off'
-
+    
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username']
         labels = {
             'username': 'Nombre de Usuario',
-            'password1': 'Contraseña',
-            'password2': 'Confirmar Contraseña'
         }
 
         widgets = {
@@ -139,11 +137,6 @@ class User_Reg(UserCreationForm):
                     'placeholder': 'Ingrese un Nombre de Usuario',
                 }
             ),
-            'email': EmailInput(
-                attrs={
-                    'placeholder': 'Ingrse un Correo Electronico',
-                }
-            )
         }
 
 class update_Revisor(ModelForm):

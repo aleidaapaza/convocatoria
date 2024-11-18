@@ -1,135 +1,171 @@
 {% load static%}
 {% block contenido %}
-    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
-        
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">        
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="miModalLabel">Bienvenido</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Estas son unas recomendaciones que se deben de tomar en cuenta para el llenado del formulario:
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Los archivos solicitados para subir <i class="text-danger">no deben de exeder los 2MB de peso</i></li>
-                        <li class="list-group-item">Para registrar la solicitud se debe de completar <i class="text-info">todos los pasos </i> hasta que le <i class="text-black">APAREZCA LA CONFIRMACION DEL REGISTRO</i></li>
-                    </ul>
-                </div>
+                {% if activo %}
+                    {% if fechaActivo %}
+                    <div class="modal-body">
+                        Estas son unas recomendaciones que se deben de tomar en cuenta para el llenado del formulario:
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Los archivos solicitados para subir <i class="text-danger">no deben de exeder los 2MB de peso</i></li>
+                            <li class="list-group-item">Para registrar la solicitud se debe de completar <i class="text-info">todos los pasos </i> hasta que le <i class="text-black">APAREZCA LA CONFIRMACION DEL REGISTRO</i></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                        {{message_fecha}}
+                    {% endif %}                    
+                {% else %}
+                    <div class="modal-body">
+                        {{message}}
+                    </div>
+                {% endif %}            
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div class"row ">
-        <div class="mb-3 row">
-            <div class="col-md-8 col-sm-8 fw-bold col-form-label text-end">INGRESA EL CODIGO PARA MODIFICAR TU SOLICITUD</div>
-            <div class="col-md-4 col-sm-4 align-items-center ">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                    <input type="text" id="campo" class='form-control form-control-sm font-weight-bold border border-info' placeholder="Escribe aquí el codigo">
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                    <button onclick="redirigirConDato()" class="btn btn-primary ">Enviar</button>
-                    </div>
-                </div>
-                
-            </div>                            
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4 col-sm-2">
-            <div class="linea-pasos">
-                <ul>
-                    <li class="paso activo">Paso 1</li>
-                    <li class="paso">Paso 2</li>
-                    <li class="paso">Paso 3</li>
-                    <li class="paso">Paso 4</li>
-                    <li class="paso">Paso 5</li>
-                    <li class="paso">FIN</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-8 col-sm-10">
-            <h4 class="text-center text-bg-success ">SELECCIONE SU DEPARTAMENTO</h4>
-            <div class="row align-items-start justify-content-center p-5">
-                <div class="col-sm-6 col-md-2 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '1' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">LA PAZ</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/laPaz.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-2 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '2' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">BENI</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/beni.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-2 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '5' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">ORURO</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/oruro.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div> 
-                <div class="col-sm-6 col-md-2 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '6' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">PANDO</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/pando.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>                 
-                <div class="col-sm-6 col-md-2 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '9' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/tarija.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>                  
-                <div class="col-sm-6 col-md-2 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '7' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/potosi.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>                  
-                <div class="col-sm-6 col-md-3 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '3' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/chuquisaca.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>                                  
-                <div class="col-sm-6 col-md-3 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '4' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/cochabamba.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
-                </div>                                  
-                <div class="col-sm-6 col-md-3 pt-3">
-                    <a href="{% url 'solicitud:Entidad_Territorial' '8' %}" style="text-decoration: none; color: inherit;">
-                    <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
-                    <div class="card text-center">                                               
-                            <img src="{% static 'img/departamento/santaCruz.jpg' %}" class="card-img-top" alt="...">                        
-                    </div>
-                    </a>
+    </div>    
+    {% if activo %}
+        {% if fechaActivo %}
+            <div class"row ">
+                <div class="mb-3 row">
+                    <div class="col-md-8 col-sm-8 fw-bold col-form-label text-end">INGRESA EL CODIGO PARA MODIFICAR TU SOLICITUD</div>
+                    <div class="col-md-4 col-sm-4 align-items-center ">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                            <input type="text" id="campo" class='form-control form-control-sm font-weight-bold border border-info' placeholder="Escribe aquí el codigo">
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                            <button onclick="redirigirConDato()" class="btn btn-primary ">Enviar</button>
+                            </div>
+                        </div>
+                        
+                    </div>                            
                 </div>
             </div>
+            <div class="row">
+                <div class="col-4 col-sm-2">
+                    <div class="linea-pasos">
+                        <ul>
+                            <li class="paso activo">Paso 1</li>
+                            <li class="paso">Paso 2</li>
+                            <li class="paso">Paso 3</li>
+                            <li class="paso">Paso 4</li>
+                            <li class="paso">Paso 5</li>
+                            <li class="paso">FIN</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-8 col-sm-10">
+                    <h4 class="text-center text-bg-success ">SELECCIONE SU DEPARTAMENTO</h4>
+                    <div class="row align-items-start justify-content-center p-5">
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '1' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">LA PAZ</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/laPaz.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '2' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">BENI</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/beni.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '5' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">ORURO</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/oruro.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div> 
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '6' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">PANDO</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/pando.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                 
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '9' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/tarija.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                  
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '7' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/potosi.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                  
+                        <div class="col-sm-6 col-md-3 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '3' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/chuquisaca.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                                  
+                        <div class="col-sm-6 col-md-3 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '4' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/cochabamba.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                                  
+                        <div class="col-sm-6 col-md-3 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial' '8' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/santaCruz.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        {% else %}
+            <h3 class="text-center bg-success rounded-3 text-white"> {{message_fecha}}</h3>
+            <h3 class="text-center rounded-3 text-black fw-bold"> {{convocatoria.nombre}}</h3>
+            <h3 class="text-center rounded-3 text-black fw-bold"> FECHA DE {{estadotemporal}}: {{fecha_expiracion}}</h3>
+            <div class="contador">
+                <p id="tiempo"></p>
+            </div>
+            <div class="card text-center" style="background: transparent;">
+                <img src="{% static 'img/fondo/esperando.png' %}" class="card-img-top" alt="...">
+            </div>
+        {% endif %}      
+    {% elif conteo > 1 %}
+        <div class="col-md-3 mt-2">
+            <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
         </div>
-    
-    </div>
-    
+        <div class="card text-center" style="background: transparent;">
+            <img src="{{imagen}}" class="card-img-top" alt="...">
+        </div>
+    {% else %}
+        <div class="col-md-3 mt-2">
+            <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
+        </div>
+        <div class="card text-center" style="background: transparent;">                                             
+            <img src="{% static 'img/fondo/esperando.png' %}" class="card-img-top" alt="...">                        
+        </div>
+    {% endif %}    
 {% endblock contenido %}
 {% block js %}
 <script>
@@ -148,4 +184,34 @@
             window.location.href = urlCompleta;  // Redirige a la nueva URL
         }
 </script>
+<script>
+        // Obtener la fecha y hora de cierre desde Django (pasada como string en formato ISO)
+        const fechaHoraCierre = new Date("{{ fecha_expiracion }}").getTime();
+
+        // Actualizar la cuenta regresiva cada 1 segundo
+        const intervalo = setInterval(function() {
+
+            // Obtener la fecha y hora actuales
+            const ahora = new Date().getTime();
+
+            // Calcular la diferencia entre la fecha y hora de cierre y la fecha y hora actuales
+            const distancia = fechaHoraCierre - ahora;
+
+            // Calcular los días, horas, minutos y segundos restantes
+            const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+            // Mostrar la cuenta regresiva en el HTML
+            document.getElementById("tiempo").innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
+            // Si la cuenta regresiva ha llegado a cero, mostrar un mensaje
+            if (distancia < 0) {
+                clearInterval(intervalo);
+                document.getElementById("tiempo").innerHTML = "¡Se cerro la convocatoria!";
+            }
+
+        }, 1000); // Actualiza cada 1 segundo
+    </script>
 {% endblock js %}
