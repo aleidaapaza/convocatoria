@@ -61,7 +61,6 @@ class Reg_PresupuestoRef(View):
         elabSolicBs = float(request.POST.get('elabSolicBs', 0))
         ejecFonaBs = float(request.POST.get('ejecFonaBs', 0))
         ejecSolicBs = float(request.POST.get('ejecSolicBs', 0))
-
         if elabSolicBs != 0.00 and ejecFonaBs != 0.00 and ejecSolicBs!=0.00:
             ejecTotalBs = ejecFonaBs + ejecSolicBs
             ejecFonaPor = round((ejecFonaBs * 100) / ejecTotalBs, 2)
@@ -69,8 +68,7 @@ class Reg_PresupuestoRef(View):
             print(ejecFonaPor)
             print(ejecSolicPor)
             if ejecFonaPor > 70.00 or ejecSolicPor < 30.00:
-                error_messages.append(f'El porcentaje de la ejecucion del EDTP por parte del FONABOSQUE supera el 70%: {ejecFonaPor:.2f}% y por parte del SOLICITANTE es menor al 30%: {ejecSolicPor :.2f}%')
-                print(error_messages, 'MOSTRAR1')
+                error_messages.append(f'El porcentaje de la ejecucion del EDTP por parte del FONABOSQUE supera el 70%: {ejecFonaPor:.2f}% y por parte del SOLICITANTE es menor al 30%: {ejecSolicPor :.2f}%')                
                 if error_messages:
                     proyecto_p = get_object_or_404(Postulacion, slug=slug)
                     objetivos = self.model.objects.get(slug=slug)

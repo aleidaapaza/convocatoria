@@ -5,7 +5,7 @@
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <a class="btn btn-primary me-md-2" type="button" href="{% url 'proyecto:registro_Base' proyecto.slug %}">Empezar/continuar el registro</a>
         <a class="btn btn-primary" type="button">Enviar los datos</a>
-        <a class="btn btn-primary" type="button">GenerarPdf</a>
+        <a class="btn btn-primary" type="button" href="{% url 'convocatoria:generar_pdf' proyecto.slug %}">GenerarPdf</a>
     </div>
     <div class="mb-3 row">
         <div class="card card-default mt-3 mb-3">
