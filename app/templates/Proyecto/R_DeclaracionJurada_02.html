@@ -26,6 +26,19 @@
                         {% endif %}
                 </td>
             </tr>
+            <tr>    
+                <td><p>ITCP FOLIADO Y RUBRICADO</p></td>
+                <td>
+                </td>
+                <td><p> {{form.itcp}} </p>
+                {% if objeto.itcp %}
+                            <a href="{% url 'descargar_docDeclaracion' objeto.slug '2' %}" class="btn btn-info">
+                                Descargar Archivos
+                            </a>
+                        {% else %}
+                        {% endif %}
+                </td>
+            </tr>
             <tr>
                 <td>
                 <p>CARTA DE SOLICITUD DE: <br> FINANCIAMIENTO PARA ELABORACION DE EDTP Y <br> FINANCIAMIENTO PARA EJECUCION DE EDTP</p></td>

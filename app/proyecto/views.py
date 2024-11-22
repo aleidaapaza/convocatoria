@@ -12,7 +12,9 @@ from reportlab.pdfgen import canvas
 from django.db.models import Prefetch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.platypus import Spacer
+from reportlab.platypus import Spacer, Image
+import qrcode
+from io import BytesIO
 
 from solicitud.models import Postulacion
 
@@ -153,7 +155,7 @@ def generate_pdf(request, slug):
     ]
      # Crear los datos para la tabla
     data_municipio = [
-        ["CODIGO PROYECTO", "DEPARTAMENTO", "ETA", "MUNICIPIO"]
+        ["<b>CODIGO PROYECTO</b>", "<b>DEPARTAMENTO</b>", "<b>ETA</b>", "<b>MUNICIPIO</b>"]
     ]
     data_municipio.append([
         str(postulacion.slug),
@@ -164,7 +166,7 @@ def generate_pdf(request, slug):
 
     # Convertir cada valor de la tabla en un Paragraph para que el texto se ajuste dentro de las celdas
     data_municipio = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_municipio]
-    table_municipio = Table(data_municipio, colWidths=[130, 130, 130, 130], rowHeights=25)# Crear la tabla
+    table_municipio = Table(data_municipio, colWidths=[130, 130, 130, 130])# Crear la tabla
     # Aplicar estilo
     table_municipio.setStyle(table_style)
     # Permitir que el texto se ajuste y se divida en varias filas si es necesario
@@ -179,7 +181,7 @@ def generate_pdf(request, slug):
     # -------------------------
 
     data_mae = [
-        ["NOMBRE MAE", "CARGO MAE", "CELULAR MAE", "CORREO DOMICILIO LEGAL PARA NOTIFICACION"]
+        ["<b>NOMBRE MAE</b>", "<b>CARGO MAE</b>", "<b>CELULAR MAE</b>", "<b>CORREO DOMICILIO LEGAL PARA NOTIFICACION</b>"]
     ]
     data_mae.append([
         str(postulacion.mae.persona.nombrecompleto()),
@@ -189,7 +191,7 @@ def generate_pdf(request, slug):
     ])
 
     data_mae = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_mae]
-    table_mae = Table(data_mae, colWidths=[130, 130, 130, 130], rowHeights=25)
+    table_mae = Table(data_mae, colWidths=[130, 130, 130, 130])
     table_mae.setStyle(table_style)
     table_mae.splitByRow = True
     elements.append(table_mae)
@@ -201,7 +203,7 @@ def generate_pdf(request, slug):
     # -------------------------
 
     data_responsable = [
-        ["NOMBRE RESPONSABLE", "CARGO RESPONSABLE", "CELULAR RESPONSABLE", "CORREO RESPONSABLE"]
+        ["<b>NOMBRE RESPONSABLE</b>", "<b>CARGO RESPONSABLE</b>", "<b>CELULAR RESPONSABLE</b>", "<b>CORREO RESPONSABLE</b>"]
     ]
     data_responsable.append([
         str(postulacion.responsable.persona.nombrecompleto()),
@@ -211,7 +213,7 @@ def generate_pdf(request, slug):
     ])
 
     data_responsable = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_responsable]
-    table_responsable = Table(data_responsable, colWidths=[130, 130, 130, 130], rowHeights=25)
+    table_responsable = Table(data_responsable, colWidths=[130, 130, 130, 130])
     table_responsable.setStyle(table_style)
     table_responsable.splitByRow = True
     elements.append(table_responsable)
@@ -226,8 +228,8 @@ def generate_pdf(request, slug):
     # Tabla nombre proyecto 
     # -------------------------
     data_nombre = [
-        ["NOMBRE DEL PROYECTO",str(proyecto.nombre)],
-        ["BENEFICIARIOS",str(proyecto.comunidades)],
+        ["<b>NOMBRE DEL PROYECTO</b>",str(proyecto.nombre)],
+        ["<b>BENEFICIARIOS</b>",str(proyecto.comunidades)],
     ]
     data_nombre = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_nombre]
     table_nombre = Table(data_nombre, colWidths=[130, 390], rowHeights=25)
@@ -240,7 +242,7 @@ def generate_pdf(request, slug):
         tipologi = ''
 
     data_tipo = [
-        ["TIPOLOGIA DEL PROYECTO", str(tipologi), "PERIODO DE EJECUCION", str(proyecto.periodo_ejecu), "FINANCIAMIENTO EDTP", "Sí" if proyecto.solicitud_financ else "No"],
+        ["<b>TIPOLOGIA DEL PROYECTO</b>", str(tipologi), "<b>PERIODO DE EJECUCION</b>", str(proyecto.periodo_ejecu), "<b>FINANCIAMIENTO EDTP</b>", "Sí" if proyecto.solicitud_financ else "No"],
     ]
     data_tipo = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_tipo]
     table_tipo = Table(data_tipo, colWidths=[130, 130, 90, 40, 90, 40], rowHeights=20)
@@ -285,23 +287,23 @@ def generate_pdf(request, slug):
     # -------------------------
 
     data_idea = [
-        ["ANTECEDENTES"],
+        ["<b>ANTECEDENTES</b>"],
         [str(idea.antecedente)],
-        ["DIAGNOSTICO DEL PROYECTO"],
+        ["<b>DIAGNOSTICO DEL PROYECTO</b>"],
         [str(idea.diagnostico)],
-        ["PLANTEAMIENTO DEL PROBLEMA / NECESIDAD A RESOLVER CON EL PROYECTO"],
+        ["<b>PLANTEAMIENTO DEL PROBLEMA / NECESIDAD A RESOLVER CON EL PROYECTO</b>"],
         [str(idea.planteamiento_problema)],
-        ["ACTORES INVOLUCRADOS"],
+        ["<b>ACTORES INVOLUCRADOS</b>"],
         [str(idea.actores_involucrados)],
-        ["ALTERNATIVA DE SOLUCION 1"],
+        ["<b>ALTERNATIVA DE SOLUCION 1</b>"],
         [str(idea.alternativa_1)],
-        ["ALTERNATIVA DE SOLUCION 2"],
+        ["<b>ALTERNATIVA DE SOLUCION </b>"],
         [str(idea.alternativa_2)],
-        ["ALTERNATIVA ELEGIDA"],
+        ["<b>ALTERNATIVA ELEGIDA</b>"],
         [str(idea.elige_alternativa)],
-        ["JUSTIFICACION DE LA ALTERNATIVA ELEGIDA"],
+        ["<b>JUSTIFICACION DE LA ALTERNATIVA ELEGIDA</b>"],
         [str(idea.justificacion_alter)],
-        ["OBJETIVO GENERAL DEL PROYECTO"],
+        ["<b>OBJETIVO GENERAL DEL PROYECTO</b>"],
         [str(idea.objetivo_general)],
     ]
     data_idea = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_idea]
@@ -319,7 +321,7 @@ def generate_pdf(request, slug):
     # -------------------------
 
     data_objetivo = [
-        ["OBJETIVO ESPECIFICO", "COMPONENTE", "SITUACION ACTUAL / LINEA DE BASE", "INDICADOR", "META"]
+        ["<b>OBJETIVO ESPECIFICO</b>", "<b>COMPONENTE</b>", "<b>SITUACION ACTUAL / LINEA DE BASE</b>", "<b>INDICADOR</b>", "<b>META</b>"]
     ]
     for objetivos in objetivo:
         data_objetivo.append([
@@ -347,7 +349,7 @@ def generate_pdf(request, slug):
     # -------------------------
 
     data_beneficio = [
-        ["Beneficios esperados del Proyecto (ambiental, social y economico)"],
+        ["<b>Beneficios esperados del Proyecto (ambiental, social y economico)</b>"],
         [str(idea.beneficios_alter)],
     ]
     data_beneficio = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_beneficio]
@@ -364,9 +366,9 @@ def generate_pdf(request, slug):
     total = total_mujeres + total_hombres
     data_beneficiarios = [
         ["<b>Beneficiarios</b>", "<b>Hombres</b>", "<b>Mujeres</b>", "<b>Total</b>"],
-        ["Directos",str(beneficiarios.hombre_directo),str(beneficiarios.mujer_directo),str(total_directo)],
-        ["Indirectos",str(beneficiarios.hombre_indirecto),str(beneficiarios.mujer_indirecto),str(total_indirecto)],
-        ["Total",str(total_hombres),str(total_mujeres),str(total)],
+        ["<b>Directos</b>",str(beneficiarios.hombre_directo),str(beneficiarios.mujer_directo),str(total_directo)],
+        ["<b>Indirectos</b>",str(beneficiarios.hombre_indirecto),str(beneficiarios.mujer_indirecto),str(total_indirecto)],
+        ["<b>Total</b>",str(total_hombres),str(total_mujeres),str(total)],
     ]
     data_beneficiarios = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_beneficiarios]
     table_beneficiarios = Table(data_beneficiarios, colWidths=[130,130,130,130])
@@ -377,7 +379,7 @@ def generate_pdf(request, slug):
 
     data_beneficiariosF = [
         ["<b>Beneficiarios</b>", "<b>Total</b>"],
-        ["Familias",str(beneficiarios.familia)],
+        ["<b>Familias</b>",str(beneficiarios.familia)],
     ]
     data_beneficiariosF = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_beneficiariosF]
     table_beneficiariosF = Table(data_beneficiariosF, colWidths=[130, 390])
@@ -515,7 +517,7 @@ def generate_pdf(request, slug):
     subt11 = f"Elaboración Estudio de Diseño Técnico de Preinversión - EDTP:"
     subt11_title = Paragraph(subt11, style_left)
     elements.append(subt11_title)
-
+    
     # -------------------------
     # Tabla Presupuesto referencial
     # -------------------------
@@ -571,6 +573,83 @@ def generate_pdf(request, slug):
     table_conclusion.splitByRow = True
     elements.append(table_conclusion)
     elements.append(Spacer(1, 10))
+
+    # Título de sección
+    subt14 = f"11.- DECLARACION JURADA"
+    subt14_title = Paragraph(subt14, style_left)
+    elements.append(subt14_title)
+    # -------------------------
+    # Tabla Declaracion jurada
+    # -------------------------
+
+    data_declaracion = [
+        ["<b>Declaracion Jurada</b>"],
+        [str(declaracion.declaracion)],
+        ["<b>CARTA DE SOLICITUD DE:FINANCIAMIENTO PARA ELABORACION DE EDTP Y FINANCIAMIENTO PARA EJECUCION DE EDTP</b>"],
+        [str(declaracion.carta)],
+    ]
+    data_declaracion = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_declaracion]
+    table_declaracion = Table(data_declaracion, colWidths=[520])
+    table_declaracion.setStyle(table_style_V)
+    table_declaracion.splitByRow = True
+    elements.append(table_declaracion)
+    elements.append(Spacer(1, 10))
+    data_firma = [
+        ["",""],
+    ]
+    data_firma = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_firma]
+    table_firma = Table(data_firma, colWidths=[260,260], rowHeights=70)
+    table_firma.setStyle(table_style_V)
+    table_firma.splitByRow = True
+    elements.append(table_firma)
+    data_firmaP = [
+        ["<b>Firma y Sello MAE</b>","<b>Firma y Sello TECNICO</b>"],
+    ]
+    data_firmaP = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_firmaP]
+    table_firmaP = Table(data_firmaP, colWidths=[260,260])
+    table_firmaP.setStyle(table_style_V)
+    table_firmaP.splitByRow = True
+    elements.append(table_firmaP)
+    elements.append(Spacer(1, 1))
+    data = "Convocatoria:"+postulacion.convocatoria.nombre+" Codigo:"+proyecto.slug+", Departamento:"+postulacion.municipio.departamento+", Municipio:"+postulacion.municipio.nombre_municipio
+    
+    # Generar el código QR
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=2,
+        border=1,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    # Crear una imagen del código QR
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Guardar la imagen en memoria (sin necesidad de escribir a disco)
+    img_io = BytesIO()
+    img.save(img_io)
+    img_io.seek(0)  # Necesario para leer la imagen desde el inicio
+
+    # Definir tamaño en puntos (3 cm = 85.05 puntos)
+    qr_width = 30  # Ancho de la imagen QR en puntos
+    qr_height = 30  # Alto de la imagen QR en puntos
+
+    # Insertar la imagen QR en la esquina derecha
+    qr_image = Image(img_io)
+    qr_image.width = qr_width
+    qr_image.height = qr_height
+     # Colocar la imagen en la esquina superior derecha
+    qr_image.x = 470  # Coordenada X (ajustar según el tamaño de la página)
+    qr_image.y = 750  # Coordenada Y (ajustar según el tamaño de la página)
+
+
+    # Agregar la imagen al documento
+    elements.append(qr_image)
+
+
+    # Otra seccion
+
     # Generar el PDF
     doc.build(elements)
 

@@ -4,8 +4,32 @@
     <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <a class="btn btn-primary me-md-2" type="button" href="{% url 'proyecto:registro_Base' proyecto.slug %}">Empezar/continuar el registro</a>
+        {% if declaracion %}
         <a class="btn btn-primary" type="button">Enviar los datos</a>
         <a class="btn btn-primary" type="button" href="{% url 'convocatoria:generar_pdf' proyecto.slug %}">GenerarPdf</a>
+        {% else %}
+        <a class="btn btn-primary " type="button" id="btnDisabled" onclick="showModal()">Enviar los datos</a>
+        <a class="btn btn-primary " type="button" id="btnDisabled" onclick="showModal()">Generar Pdf</a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Acción no disponible</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                El botón está deshabilitado. Complete hasta la parte de ITCP-DECLARACION JURADA para habilitar la accion
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            </div>
+        </div>
+        </div>
+        {% endif %}
+        
     </div>
     <div class="mb-3 row">
         <div class="card card-default mt-3 mb-3">
@@ -145,3 +169,11 @@
     </div>
 </div>
 {% endblock contenido %}
+{% block script %}
+<script>
+  function showModal() {
+    var modal = new bootstrap.Modal(document.getElementById('myModal'));
+    modal.show();
+  }
+</script>
+{% endblock %}

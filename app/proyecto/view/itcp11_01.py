@@ -12,75 +12,12 @@ from django.contrib import messages
 from solicitud.models import Postulacion
 
 from proyecto.models import Declaracion_jurada
-from proyecto.forms import R_Declaracion_jurada
-
-class Reg_DeclaracionJurada(CreateView):
-    model = Declaracion_jurada
-    template_name = 'Proyecto/R_DeclaracionJurada.html'
-    form_class = R_Declaracion_jurada
-
-    def get(self, request, *args, **kwargs):
-        slug = self.kwargs.get('slug', None)
-        postulacion_p = get_object_or_404(Postulacion, slug=slug)
-        poa_p = self.model.objects.filter(slug=postulacion_p.slug).exists()
-        print(poa_p)
-        if self.model.objects.filter(slug=postulacion_p.slug).exists():
-            print("Redirigiendo...")
-            return redirect('proyecto:actualizar_DeclaracionJurada', slug=postulacion_p.slug)
-        
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(Reg_DeclaracionJurada, self).get_context_data(**kwargs)
-        slug = self.kwargs.get('slug', None)
-        if 'form' not in context:
-            context['form'] = self.form_class(self.request.GET, self.request.FILES)
-        proyecto_p = Postulacion.objects.get(slug=slug)
-        context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-DECLARACION JURADA'
-        context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-DECLARACION JURADA'
-        context['accion'] = 'Registrar'
-        context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('convocatoria:Index')
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object
-        slug = self.kwargs.get('slug', None)
-        form = self.form_class(request.POST, request.FILES)
-
-        if form.is_valid():
-            declaracion_d = form.cleaned_data.get('declaracion')
-            itcp_d = form.cleaned_data.get('itcp')
-            carta_d = form.cleaned_data.get('carta')
-            consultoria_d = form.cleaned_data.get('consultoria')
-
-            # Validación del tamaño de los archivos
-            if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo declaracion no debe superar los 2 MB.')
-            
-            if carta_d and carta_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo carta no debe superar los 2 MB.')
-
-            # Si hay errores, volvemos a renderizar la página con los errores
-            if messages.get_messages(request):
-                return self.render_to_response(self.get_context_data(form=form))
-
-            # Si no hay errores, guardamos el formulario
-            declaracion = form.save(commit=False)
-            declaracion.slug = slug            
-            declaracion.save()
-            return HttpResponseRedirect(reverse_lazy('convocatoria:Index', args=[]))
-        
-        else:
-            # Si el formulario no es válido, se vuelve a renderizar con los errores
-            return self.render_to_response(self.get_context_data(form=form))
+from proyecto.forms import R_Declaracion_ITCP, R_Declaracion_juradaTotal
 
 class Act_DeclaracionJurada(UpdateView):
     model = Declaracion_jurada
     template_name = 'Proyecto/R_DeclaracionJurada_02.html'
-    form_class = R_Declaracion_jurada
+    form_class = R_Declaracion_juradaTotal
 
     def get_context_data(self, **kwargs):
         context = super(Act_DeclaracionJurada, self).get_context_data(**kwargs)
@@ -111,13 +48,16 @@ class Act_DeclaracionJurada(UpdateView):
             carta_d = form.cleaned_data.get('carta')
             consultoria_d = form.cleaned_data.get('consultoria')
 
-            # Validación del tamaño de los archivos
+           # Validación del tamaño de los archivos
             if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
                 messages.error(request, 'El archivo declaracion no debe superar los 2 MB.')
             
+            if itcp_d and itcp_d.size > 2 * 1024 * 1024:  # 2 MB
+                messages.error(request, 'El archivo itcp no debe superar los 2 MB.')
+            
             if carta_d and carta_d.size > 2 * 1024 * 1024:  # 2 MB
                 messages.error(request, 'El archivo carta no debe superar los 2 MB.')
-            
+                        
             # Si hay errores, volvemos a renderizar la página con los errores
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))

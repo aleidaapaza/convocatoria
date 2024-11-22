@@ -232,9 +232,9 @@ class R_Beneficios(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['titulo'] = 'ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['entity2'] = 'ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO'
         context['entity3'] = 'BENEFICIOS ESPERADOS DEL PROYECTO'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
@@ -250,7 +250,7 @@ class R_Beneficios(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            return HttpResponseRedirect(reverse('proyecto:registro_Beneficios', args=[postulacion_pr.slug]))
+            return HttpResponseRedirect(reverse('proyecto:registro_Beneficiarios', args=[postulacion_pr.slug]))
         else:
             return self.render_to_response(self.get_context_data(form=form))
 

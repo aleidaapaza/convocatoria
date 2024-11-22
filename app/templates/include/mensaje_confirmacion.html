@@ -1,0 +1,28 @@
+        <!-- Modal de éxito -->
+<div class="modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Actualización Exitosa</h5>
+                </div>
+                <div class="modal-body">
+                    {{ success_message }}
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-secondary" href="{{next_url}}">Siguiente bloque</a>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% block funcScript %}
+<script>
+    // Verificar si hay un mensaje de éxito
+    {% if success_message %}
+        // Mostrar el modal si el mensaje existe
+        $(document).ready(function(){
+            $('#successModal').modal('show');
+        });
+    {% endif %}
+</script>
+{% endblock funcScript %}

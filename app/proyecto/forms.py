@@ -200,9 +200,9 @@ class R_Declaracion_jurada(ModelForm):
     class Meta:
         model = Declaracion_jurada
         fields = '__all__'
-        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
+        exclude = ['slug', 'fecha_registro', 'fecha_actualizacion', 'itcp']
 
-class R_PresupuestoReferencial(ModelForm):
+class R_Declaracion_juradaTotal(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.visible_fields():
@@ -214,4 +214,16 @@ class R_PresupuestoReferencial(ModelForm):
         fields = '__all__'
         exclude = ['slug', 'fecha_registro', 'fecha_actualizacion']
 
-        
+class R_Declaracion_ITCP(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = Declaracion_jurada
+        fields = ['itcp']
+
+
+

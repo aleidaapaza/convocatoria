@@ -12,7 +12,6 @@ from django.contrib import messages
 from solicitud.models import Postulacion
 
 from proyecto.models import PresupuestoReferencial
-from proyecto.forms import R_PresupuestoReferencial
 
 class Reg_PresupuestoRef(View):
     model = PresupuestoReferencial
@@ -192,4 +191,20 @@ class Act_PresupuestoRef(View):
                 objetivos.ejec_total_p = ejecTotalPor
                 objetivos.fecha_actualizacion = timezone.now()
                 objetivos.save()
-                return redirect('proyecto:actualizar_PresupuestoRef', slug=slug)
+                # Agregar mensaje de éxito al contexto
+                success_message = 'Los datos se actualizaron correctamente.'
+                proyecto_p = get_object_or_404(Postulacion, slug=slug)
+                objetivos = self.model.objects.get(slug=slug)
+                context = { 
+                    'proyecto': proyecto_p,
+                    'objetivo': objetivos,
+                    'titulo': 'ITCP-PRESUPUESTO REFERENCIAL',
+                    'entity': 'REGISTRO DATOS DEL PROYECTO',
+                    'entity2': 'ITCP-PRESUPUESTO REFERENCIAL',
+                    'accion': 'Actualizar',
+                    'accion2': 'Cancelar',
+                    'accion2_url': reverse('convocatoria:Index'),
+                    'success_message': success_message,  # Pasar el mensaje de éxito
+                    'next_url':reverse('convocatoria:Index', args=[slug]),
+                }
+                return render(self.request, self.template_name, context)
