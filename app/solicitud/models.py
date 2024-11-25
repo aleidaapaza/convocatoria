@@ -8,7 +8,7 @@ from django.db.models.signals import pre_save, post_save
 from solicitud.choices import departamentos, entidad_territorial_autonoma, estado_proyecto
 from user.models import EncargadoMAE, ResponsableP
 from convocatoria.models import Convocatoria
-
+from proyecto.models import DatosProyectoBase
 # Create your models here.
 
 class Municipios(models.Model):
@@ -35,6 +35,7 @@ class Postulacion(models.Model):
     estado = models.BooleanField(null=True, blank=True)
     modificacion = models.BooleanField(default=False)
     convocatoria = models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='postulacion_convocatoria', null=True, blank=True)
+    datos_proyecto = models.OneToOneField(DatosProyectoBase, null=True, blank=True, on_delete=models.CASCADE, related_name='postulacion', to_field='slug')
 
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'

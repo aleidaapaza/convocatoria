@@ -6,6 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, View
 from django.utils import timezone
 from solicitud.models import Postulacion
+from django.contrib import messages
 
 from proyecto.models import Idea_Proyecto, Objetivo_especifico, Beneficiario
 from proyecto.forms import R_Idea_Proyecto, R_Objetivo_especifico, ObjetivoEspecificoForm, Beneficios_esperados
@@ -68,6 +69,23 @@ class Act_Idea_Proyecto(UpdateView):
         context['accion'] = 'Actualizar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
+        # Definir la URL de siguiente paso
+        context['next_url'] = reverse('proyecto:registro_obj_especifico', args=[slug])
         return context
 
     def post(self, request, *args, **kwargs):
@@ -80,8 +98,12 @@ class Act_Idea_Proyecto(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            return HttpResponseRedirect(reverse('convocatoria:Index', args=[]))
+            messages.success(request, 'Los datos se actualizaron correctamente.')
+
+            return redirect('proyecto:registro_Idea_proyecto', slug=slug)
         else:
+            messages.error(request, 'Hubo un error al actualizar los datos.')
+
             return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -154,6 +176,22 @@ class Act_Objetivo_especifico(View):
             'entity_registro': reverse_lazy('proyecto:registro_obj_especifico_01', args=[slug]),
             'entity_registro_nom': 'Registrar',
         }
+        for message in messages.get_messages(self.request):
+            print(message)
+            if message.level_tag == 'success':
+                context['message_title'] = 'Actualización Exitosa'
+                context['message_content'] = message.message
+            elif message.level_tag == 'error':
+                context['message_title'] = 'Error al Actualizar'
+                context['message_content'] = message.message
+            elif message.level_tag == 'warning':
+                context['message_title'] = 'Advertencia'
+                context['message_content'] = message.message
+            else:
+                context['message_title'] = 'Información'
+                context['message_content'] = message.message
+        context['next_url'] = reverse('proyecto:registro_justificacion', args=[slug])
+         
         return render(request, self.template_name, context)
 
     def post(self, request, slug):
@@ -167,9 +205,9 @@ class Act_Objetivo_especifico(View):
             objetivo.meta = request.POST.get(f'meta_{objetivo.id}', objetivo.meta)
             objetivo.fecha_actualizacion = timezone.now()
             objetivo.save()
-
+        messages.success(request, 'Los datos se actualizaron correctamente.')
         # Comprobar si se han agregado nuevos objetivos
-        return redirect(reverse('convocatoria:Index'))
+        return redirect('proyecto:registro_obj_especifico', slug=slug)
 
 def eliminar_objetivo(request, objetivo_id):
     if request.method == 'POST':
@@ -197,7 +235,7 @@ class Reg_Objetivo_especifico01(CreateView):
         context['entity3'] = 'OBJETIVOS ESPECIFICOS'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        context['accion2_url'] = reverse('proyecto:registro_obj_especifico', args=[slug])
         return context
     
     def post(self, request, *args, **kwargs):
@@ -266,8 +304,11 @@ class R_Beneficiarios(View):
         return self.render_form(slug)
 
     def render_form(self, slug):
+        # Obtener el proyecto (Postulacion) y los objetivos basados en el slug
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         objetivos = self.model.objects.filter(slug=slug)
+
+        # Inicializar el contexto
         context = {
             'proyecto': proyecto_p,
             'objetivos_esp': objetivos,
@@ -279,6 +320,23 @@ class R_Beneficiarios(View):
             'accion2': 'Cancelar',
             'accion2_url': reverse('convocatoria:Index'),
         }
+
+        # Manejar los mensajes de Django (éxito, error, advertencia, información)
+        for message in messages.get_messages(self.request):
+            if message.level_tag == 'success':
+                context['message_title'] = 'Actualización Exitosa'
+                context['message_content'] = message.message
+            elif message.level_tag == 'error':
+                context['message_title'] = 'Error al Actualizar'
+                context['message_content'] = message.message
+            elif message.level_tag == 'warning':
+                context['message_title'] = 'Advertencia'
+                context['message_content'] = message.message
+            else:
+                context['message_title'] = 'Información'
+                context['message_content'] = message.message
+
+        # Renderizar la plantilla con el contexto
         return render(self.request, self.template_name, context)
 
     

@@ -22,12 +22,8 @@ class RegistroDatosBasicos(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(RegistroDatosBasicos, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
-        
-        # Asegúrate de que el formulario sea correcto
         if 'form' not in context:
             context['form'] = self.form_class(self.request.GET)
-        
-        # Obtener el objeto Postulacion relacionado
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
         context['titulo'] = 'DATOS PRINCIPALES DEL PROYECTO'
@@ -36,38 +32,43 @@ class RegistroDatosBasicos(UpdateView):
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
+        # Definir la URL de siguiente paso
+        context['next_url'] = reverse('proyecto:registro_justificacion', args=[slug])
         return context
 
     def post(self, request, *args, **kwargs):
-        # Obtén el objeto relacionado con el modelo principal (DatosProyectoBase)
         self.object = self.get_object()
         slug = self.kwargs.get('slug', None)
-        
-        # Obtener la instancia de Postulacion relacionada
         postulacion_pr = Postulacion.objects.get(slug=slug)
-        
-        # Crear el formulario con los datos POST
         form = self.form_class(request.POST, instance=self.object)
-        
-        # Verifica si el formulario es válido
         if form.is_valid():
             print('Formulario validado')
-
-            # Guarda la instancia de DatosProyectoBase
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
-
-            # Si necesitas asociar la postulacion al objeto de DatosProyectoBase
-            datos.postulacion = postulacion_pr
-            
-            # Guarda los datos
             datos.save()
-
-            # Redirige a la siguiente vista (por ejemplo, registro_justificacion)
-            return HttpResponseRedirect(reverse('proyecto:registro_justificacion', args=[postulacion_pr.slug]))
+            postulacion_pr.datos_proyecto = slug
+            postulacion_pr.save()
+            # Agregar mensaje de éxito al contexto
+            messages.success(request, 'Los datos se actualizaron correctamente.')
+            return redirect('proyecto:registro_Base', slug=slug)
         else:
-            # Si el formulario no es válido, muestra los errores
+            messages.error(request, 'Hubo un error al actualizar los datos.')
+
             print(form.errors)
-            
-            # Renderiza de nuevo la página con el formulario y sus errores
             return self.render_to_response(self.get_context_data(form=form))
+        

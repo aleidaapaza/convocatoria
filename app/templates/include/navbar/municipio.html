@@ -31,7 +31,22 @@
         </div>
         <div class="offcanvas-body">
             <ul class="nav flex-column">
-                <li class="nav-item">
+                {% if vista %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'convocatoria:Index' %}">
+                            <i class="fas fa-clipboard-list"></i> INICIO
+                        </a>
+                        <hr>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:datos_postulacion' proyecto.slug %}">
+                            <i class="fas fa-clipboard-list"></i> VER DATOS ENVIADOS
+                        </a>
+                        <hr>
+                    </li>
+                    
+                {% else %}
+                    <li class="nav-item">
                     <a class="nav-link active" href="{% url 'convocatoria:Index' %}">
                         <i class="fas fa-clipboard-list"></i> INICIO
                     </a>
@@ -113,6 +128,8 @@
                         <i class="fas fa-clipboard-check"></i> 11.ITCP-DECLARACION JURADA
                     </a>
                 </li>
+                {% endif %}
+                
             </ul>
         </div>
     </div>

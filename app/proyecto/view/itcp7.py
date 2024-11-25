@@ -117,7 +117,7 @@ class R_RiesgoDesastre_R(View):
             'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
             'accion': 'Registrar',
             'accion2': 'Cancelar',
-            'accion2_url': reverse_lazy('convocatoria:Index'),
+            'accion2_url': reverse('proyecto:registro_RiesgoDesastre', args=[slug]),
             'error_messages': []  # Inicializa una lista vacía para los mensajes de error
         }
         return render(self.request, self.template_name, context)

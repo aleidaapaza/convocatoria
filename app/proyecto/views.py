@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, View
 from django.utils import timezone
+from django.contrib import messages
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
@@ -20,7 +21,10 @@ from solicitud.models import Postulacion
 
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
                              Modelo_Acta, Derecho_propietario, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
-                             Conclusion_recomendacion, Declaracion_jurada, PresupuestoReferencial)
+                             Conclusion_recomendacion, Declaracion_jurada, PresupuestoReferencial,
+                             Proyecto)
+
+from proyecto.forms import R_Declaracion_ITCP
 
 class Lista_Proyectos(ListView):
     model = Postulacion
@@ -28,10 +32,26 @@ class Lista_Proyectos(ListView):
     def get_context_data(self, **kwargs):
         context = super(Lista_Proyectos, self).get_context_data(**kwargs)
         proyectos = self.model.objects.filter(estado=True)
+        
+        # Añadimos el título y la entidad
         context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION'
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION'
         context['object_list'] = proyectos
+                
+        return context
+    
+class Lista_ProyectosDatos(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_Datos.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ProyectosDatos, self).get_context_data(**kwargs)
+        # Añadimos el título y la entidad
+        context['titulo'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
+        context['object_list'] = Proyecto.objects.all()
+                
         return context
     
 def generate_pdf(request, slug):
@@ -379,7 +399,7 @@ def generate_pdf(request, slug):
 
     data_beneficiariosF = [
         ["<b>Beneficiarios</b>", "<b>Total</b>"],
-        ["<b>Familias</b>",str(beneficiarios.familia)],
+        ["<b>Nro Familias</b>",str(beneficiarios.familia)],
     ]
     data_beneficiariosF = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_beneficiariosF]
     table_beneficiariosF = Table(data_beneficiariosF, colWidths=[130, 390])
@@ -654,3 +674,117 @@ def generate_pdf(request, slug):
     doc.build(elements)
 
     return response
+
+class EnviarDatos(View):
+    model = Proyecto
+    template_name = 'Proyecto/EnviarDatos.html'
+    def get(self, request, slug):
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
+        declaracion = get_object_or_404(Declaracion_jurada, slug=slug)
+        context = {
+            'proyecto': proyecto_p,
+            'titulo': 'ENVIAR DATOS',
+            'entity': 'ENVIAR DATOS',
+            'accion': 'ENVIAR',
+            'accion2': 'Cancelar',
+            'accion2_url': reverse('convocatoria:Index'),
+        }
+        
+        # Solo agregar el formulario si 'itcp' es None
+        if not declaracion.itcp:
+            form = R_Declaracion_ITCP()
+            context['form'] = form
+        return render(request, self.template_name, context)
+    
+    def post(self, request, slug):
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
+        declaracion = get_object_or_404(Declaracion_jurada, slug=slug)
+
+        # Verificar si el formulario se envió correctamente
+        form = R_Declaracion_ITCP(request.POST)  # Recibe los datos POST del formulario
+
+        if form.is_valid():  # Si el formulario es válido
+            # Guardar el formulario o hacer alguna acción con los datos
+            declaracion.itcp = form.cleaned_data['itcp']  # Ejemplo de guardar el campo 'itcp'
+            declaracion.save()
+            Proyecto.objects.create(
+                slug = slug,
+                postulacion = get_object_or_404(Postulacion, slug=slug),
+                datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
+                justificacion = get_object_or_404(Justificacion, slug=slug),
+                ideaProyecto = get_object_or_404(Idea_Proyecto, slug=slug),
+                beneficiario = get_object_or_404(Beneficiario, slug=slug),
+                impactoAmbiental = get_object_or_404(Impacto_ambiental, slug=slug),
+                detallePoa = get_object_or_404(Detalle_POA, slug=slug),
+                conclusion = get_object_or_404(Conclusion_recomendacion, slug=slug),
+                declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),
+                presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
+                aceptar = False,
+            )
+            # Agregar un mensaje de éxito
+            messages.success(request, "Los datos se enviaron correctamente.")
+
+            # Redirigir a la página de éxito o a otro lugar
+            return redirect('convocatoria:Index')  # Redirige a la página principal o a la página deseada
+        else:
+            # Si el formulario no es válido, mostrar los errores
+            messages.error(request, "Hubo un error al enviar los datos.")
+            return render(request, self.template_name, {
+                'proyecto': proyecto_p,
+                'titulo': 'ENVIAR DATOS',
+                'entity': 'ENVIAR DATOS',
+                'accion': 'ENVIAR',
+                'accion2': 'Cancelar',
+                'accion2_url': reverse('convocatoria:Index'),
+                'form': form,
+            })
+
+class enviarDatos2(View):
+    model = Proyecto
+    template_name = 'Proyecto/EnviarDatos.html'
+
+    def post(self, request, slug):
+        Proyecto.objects.create(
+                slug = slug,
+                postulacion = get_object_or_404(Postulacion, slug=slug),
+                datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
+                justificacion = get_object_or_404(Justificacion, slug=slug),
+                ideaProyecto = get_object_or_404(Idea_Proyecto, slug=slug),
+                beneficiario = get_object_or_404(Beneficiario, slug=slug),
+                impactoAmbiental = get_object_or_404(Impacto_ambiental, slug=slug),
+                detallePoa = get_object_or_404(Detalle_POA, slug=slug),
+                conclusion = get_object_or_404(Conclusion_recomendacion, slug=slug),
+                declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),
+                presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
+                aceptar = False,
+
+            )
+            # Agregar un mensaje de éxito
+        messages.success(request, "Los datos se enviaron correctamente.")
+
+            # Redirigir a la página de éxito o a otro lugar
+        return redirect('convocatoria:Index')  # Redirige a la página principal o a la página deseada
+       
+class verDatos(View):
+    template_name = 'Proyecto/Vista.html'
+
+    def get(self, request, slug):
+        proyecto = get_object_or_404(Proyecto, slug=slug)
+        postulacion = get_object_or_404(Postulacion, slug=slug)
+        objetivo_esp = Objetivo_especifico.objects.filter(slug=slug)
+        modelo_acta = Modelo_Acta.objects.filter(slug=slug)
+        derecho = Derecho_propietario.objects.filter(slug=slug)
+        riesgo_des = Riesgo_desastre.objects.filter(slug=slug)
+        
+        context = {
+            'proyecto': proyecto,
+            'postulacion': postulacion,
+            'objetivo': objetivo_esp,
+            'modelo': modelo_acta,
+            'derecho': derecho,
+            'riesgo': riesgo_des,
+            'titulo': 'DATOS ENVIADOS',
+            'entity': 'DATOS ENVIADOS',
+        }
+
+        return render(self.request, self.template_name, context)

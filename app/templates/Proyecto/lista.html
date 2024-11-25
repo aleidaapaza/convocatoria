@@ -9,8 +9,7 @@
         <th scope="col">NOMBRE RESPONSABLE</th>
         <th scope="col">CELULAR RESPONSABLE</th>
         <th scope="col">FECHA Y HORA REGISTRO</th>
-        <th scope="col">Estado</th>
-        <th scope="col">VER/EDITAR</th>
+        <th scope="col">ULTIMA FECHA DE CONEXION</th>
     </tr>
 
 {% endblock %}
@@ -24,17 +23,7 @@
             <td> {{ postulacion.responsable.persona.nombrecompleto }}</td>
             <td> {{ postulacion.responsable.persona.celular }}</td>
             <td> {{ postulacion.fecha_registro }}</td>
-            <td> {{ postulacion.municipio.estado }}</td>
-            <td>
-                <a href=" {% url 'solicitud:Ficha_solicitud' postulacion.slug %} " type="button"
-                   class="btn btn-primary btn-xs">
-                   {% if postulacion.municipio.estado == 'SOLICITUD' %}
-                   <i class="fas fa-edit"></i>
-                   {% else %}
-                   <i class="fa fa-eye"></i>
-                   {% endif %}                   
-                </a>
-            </td>
+            <td> {{ postulacion.datos_proyecto.user.last_login }}</td>
         </tr>
     {% endfor %}
 {% endblock %}

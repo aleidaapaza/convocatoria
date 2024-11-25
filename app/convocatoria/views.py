@@ -16,7 +16,7 @@ from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto,
                              Objetivo_especifico, Beneficiario, Modelo_Acta,
                              Derecho_propietario, Impacto_ambiental, Riesgo_desastre,
                              Detalle_POA, Conclusion_recomendacion, Declaracion_jurada,
-                             PresupuestoReferencial)
+                             PresupuestoReferencial, Proyecto)
 # Create your views here.
 
 
@@ -121,6 +121,8 @@ class Index(TemplateView):
                 context['conclusion'] = Conclusion_recomendacion.objects.filter(slug=user_sl).count()
                 context['declaracion'] = Declaracion_jurada.objects.filter(slug=user_sl).count()
                 context['Presupuesto'] = PresupuestoReferencial.objects.filter(slug=user_sl).count()
+                if Proyecto.objects.filter(slug=user_sl).exists:
+                    context['vista'] = True
             elif self.request.user.is_revisor:
                 user_sl = self.request.user.revisor_perfil.slug
                 context['slug']=user_sl

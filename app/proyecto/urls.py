@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from proyecto.views import Lista_Proyectos 
+from proyecto.views import Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos
 from proyecto.view.itcp0 import DatosPostulacion
 from proyecto.view.itcp1 import RegistroDatosBasicos
 from proyecto.view.itcp2 import Reg_Justificaciones, Act_Justificacion
@@ -21,6 +21,7 @@ app_name = 'proyecto'
 
 urlpatterns = [
     path('lista_aprobados/', Lista_Proyectos.as_view(), name='lista_inicio'),
+    path('lista_aprobadosDatos/', Lista_ProyectosDatos.as_view(), name='lista_datos'),
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
     path('Reg_DatosPrincipales/<slug:slug>', RegistroDatosBasicos.as_view(), name='registro_Base'),
     path('Reg_Justificacion/<slug:slug>', Reg_Justificaciones.as_view(), name='registro_justificacion'),
@@ -56,4 +57,8 @@ urlpatterns = [
     path('Act_DeclaracionJurada/<slug:slug>', Act_DeclaracionJurada.as_view(), name='actualizar_DeclaracionJurada'),
     path('Reg_PresupuestoReferencial/<slug:slug>', Reg_PresupuestoRef.as_view(), name='registro_PresupuestoRef'),
     path('Act_PresupuestoReferencial/<slug:slug>', Act_PresupuestoRef.as_view(), name='actualizar_PresupuestoRef'),
+    path('EnviarDatos/<slug:slug>', EnviarDatos.as_view(), name='enviar_datos'),
+    path('EnviarDatos1/<slug:slug>', enviarDatos2.as_view(), name='enviar_datos2'),
+    path('VerDatos/<slug:slug>', verDatos.as_view(), name='ver_Datos'),
+    
     ]

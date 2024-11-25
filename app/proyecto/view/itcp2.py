@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.utils import timezone
+from django.contrib import messages
 
 from solicitud.models import Postulacion
 
@@ -69,6 +70,24 @@ class Act_Justificacion(UpdateView):
         context['accion'] = 'Actualizar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
+        # Definir la URL de siguiente paso
+        context['next_url'] = reverse('proyecto:registro_Idea_proyecto', args=[slug])
+        
         return context
 
     def post(self, request, *args, **kwargs):
@@ -81,6 +100,8 @@ class Act_Justificacion(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            return HttpResponseRedirect(reverse('convocatoria:Index', args=[]))
+            messages.success(request, 'Los datos se actualizaron correctamente.')
+            return redirect('proyecto:registro_justificacion', slug=slug)        
         else:
+            messages.error(request, 'Hubo un error al actualizar los datos.')
             return self.render_to_response(self.get_context_data(form=form))

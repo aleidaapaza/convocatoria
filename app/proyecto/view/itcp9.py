@@ -205,6 +205,6 @@ class Act_PresupuestoRef(View):
                     'accion2': 'Cancelar',
                     'accion2_url': reverse('convocatoria:Index'),
                     'success_message': success_message,  # Pasar el mensaje de éxito
-                    'next_url':reverse('convocatoria:Index', args=[slug]),
+                    'next_url': reverse('proyecto:registro_ConclRec', args=[slug]),
                 }
                 return render(self.request, self.template_name, context)

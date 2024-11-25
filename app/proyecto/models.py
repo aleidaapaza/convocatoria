@@ -6,7 +6,6 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 
 from proyecto.choices import periodo_ejecucion, elige_alternativas, nivel, temporalidad, riesgos
-from solicitud.models import Postulacion
 from user.models import User
 
 from proyecto.upload import docModeloActa, docDerechoPropietario, docDeclaracionjurada
@@ -314,7 +313,6 @@ class PresupuestoReferencial(models.Model):
 class Proyecto(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
     fechaenvio = models.DateTimeField(auto_now_add=True)
-    postulacion = models.ForeignKey(Postulacion, on_delete=models.CASCADE, related_name='proyecto_postulacion')
     datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='proyecto_DatosBase')
     justificacion = models.ForeignKey(Justificacion, on_delete=models.CASCADE, related_name='proyecto_justificacion')
     ideaProyecto = models.ForeignKey(Idea_Proyecto, on_delete=models.CASCADE, related_name='proyecto_idea')

@@ -12,7 +12,7 @@ from django.contrib import messages
 from solicitud.models import Postulacion
 
 from proyecto.models import Declaracion_jurada
-from proyecto.forms import R_Declaracion_jurada
+from proyecto.forms import R_Declaracion_jurada,R_Declaracion_juradaTotal
 
 class Reg_DeclaracionJurada(CreateView):
     model = Declaracion_jurada
@@ -80,7 +80,7 @@ class Reg_DeclaracionJurada(CreateView):
 class Act_DeclaracionJurada(UpdateView):
     model = Declaracion_jurada
     template_name = 'Proyecto/R_DeclaracionJurada_02.html'
-    form_class = R_Declaracion_jurada
+    form_class = R_Declaracion_juradaTotal
 
     def get_context_data(self, **kwargs):
         context = super(Act_DeclaracionJurada, self).get_context_data(**kwargs)

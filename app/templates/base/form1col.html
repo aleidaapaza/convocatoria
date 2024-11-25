@@ -18,17 +18,21 @@
                 </ul>
             </div>
         {% endif %}
-
-        {% if messages %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageModalLabel">{{ message_title }}</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ message_content }}
+                    </div>
+                    <div class="modal-footer">
+                        <a type="button" class="btn btn-secondary" href="{{ next_url }}">Siguiente bloque</a>
+                    </div>
+                </div>
             </div>
-        {% endif %}
-
+        </div>
         <hr>
         {% block errores %}
 
@@ -58,3 +62,15 @@
     {% endif %}
 
 {% endblock contenido %}
+
+{% block funcScript %}
+<script>
+    // Verificar si hay un mensaje
+    {% if messages %}
+        $(document).ready(function() {
+            // Mostrar el modal
+            $('#messageModal').modal('show');
+        });
+    {% endif %}
+</script>
+{% endblock funcScript %}
