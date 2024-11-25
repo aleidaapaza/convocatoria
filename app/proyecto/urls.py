@@ -59,6 +59,5 @@ urlpatterns = [
     path('Act_PresupuestoReferencial/<slug:slug>', Act_PresupuestoRef.as_view(), name='actualizar_PresupuestoRef'),
     path('EnviarDatos/<slug:slug>', EnviarDatos.as_view(), name='enviar_datos'),
     path('EnviarDatos1/<slug:slug>', enviarDatos2.as_view(), name='enviar_datos2'),
-    path('VerDatos/<slug:slug>', verDatos.as_view(), name='ver_Datos'),
-    
+    path('VerDatos/<slug:slug>', verDatos.as_view(), name='ver_Datos'),    
     ]
