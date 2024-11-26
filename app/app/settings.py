@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8v2zkj!#j@&f#dnxpr6c3_fp3noqp*o&bq!pd*a=18-=zwl$--'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.186.232', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -123,6 +123,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+# En producción, debes definir un directorio para los archivos estáticos recopilados
+STATIC_ROOT = BASE_DIR / "staticfiles"  # El directorio donde se almacenarán los archivos estáticos recopilados
+
 
 MEDIA_URL = '/media/'
 
