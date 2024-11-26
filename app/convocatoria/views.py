@@ -97,6 +97,7 @@ class Index(TemplateView):
             if self.request.user.is_municipio:
                 context['titulo'] = 'AVANCE DEL REGISTRO'
                 user_sl = self.request.user.username_proyecto.slug
+                print(user_sl)
                 context['slug']=user_sl
                 postulacion_p = Postulacion.objects.get(slug =user_sl)
                 context['proyecto'] = postulacion_p
@@ -121,8 +122,11 @@ class Index(TemplateView):
                 context['conclusion'] = Conclusion_recomendacion.objects.filter(slug=user_sl).count()
                 context['declaracion'] = Declaracion_jurada.objects.filter(slug=user_sl).count()
                 context['Presupuesto'] = PresupuestoReferencial.objects.filter(slug=user_sl).count()
-                if Proyecto.objects.filter(slug=user_sl).exists:
+                if Proyecto.objects.filter(slug=user_sl).exists():
+                    print(Proyecto.objects.filter(slug=user_sl).exists)
                     context['vista'] = True
+                else:
+                    context['vista'] = False
             elif self.request.user.is_revisor:
                 user_sl = self.request.user.revisor_perfil.slug
                 context['slug']=user_sl
