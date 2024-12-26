@@ -55,20 +55,20 @@ class RegistroDatosBasicos(UpdateView):
         self.object = self.get_object()
         slug = self.kwargs.get('slug', None)
         postulacion_pr = Postulacion.objects.get(slug=slug)
+        datos_proy = DatosProyectoBase.objects.get(slug=postulacion_pr.slug)
         form = self.form_class(request.POST, instance=self.object)
         if form.is_valid():
             print('Formulario validado')
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            postulacion_pr.datos_proyecto = slug
+            postulacion_pr.datos_proyecto = datos_proy
             postulacion_pr.save()
             # Agregar mensaje de éxito al contexto
-            messages.success(request, 'Los datos se actualizaron correctamente.')
-            return redirect('proyecto:registro_Base', slug=slug)
+            messages.success(request, 'DATOS PRINCIPALES DEL PROYECTO - se actualizo correctamente.')
+            return redirect('proyecto:registro_justificacion', slug=slug)
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
-
             print(form.errors)
             return self.render_to_response(self.get_context_data(form=form))
         

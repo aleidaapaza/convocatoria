@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.db.models import Count, Q
 from datetime import datetime
+from django.utils import timezone
+from datetime import timedelta
+from django.contrib import messages
 
 from solicitud.models import Postulacion
 from user.models import Revisor, SuperUser, User
@@ -93,6 +96,21 @@ class Index(TemplateView):
     template_name = 'index.html'
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                    if message.level_tag == 'success':
+                        context['message_title'] = 'Actualización Exitosa'
+                        context['message_content'] = message.message
+                    elif message.level_tag == 'error':
+                        context['message_title'] = 'Error al Actualizar'
+                        context['message_content'] = message.message
+                    elif message.level_tag == 'warning':
+                        context['message_title'] = 'Advertencia'
+                        context['message_content'] = message.message
+                    else:
+                        context['message_title'] = 'Información'
+                        context['message_content'] = message.message
         if self.request.user.is_authenticated:
             if self.request.user.is_municipio:
                 context['titulo'] = 'AVANCE DEL REGISTRO'
@@ -123,10 +141,17 @@ class Index(TemplateView):
                 context['declaracion'] = Declaracion_jurada.objects.filter(slug=user_sl).count()
                 context['Presupuesto'] = PresupuestoReferencial.objects.filter(slug=user_sl).count()
                 if Proyecto.objects.filter(slug=user_sl).exists():
-                    print(Proyecto.objects.filter(slug=user_sl).exists)
-                    context['vista'] = True
+                    print(Proyecto.objects.filter(slug=user_sl).exists())
+                    proyecto = Proyecto.objects.get(slug=user_sl)
+
+                    if proyecto.estado == "CON OBSERVACION":
+                        context['proyectoDatos'] = proyecto
+                        context['vista'] = False
+                    else:
+                        context['vista'] = True
                 else:
                     context['vista'] = False
+
             elif self.request.user.is_revisor:
                 user_sl = self.request.user.revisor_perfil.slug
                 context['slug']=user_sl
@@ -134,18 +159,45 @@ class Index(TemplateView):
                 postulacion_p = Revisor.objects.get(slug = user_sl)
                 print(postulacion_p)
                 context['postulacion'] = postulacion_p
+                convocatorias = Convocatoria.objects.annotate(
+                    num_true=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
+                    num_false=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=False)),
+                    num_none=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=None)),
+                    num_total=Count('postulacionConvocatoria')
+                )
+                context['convocatoria'] = convocatorias
+                datosProyect = Convocatoria.objects.annotate(
+                    totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
+                    totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__user__isnull=False)),
+                    totalDatosEnv=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__isnull=False)),
+                    datSRev=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="SIN REVISAR")),
+                    datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
+                    datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
+                )
+                context['datosProyect'] = datosProyect
+
             elif self.request.user.is_superuser:
                 user_sl = self.request.user.superuser_perfil.slug
                 context['slug']=user_sl
                 postulacion_p = SuperUser.objects.get(slug = user_sl)
                 context['postulacion'] = postulacion_p
                 convocatorias = Convocatoria.objects.annotate(
-                    num_true=Count('postulacion_convocatoria', filter=Q(postulacion_convocatoria__estado=True)),
-                    num_false=Count('postulacion_convocatoria', filter=Q(postulacion_convocatoria__estado=False)),
-                    num_none=Count('postulacion_convocatoria', filter=Q(postulacion_convocatoria__estado=None)),
-                    num_total=Count('postulacion_convocatoria')
+                    num_true=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
+                    num_false=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=False)),
+                    num_none=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=None)),
+                    num_total=Count('postulacionConvocatoria')
                 )
                 context['convocatoria'] = convocatorias
+                datosProyect = Convocatoria.objects.annotate(
+                    totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
+                    totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__user__isnull=False)),
+                    totalDatosEnv=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__isnull=False)),
+                    datSRev=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="SIN REVISAR")),
+                    datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
+                    datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
+                )
+                context['datosProyect'] = datosProyect
+
         else:
             estado = Convocatoria.objects.filter(estado=True).count()
             if estado == 1:
@@ -168,6 +220,9 @@ class Index(TemplateView):
                 elif fechaCierre < fechaHoy:
                     context['fechaActivo'] = False
                     context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
+                    print("cerrado")
+                    fecha.estado = False
+                    fecha.save()
                     context['message_fecha'] = 'SE CERRO LA CONVOCATORIA ACTUAL' 
                     context['estadotemporal']='CIERRE'
                     context['imagen'] = 'img/fondo/cierre.png'
@@ -177,8 +232,32 @@ class Index(TemplateView):
                 context['conteo'] = estado
                 context['imagen'] = 'img/fondo/problema.png'
             elif estado == 0:
-                context['activo'] = False
-                context['message'] = 'No se tiene una convocatoria vigente por el momento.'
-                context['conteo'] = estado
-                context['imagen'] = 'img/fondo/esperando.png'
+                fecha_actual = timezone.now().date()
+                convocatorias_recientes = Convocatoria.objects.filter(fechaCierre__gte=fecha_actual).order_by('fechaCierre').first()
+                if convocatorias_recientes and convocatorias_recientes.estado == False:
+                    print(convocatorias_recientes)
+                    fechaCierre = convocatorias_recientes.fechaCierre
+                    fechalimite = fechaCierre + timedelta(days=10)
+                    print(fechalimite)
+                    print(fecha_actual)
+                    if fecha_actual <= fechalimite:
+                        context['activo'] = True  
+                        context['message'] = 'SE CERRO LA CONVOCATORIA ACTUAL'
+                        context['message_fecha'] = 'SE CERRO LA CONVOCATORIA ACTUAL' 
+                        context['estadotemporal']='CIERRE'
+                        context['convocatoria']= convocatorias_recientes
+                        context['fecha_expiracion']= datetime.combine(convocatorias_recientes.fechaCierre, convocatorias_recientes.horaCierre)
+                        context['imagen'] = 'img/fondo/cierre.png'
+                    else:
+                        print("No se encontró ninguna convocatoria reciente.")
+                        context['activo'] = False
+                        context['message'] = 'No se tiene una convocatoria vigente por el momento.'
+                        context['conteo'] = estado
+                        context['imagen'] = 'img/fondo/esperando.png'          
+                else:
+                    print("No se encontró ninguna convocatoria reciente.")
+                    context['activo'] = False
+                    context['message'] = 'No se tiene una convocatoria vigente por el momento.'
+                    context['conteo'] = estado
+                    context['imagen'] = 'img/fondo/esperando.png'            
         return context

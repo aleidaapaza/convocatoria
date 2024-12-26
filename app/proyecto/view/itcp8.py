@@ -75,6 +75,21 @@ class Act_DetallePOA(UpdateView):
         context['accion'] = 'Actualizar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return context
 
     def post(self, request, *args, **kwargs):
@@ -87,6 +102,7 @@ class Act_DetallePOA(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            return HttpResponseRedirect(reverse('proyecto:actualizar_DetallePOA', args=[slug]))
+            messages.success(request, 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO - se actualizo correctamente.')
+            return redirect('proyecto:registro_PresupuestoRef', slug=slug) 
         else:
             return self.render_to_response(self.get_context_data(form=form))

@@ -9,20 +9,8 @@
                 {{ message_content }}
             </div>
             <div class="modal-footer">
-                <a type="button" class="btn btn-secondary" href="{{ next_url }}">Siguiente bloque</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
-
-{% block funcScript %}
-<script>
-    // Verificar si hay un mensaje
-    {% if messages %}
-        $(document).ready(function() {
-            // Mostrar el modal
-            $('#messageModal').modal('show');
-        });
-    {% endif %}
-</script>
-{% endblock funcScript %}

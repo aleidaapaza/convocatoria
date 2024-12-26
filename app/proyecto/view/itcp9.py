@@ -136,75 +136,105 @@ class Act_PresupuestoRef(View):
             'accion2_url': reverse('convocatoria:Index'),
             'error_messages': []
         }
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return render(request, self.template_name, context)
-        
+    
     def post(self, request, slug):
         error_messages = []
         objetivos = self.model.objects.get(slug=slug)
         print(objetivos.elab_sol, 'en el post')
-        elabSolicBs = float(request.POST.get('elabSolicBs', objetivos.elab_sol ).replace(',', '.')) 
-        elabFonaBs = float(request.POST.get('elabFonaBs', objetivos.elab_fona ).replace(',', '.')) 
-        elabTotalBs = float(request.POST.get('elabTotalBs', objetivos.elab_total ).replace(',', '.'))
-        elabFonaPor = float(request.POST.get('elabFonaPor', objetivos.elab_fona_p ).replace(',', '.')) 
-        elabSolicPor = float(request.POST.get('elabSolicPor', objetivos.elab_sol_p ).replace(',', '.'))
-        elabTotalPor = float(request.POST.get('elabTotalPor', objetivos.elab_total_p ).replace(',', '.'))
-        ejecFonaBs = float(request.POST.get('ejecFonaBs', objetivos.ejec_fona ).replace(',', '.'))
-        ejecSolicBs = float(request.POST.get('ejecSolicBs', objetivos.ejec_sol ).replace(',', '.'))
-        ejecTotalBs = float(request.POST.get('ejecTotalBs', objetivos.ejec_total ).replace(',', '.'))
-        ejecFonaPor = float(request.POST.get('ejecFonaPor', objetivos.ejec_fona_p ).replace(',', '.'))
-        ejecSolicPor = float(request.POST.get('ejecSolicPor', objetivos.ejec_sol_p ).replace(',', '.'))
-        ejecTotalPor = float(request.POST.get('ejecTotalPor', objetivos.ejec_total_p ).replace(',', '.'))
 
-        if elabSolicBs != 0.00 and ejecFonaBs != 0.00 and ejecSolicBs!=0.00:
-            if ejecFonaPor > 70.00 or ejecSolicPor < 30.00:
-                error_messages.append(f'El porcentaje de la ejecucion del EDTP por parte del FONABOSQUE supera el 70%: {ejecFonaPor:.2f}% y por parte del SOLICITANTE es menor al 30%: {ejecSolicPor :.2f}%')
-                print(error_messages, 'MOSTRAR1')
-                if error_messages:
+        # Función para convertir de manera segura a float
+        def safe_float(value, default_value):
+            # Si el valor está vacío o es None, retornar el valor predeterminado
+            if not value or value.strip() == '':
+                return default_value
+            # Si no está vacío, reemplazar ',' por '.' y convertir a float
+            return float(value.replace(',', '.'))
+
+        elabSolicBs = safe_float(request.POST.get('elabSolicBs', objetivos.elab_sol), objetivos.elab_sol)
+        elabFonaBs = safe_float(request.POST.get('elabFonaBs', objetivos.elab_fona), objetivos.elab_fona)
+        elabTotalBs = safe_float(request.POST.get('elabTotalBs', objetivos.elab_total), objetivos.elab_total)
+        elabFonaPor = safe_float(request.POST.get('elabFonaPor', objetivos.elab_fona_p), objetivos.elab_fona_p)
+        elabSolicPor = safe_float(request.POST.get('elabSolicPor', objetivos.elab_sol_p), objetivos.elab_sol_p)
+        elabTotalPor = safe_float(request.POST.get('elabTotalPor', objetivos.elab_total_p), objetivos.elab_total_p)
+        ejecFonaBs = safe_float(request.POST.get('ejecFonaBs', objetivos.ejec_fona), objetivos.ejec_fona)
+        ejecSolicBs = safe_float(request.POST.get('ejecSolicBs', objetivos.ejec_sol), objetivos.ejec_sol)
+        ejecTotalBs = safe_float(request.POST.get('ejecTotalBs', objetivos.ejec_total), objetivos.ejec_total)
+        ejecFonaPor = safe_float(request.POST.get('ejecFonaPor', objetivos.ejec_fona_p), objetivos.ejec_fona_p)
+        ejecSolicPor = safe_float(request.POST.get('ejecSolicPor', objetivos.ejec_sol_p), objetivos.ejec_sol_p)
+        ejecTotalPor = safe_float(request.POST.get('ejecTotalPor', objetivos.ejec_total_p), objetivos.ejec_total_p)
+
+        if elabSolicBs != 0.00 and ejecFonaBs != 0.00 and ejecSolicBs != 0.00:
+            if objetivos.ejec_fona == ejecFonaBs and objetivos.elab_sol ==elabSolicBs and objetivos.ejec_sol == ejecSolicBs:
+                print('sin modificaciones')
+                messages.success(request, 'ITCP-PRESUPUESTO REFERENCIAL - se actualizó correctamente.')
+                return redirect('proyecto:registro_ConclRec', slug=slug)            
+            else:                
+                if ejecFonaPor > 70.00 or ejecSolicPor < 30.00:
+                    error_messages.append(f'El porcentaje de la ejecución del EDTP por parte del FONABOSQUE supera el 70%: {ejecFonaPor:.2f}% y por parte del SOLICITANTE es menor al 30%: {ejecSolicPor :.2f}%')
+                    print(error_messages, 'MOSTRAR1')
+                    if error_messages:
+                        proyecto_p = get_object_or_404(Postulacion, slug=slug)
+                        objetivos = self.model.objects.get(slug=slug)
+                        print(objetivos.elab_sol)
+                        context = {
+                            'proyecto': proyecto_p,
+                            'objetivo': objetivos,
+                            'titulo': 'ITCP-PRESUPUESTO REFERENCIAL',
+                            'entity': 'REGISTRO DATOS DEL PROYECTO',
+                            'entity2': 'ITCP-PRESUPUESTO REFERENCIAL',
+                            'accion': 'Actualizar',
+                            'accion2': 'Cancelar',
+                            'accion2_url': reverse('convocatoria:Index'),
+                            'error_messages': error_messages,
+                        }
+                        return render(self.request, self.template_name, context)
+                else:
+                    objetivos.elab_sol = elabSolicBs
+                    objetivos.elab_fona = elabFonaBs
+                    objetivos.elab_total = elabTotalBs
+                    objetivos.elab_fona_p = elabFonaPor
+                    objetivos.elab_sol_p = elabSolicPor
+                    objetivos.elab_total_p = elabTotalPor
+                    objetivos.ejec_fona = ejecFonaBs
+                    objetivos.ejec_sol = ejecSolicBs
+                    objetivos.ejec_total = ejecTotalBs
+                    objetivos.ejec_fona_p = ejecFonaPor
+                    objetivos.ejec_sol_p = ejecSolicPor
+                    objetivos.ejec_total_p = ejecTotalPor
+                    objetivos.fecha_actualizacion = timezone.now()
+                    objetivos.save()
                     proyecto_p = get_object_or_404(Postulacion, slug=slug)
                     objetivos = self.model.objects.get(slug=slug)
-                    print(objetivos.elab_sol)
-                    context = {
-                        'proyecto': proyecto_p,
-                        'objetivo': objetivos,
-                        'titulo': 'ITCP-PRESUPUESTO REFERENCIAL',
-                        'entity': 'REGISTRO DATOS DEL PROYECTO',
-                        'entity2': 'ITCP-PRESUPUESTO REFERENCIAL',
-                        'accion': 'Actualizar',
-                        'accion2': 'Cancelar',
-                        'accion2_url': reverse('convocatoria:Index'),
-                        'error_messages': error_messages,
-                    }
-                    print
-                    return render(self.request, self.template_name, context)
-            else:        
-                objetivos.elab_sol = elabSolicBs
-                objetivos.elab_fona = elabFonaBs
-                objetivos.elab_total = elabTotalBs
-                objetivos.elab_fona_p = elabFonaPor
-                objetivos.elab_sol_p = elabSolicPor
-                objetivos.elab_total_p = elabTotalPor
-                objetivos.ejec_fona = ejecFonaBs
-                objetivos.ejec_sol = ejecSolicBs
-                objetivos.ejec_total = ejecTotalBs
-                objetivos.ejec_fona_p = ejecFonaPor
-                objetivos.ejec_sol_p = ejecSolicPor
-                objetivos.ejec_total_p = ejecTotalPor
-                objetivos.fecha_actualizacion = timezone.now()
-                objetivos.save()
-                # Agregar mensaje de éxito al contexto
-                success_message = 'Los datos se actualizaron correctamente.'
-                proyecto_p = get_object_or_404(Postulacion, slug=slug)
-                objetivos = self.model.objects.get(slug=slug)
-                context = { 
-                    'proyecto': proyecto_p,
-                    'objetivo': objetivos,
-                    'titulo': 'ITCP-PRESUPUESTO REFERENCIAL',
-                    'entity': 'REGISTRO DATOS DEL PROYECTO',
-                    'entity2': 'ITCP-PRESUPUESTO REFERENCIAL',
-                    'accion': 'Actualizar',
-                    'accion2': 'Cancelar',
-                    'accion2_url': reverse('convocatoria:Index'),
-                    'success_message': success_message,  # Pasar el mensaje de éxito
-                    'next_url': reverse('proyecto:registro_ConclRec', args=[slug]),
-                }
-                return render(self.request, self.template_name, context)
+                    if messages:
+                        for message in messages.get_messages(self.request):
+                            if message.level_tag == 'success':
+                                context['message_title'] = 'Actualización Exitosa'
+                                context['message_content'] = message.message
+                            elif message.level_tag == 'error':
+                                context['message_title'] = 'Error al Actualizar'
+                                context['message_content'] = message.message
+                            elif message.level_tag == 'warning':
+                                context['message_title'] = 'Advertencia'
+                                context['message_content'] = message.message
+                            else:
+                                context['message_title'] = 'Información'
+                                context['message_content'] = message.message
+                    messages.success(request, 'ITCP-PRESUPUESTO REFERENCIAL - se actualizó correctamente.')
+                    return redirect('proyecto:registro_ConclRec', slug=slug)
+                

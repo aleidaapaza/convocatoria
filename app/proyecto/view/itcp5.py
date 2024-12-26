@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 from solicitud.models import Postulacion
 from proyecto.models import Derecho_propietario
+from django.contrib import messages
 
 
 class R_Derecho_propietario(View):
@@ -108,6 +109,19 @@ class A_Derecho_propietario(View):
             'entity_registro_nom': 'Registrar',
             'error_messages': [],  # Inicializa los mensajes de error
         }
+        for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return render(request, self.template_name, context)
 
     def post(self, request, slug):
@@ -222,7 +236,8 @@ class A_Derecho_propietario(View):
                 acta_instance.save()
 
         # Redirigir después de actualizar
-        return HttpResponseRedirect(reverse('proyecto:actualizar_DerechoPropietario', args=[slug]))
+        messages.success(request, 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES) - se actualizo correctamente.')
+        return redirect('proyecto:registro_ImpactoAmbiental', slug=slug)
     
 def descargar_archivo_der(request, slug, id):
     #documento = get_object_or_404(Modelo_Acta, slug=slug)
@@ -256,7 +271,19 @@ class R_Derecho_propietario_R(View):
             'accion2_url': reverse_lazy('convocatoria:Index'),
             'error_messages': []  # Inicializa una lista vacía para los mensajes de error
         }
-
+        for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         # Renderiza el template con el contexto
         return render(self.request, self.template_name, context)
     
@@ -302,6 +329,6 @@ class R_Derecho_propietario_R(View):
             context = self.render_form(slug)
             context['error_messages'] = error_messages
             return context
-
+        messages.success(request, 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES) - se añadio correctamente.')
         # Si no hubo errores, redirigir al usuario a la página de actualización
         return HttpResponseRedirect(reverse('proyecto:actualizar_DerechoPropietario', args=[slug]))

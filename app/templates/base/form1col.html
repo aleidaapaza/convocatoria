@@ -18,6 +18,7 @@
                 </ul>
             </div>
         {% endif %}
+
         <div class="modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -28,7 +29,7 @@
                         {{ message_content }}
                     </div>
                     <div class="modal-footer">
-                        <a type="button" class="btn btn-secondary" href="{{ next_url }}">Siguiente bloque</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -66,7 +67,7 @@
 {% block funcScript %}
 <script>
     // Verificar si hay un mensaje
-    {% if messages %}
+    {% if message_content %}
         $(document).ready(function() {
             // Mostrar el modal
             $('#messageModal').modal('show');

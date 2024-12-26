@@ -3,7 +3,7 @@ from django import forms
 
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
                              Modelo_Acta, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
-                             Conclusion_recomendacion, Declaracion_jurada)
+                             Conclusion_recomendacion, Declaracion_jurada, Proyecto)
 
 from proyecto.choices import riesgos, nivel
 
@@ -224,6 +224,21 @@ class R_Declaracion_ITCP(ModelForm):
     class Meta:
         model = Declaracion_jurada
         fields = ['itcp']
+        labels = {
+            'itcp':'INGRESE EL ARCHIVO ITCP FOLIADO Y RUBRICADO:'
+        }
 
+class R_Proyecto(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
 
-
+    class Meta:
+        model = Proyecto
+        fields = ['estado', 'comentarios']
+        labels = {
+            'estado': 'ESTADO DE REVISION DE DATOS DE PROYECTO:',
+            'comentarios': 'EN CASO DE TENER OBSERVACIONES, INGRESE LAS OBSERVACIONES:',
+        }

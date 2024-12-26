@@ -35,3 +35,8 @@ riesgos = [
     ("Plagas y enfermedades", "Plagas y enfermedades"),
     ("Sanitarias", "Sanitarias"),
 ]
+
+estado_proyecto = [
+    ("CON OBSERVACION", "CON OBSERVACION"),
+    ("APROBADO", "APROBADO"),
+]

@@ -103,6 +103,15 @@
 
 {% block funcScript %}
 <script>
+    // Verificar si hay un mensaje
+    {% if message_content %}
+        $(document).ready(function() {
+            // Mostrar el modal
+            $('#messageModal').modal('show');
+        });
+    {% endif %}
+</script>
+<script>    
     document.querySelector('form').addEventListener('submit', function(event) {
         let elabSolicBs = document.getElementById('elabSolicBs');
         // Reemplazar coma por punto

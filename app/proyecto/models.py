@@ -5,7 +5,7 @@ import uuid
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 
-from proyecto.choices import periodo_ejecucion, elige_alternativas, nivel, temporalidad, riesgos
+from proyecto.choices import periodo_ejecucion, elige_alternativas, nivel, temporalidad, riesgos, estado_proyecto
 from user.models import User
 
 from proyecto.upload import docModeloActa, docDerechoPropietario, docDeclaracionjurada
@@ -313,16 +313,20 @@ class PresupuestoReferencial(models.Model):
 class Proyecto(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
     fechaenvio = models.DateTimeField(auto_now_add=True)
-    datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='proyecto_DatosBase')
-    justificacion = models.ForeignKey(Justificacion, on_delete=models.CASCADE, related_name='proyecto_justificacion')
-    ideaProyecto = models.ForeignKey(Idea_Proyecto, on_delete=models.CASCADE, related_name='proyecto_idea')
-    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, related_name='proyecto_beneficiario')
-    impactoAmbiental = models.ForeignKey(Impacto_ambiental, on_delete=models.CASCADE, related_name='proyecto_impactoAmbiental')
-    detallePoa = models.ForeignKey(Detalle_POA, on_delete=models.CASCADE, related_name='proyecto_DetallePoa')
-    conclusion = models.ForeignKey(Conclusion_recomendacion, on_delete=models.CASCADE, related_name='proyecto_conclusionR')
-    declaracionJurada = models.ForeignKey(Declaracion_jurada, on_delete=models.CASCADE, related_name='proyecto_DeclaracionJ')
-    presupuestoRef = models.ForeignKey(PresupuestoReferencial, on_delete=models.CASCADE, related_name='proyecto_preupuestoRef')
+    datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='proyectoDatosBase')
+    justificacion = models.ForeignKey(Justificacion, on_delete=models.CASCADE, related_name='proyectoJustificacion')
+    ideaProyecto = models.ForeignKey(Idea_Proyecto, on_delete=models.CASCADE, related_name='proyectoIdea')
+    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, related_name='proyectoBeneficiario')
+    impactoAmbiental = models.ForeignKey(Impacto_ambiental, on_delete=models.CASCADE, related_name='proyectoImpactoAmbiental')
+    detallePoa = models.ForeignKey(Detalle_POA, on_delete=models.CASCADE, related_name='proyectoDetallePoa')
+    conclusion = models.ForeignKey(Conclusion_recomendacion, on_delete=models.CASCADE, related_name='proyectoConclusionR')
+    declaracionJurada = models.ForeignKey(Declaracion_jurada, on_delete=models.CASCADE, related_name='proyectoDeclaracionJ')
+    presupuestoRef = models.ForeignKey(PresupuestoReferencial, on_delete=models.CASCADE, related_name='proyectoPreupuestoRef')
     aceptar = models.BooleanField()
+    estado = models.CharField(choices=estado_proyecto, max_length=50, default='SIN REVISAR')
+    revisor = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    comentarios = models.TextField(null=True, blank=True)
 # = models.ForeignKey(, on_delete=models.CASCADE, related_name='proyecto_')
         
     class Meta:

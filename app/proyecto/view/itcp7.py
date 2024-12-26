@@ -79,7 +79,21 @@ class Act_RiesgoDesastre(View):
             'entity_registro': reverse_lazy('proyecto:registro_RiesgoDesastre_R', args=[slug]),
             'entity_registro_nom': 'Registrar',
         }
-
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -95,7 +109,8 @@ class Act_RiesgoDesastre(View):
                     'fecha_actualizacion': timezone.now()
                     }
             )
-        return HttpResponseRedirect(reverse('proyecto:actualizar_RiesgoDesastre', args=[slug]))
+        messages.success(request, 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES - se actualizo correctamente.')
+        return redirect('proyecto:registro_DetallePOA', slug=slug)
 
 
 class R_RiesgoDesastre_R(View):

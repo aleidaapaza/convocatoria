@@ -98,9 +98,8 @@ class Act_Idea_Proyecto(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            messages.success(request, 'Los datos se actualizaron correctamente.')
-
-            return redirect('proyecto:registro_Idea_proyecto', slug=slug)
+            messages.success(request, 'ITCP-IDEA DEL PROYECTO - se actualizo correctamente.')
+            return redirect('proyecto:registro_obj_especifico', slug=slug)
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
 
@@ -167,31 +166,32 @@ class Act_Objetivo_especifico(View):
             'proyecto': proyecto_p,
             'objetivos_esp': objetivos,
             'form': form,
-            'titulo': 'ITCP-IDEA DEL PROYECTO',
+            'titulo': 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
-            'entity2': 'ITCP-IDEA DEL PROYECTO',
+            'entity2': 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS',
             'accion': 'Actualizar',
             'accion2': 'Cancelar',
             'accion2_url': reverse('convocatoria:Index'),
             'entity_registro': reverse_lazy('proyecto:registro_obj_especifico_01', args=[slug]),
             'entity_registro_nom': 'Registrar',
         }
-        for message in messages.get_messages(self.request):
-            print(message)
-            if message.level_tag == 'success':
-                context['message_title'] = 'Actualización Exitosa'
-                context['message_content'] = message.message
-            elif message.level_tag == 'error':
-                context['message_title'] = 'Error al Actualizar'
-                context['message_content'] = message.message
-            elif message.level_tag == 'warning':
-                context['message_title'] = 'Advertencia'
-                context['message_content'] = message.message
-            else:
-                context['message_title'] = 'Información'
-                context['message_content'] = message.message
-        context['next_url'] = reverse('proyecto:registro_justificacion', args=[slug])
-         
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
+
+        context['next_url'] = reverse('proyecto:registro_justificacion', args=[slug])         
         return render(request, self.template_name, context)
 
     def post(self, request, slug):
@@ -205,9 +205,9 @@ class Act_Objetivo_especifico(View):
             objetivo.meta = request.POST.get(f'meta_{objetivo.id}', objetivo.meta)
             objetivo.fecha_actualizacion = timezone.now()
             objetivo.save()
-        messages.success(request, 'Los datos se actualizaron correctamente.')
+        messages.success(request, 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS - se actualizo correctamente.')
         # Comprobar si se han agregado nuevos objetivos
-        return redirect('proyecto:registro_obj_especifico', slug=slug)
+        return redirect('proyecto:registro_Beneficios', slug=slug)
 
 def eliminar_objetivo(request, objetivo_id):
     if request.method == 'POST':
@@ -277,6 +277,20 @@ class R_Beneficios(UpdateView):
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        if messages:
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return context
 
     def post(self, request, *args, **kwargs):
@@ -288,10 +302,11 @@ class R_Beneficios(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            return HttpResponseRedirect(reverse('proyecto:registro_Beneficiarios', args=[postulacion_pr.slug]))
+            messages.success(request, "ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO - se actualizo correctamente.")
+            return redirect('proyecto:registro_Beneficiarios', slug=postulacion_pr.slug)
         else:
             return self.render_to_response(self.get_context_data(form=form))
-
+        
 class R_Beneficiarios(View):
     model = Beneficiario
     template_name = 'Proyecto/R_Beneficiarios.html'
@@ -320,40 +335,33 @@ class R_Beneficiarios(View):
             'accion2': 'Cancelar',
             'accion2_url': reverse('convocatoria:Index'),
         }
-
-        # Manejar los mensajes de Django (éxito, error, advertencia, información)
-        for message in messages.get_messages(self.request):
-            if message.level_tag == 'success':
-                context['message_title'] = 'Actualización Exitosa'
-                context['message_content'] = message.message
-            elif message.level_tag == 'error':
-                context['message_title'] = 'Error al Actualizar'
-                context['message_content'] = message.message
-            elif message.level_tag == 'warning':
-                context['message_title'] = 'Advertencia'
-                context['message_content'] = message.message
-            else:
-                context['message_title'] = 'Información'
-                context['message_content'] = message.message
-
+        
         # Renderizar la plantilla con el contexto
         return render(self.request, self.template_name, context)
 
-    
     def post(self, request, slug):
         hombre_directo = int(request.POST.get('hombresDirecto', 0))
         mujer_directo = int(request.POST.get('mujeresDirecto', 0))
         hombre_indirecto = int(request.POST.get('hombresIndirecto', 0))
         mujer_indirecto = int(request.POST.get('mujeresIndirecto', 0))
         familia = int(request.POST.get('familia', 0))
-        self.model.objects.create(
-            slug=slug,
-            hombre_directo=hombre_directo,
-            mujer_directo=mujer_directo,
-            hombre_indirecto=hombre_indirecto,
-            mujer_indirecto=mujer_indirecto,
-            familia=familia,
+
+        # Intentar crear el Beneficiario y agregar un mensaje
+        try:
+            self.model.objects.create(
+                slug=slug,
+                hombre_directo=hombre_directo,
+                mujer_directo=mujer_directo,
+                hombre_indirecto=hombre_indirecto,
+                mujer_indirecto=mujer_indirecto,
+                familia=familia,
             )
+            # Mensaje de éxito después de crear el objeto
+            messages.success(request, "Beneficiario registrado correctamente.")
+        except Exception as e:
+            # Mensaje de error en caso de fallo
+            messages.error(request, f"Error al registrar al beneficiario: {str(e)}")
+        # Redirigir a la siguiente página
         return redirect('proyecto:registro_ModeloActa', slug=slug)
 
 class A_Beneficiarios(View):
@@ -369,11 +377,26 @@ class A_Beneficiarios(View):
             'objetivo': objetivos,
             'titulo': 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
-            'entity2': 'ITCP-IDEA DEL PROYECTO',
+            'entity2': 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS',
             'entity3': 'BENEFICIARIOS',
             'accion2_url': reverse('convocatoria:Index'),            
             'accion2': 'Cancelar',
         }
+        if messages:
+        # Si hay mensajes de éxito, error, etc.
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return render(request, self.template_name, context)
     
     def post(self, request, slug):
@@ -386,6 +409,6 @@ class A_Beneficiarios(View):
         objetivos.familia = int(request.POST.get('familia', objetivos.familia))
         objetivos.fecha_actualizacion = timezone.now()
         objetivos.save()
-
+        messages.success(request, "ITCP-IDEA DEL PROYECTO - BENEFICIARIOS - se registro correctamente.")
         # Comprobar si se han agregado nuevos objetivos
         return redirect('proyecto:registro_DerechoPropietario', slug=slug)

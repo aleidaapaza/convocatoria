@@ -100,8 +100,8 @@ class Act_Justificacion(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            messages.success(request, 'Los datos se actualizaron correctamente.')
-            return redirect('proyecto:registro_justificacion', slug=slug)        
+            messages.success(request, 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO - se actualizo correctamente.')
+            return redirect('proyecto:registro_Idea_proyecto', slug=slug)        
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
             return self.render_to_response(self.get_context_data(form=form))

@@ -7,6 +7,9 @@
                     <h5 class="modal-title" id="miModalLabel">Bienvenido</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                        {{ message_content }}
+                </div>
                 {% if activo %}
                     {% if fechaActivo %}
                     <div class="modal-body">
@@ -148,7 +151,7 @@
                 <p id="tiempo"></p>
             </div>
             <div class="card text-center" style="background: transparent;">
-                <img src="{% static 'img/fondo/esperando.png' %}" class="card-img-top" alt="...">
+                <img src="{% static 'img/fondo/cierre.png' %}" class="card-img-top" alt="...">
             </div>
         {% endif %}      
     {% elif conteo > 1 %}

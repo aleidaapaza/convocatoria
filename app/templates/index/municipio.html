@@ -1,8 +1,32 @@
 {% load static%}
 {% block contenido %}
-<div class="row d-flex">
+<div class="modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageModalLabel">{{ message_title }}</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ message_content }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+</div>
+{% if proyectoDatos.estado == "CON OBSERVACION" %}
+            <div class="alert alert-danger">
+                <ul>
+                    <li>SE REALIZO OBSERVACIONES A LOS DATOS</li>
+                    <li> {{proyectoDatos.comentarios}} </li>
+                </ul>
+            </div>
+        {% endif %}
+<div class="row d-flex">    
     <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        
         {% if not vista %}
             <a class="btn btn-primary me-md-2" type="button" href="{% url 'proyecto:registro_Base' proyecto.slug %}">Empezar/continuar el registro</a>        
         {% endif %}
@@ -33,7 +57,6 @@
         </div>
         </div>
         {% endif %}
-        
     </div>
     <div class="mb-3 row">
         <div class="card card-default mt-3 mb-3">
@@ -44,125 +67,151 @@
                     <tr>
                         <th scope="col">Nro</th>
                         <th scope="col">NOMBRE</th>
-                        <th scope="col">PORCENTAJE DE AVANCE</th>
+                        <th scope="col">ESTADO DE AVANCE</th>
                     </tr>
                 </thead>
                 <tbody class="font-weight-bold">
                     <tr>
                         <td>00</td>
-                        <td>DATOS DE POSTULACION</td>
-                        <td>100%</td>
+                        <td><a>DATOS DE POSTULACION</a></td>
+                        <td><i class="fa fa-check-circle text-success" aria-hidden="true"></td>
                     </tr>
                     <tr>
                         <td>01</td>
-                        <td>DATOS PRINCIPALES DEL PROYECTO</td>
+                        <td><a {% if not datosProyecto > 0 %} href="{% url 'proyecto:registro_Base' proyecto.slug %}"
+                        {% endif %}>DATOS PRINCIPALES DEL PROYECTO</a>
+                        </td>
                         <td>
-                        {% if datosProyecto > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if datosProyecto > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>02</td>
-                        <td>ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</td>
+                        <td><a {% if not justificacion > 0 %} href="{% url 'proyecto:registro_justificacion' proyecto.slug %}"
+                        {% endif %}>ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</a></td>
                         <td>
-                        {% if justificacion > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if justificacion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>03</td>
-                        <td>ITCP-IDEA DEL PROYECTO</td>
+                        <td><a {% if not ideaProyecto > 0 %}
+                        href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}"
+                        {% endif %}>ITCP-IDEA DEL PROYECTO</a></td>
                         <td>
-                        {% if ideaProyecto > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if ideaProyecto > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>03.1</td>
-                        <td>OBJETIVOS SECUNDARIOS</td>
+                        <td><a {% if not objetivoEsp > 0 %}
+                        href="{% url 'proyecto:registro_obj_especifico' proyecto.slug %}"
+                        {% endif %}>OBJETIVOS SECUNDARIOS</a></td>
                         <td>
-                        {% if objetivoEsp > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if objetivoEsp > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>03.2</td>
-                        <td>BENEFICIOS ESPERADOS DEL PROYECTO</td>
+                        <td><a {% if not beneficio %}
+                        href="{% url 'proyecto:registro_Beneficios' proyecto.slug %}"
+                        {% endif %}>BENEFICIOS ESPERADOS DEL PROYECTO</a></td>
                         <td>
-                        {% if beneficio %}100%
-                        {% else %}0%{% endif %}
+                        {% if beneficio %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>03.3</td>
-                        <td>BENEFICIARIOS</td>
+                        <td><a {% if not beneficiario > 0 %}
+                        href="{% url 'proyecto:registro_Beneficiarios' proyecto.slug %}"
+                        {% endif %}>BENEFICIARIOS</a></td>
                         <td>
-                        {% if beneficiario > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if beneficiario > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>04</td>
-                        <td>ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</td>
+                        <td><a {% if not modeloActa > 0 %}
+                        href="{% url 'proyecto:registro_ModeloActa' proyecto.slug %}"
+                        {% endif %}>ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</a></td>
                         <td>
-                        {% if modeloActa > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if modeloActa > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>05</td>
-                        <td>ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)</td>
+                        <td><a {% if not DerechoPropie > 0 %}
+                        href="{% url 'proyecto:registro_DerechoPropietario' proyecto.slug %}"
+                        {% endif %}>ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)</a></td>
                         <td>
-                        {% if DerechoPropie > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if DerechoPropie > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>06</td>
-                        <td>ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</td>
+                        <td><a {% if not impactoAmbiental > 0 %}
+                        href="{% url 'proyecto:registro_ImpactoAmbiental' proyecto.slug %}"
+                        {% endif %}>ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</a></td>
                         <td>
-                        {% if impactoAmbiental > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if impactoAmbiental > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>07</td>
-                        <td>ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES</td>
+                        <td><a {% if not riesgoDesastre > 0 %}
+                        href="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}"
+                        {% endif %}>ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES</a></td>
                         <td>
-                        {% if riesgoDesastre > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if riesgoDesastre > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>08</td>
-                        <td>ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO</td>
+                        <td><a {% if not detallePoa > 0 %}
+                        href="{% url 'proyecto:registro_DetallePOA' proyecto.slug %}"
+                        {% endif %}>ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO</a></td>
                         <td>
-                        {% if detallePoa > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if detallePoa > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>09</td>
-                        <td>ITCP-PRESUPUESTO REFERENCIAL</td>
+                        <td><a {% if not Presupuesto > 0 %}
+                        href="{% url 'proyecto:registro_PresupuestoRef' proyecto.slug %}"
+                        {% endif %}>ITCP-PRESUPUESTO REFERENCIAL</a></td>
                         <td>
-                        {% if Presupuesto > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if Presupuesto > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>10</td>
-                        <td>ITCP-CONCLUSIONES Y RECOMENDACIONES</td>
+                        <td><a {% if not conclusion > 0 %}
+                        href="{% url 'proyecto:registro_ConclRec' proyecto.slug %}"
+                        {% endif %}>ITCP-CONCLUSIONES Y RECOMENDACIONES</a></td>
                         <td>
-                        {% if conclusion > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if conclusion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td>11</td>
-                        <td>ITCP-DECLARACION JURADA</td>
+                        <td><a {% if not declaracion > 0 %}
+                        href="{% url 'proyecto:registro_DeclaracionJurada' proyecto.slug %}"{% endif %} >ITCP-DECLARACION JURADA</a></td>
                         <td>
-                        {% if declaracion > 0 %}100%
-                        {% else %}0%{% endif %}
+                        {% if declaracion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
                 </tbody>
@@ -174,6 +223,15 @@
 </div>
 {% endblock contenido %}
 {% block script %}
+<script>
+    // Verificar si hay un mensaje
+    {% if message_content %}
+        $(document).ready(function() {
+            // Mostrar el modal
+            $('#messageModal').modal('show');
+        });
+    {% endif %}
+</script>
 <script>
   function showModal() {
     var modal = new bootstrap.Modal(document.getElementById('myModal'));

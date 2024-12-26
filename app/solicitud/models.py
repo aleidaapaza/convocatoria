@@ -34,7 +34,7 @@ class Postulacion(models.Model):
     fecha_registro = models.DateTimeField(auto_now_add=True)
     estado = models.BooleanField(null=True, blank=True)
     modificacion = models.BooleanField(default=False)
-    convocatoria = models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='postulacion_convocatoria', null=True, blank=True)
+    convocatoria = models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='postulacionConvocatoria', null=True, blank=True)
     datos_proyecto = models.OneToOneField(DatosProyectoBase, null=True, blank=True, on_delete=models.CASCADE, related_name='postulacion', to_field='slug')
 
     def __str__(self):

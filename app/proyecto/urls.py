@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from proyecto.views import Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos
+from proyecto.views import Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos, Lista_ProyectosSinRevisar, Lista_ProyectosObservados, Lista_ProyectosAprobados
 from proyecto.view.itcp0 import DatosPostulacion
 from proyecto.view.itcp1 import RegistroDatosBasicos
 from proyecto.view.itcp2 import Reg_Justificaciones, Act_Justificacion
@@ -60,4 +60,7 @@ urlpatterns = [
     path('EnviarDatos/<slug:slug>', EnviarDatos.as_view(), name='enviar_datos'),
     path('EnviarDatos1/<slug:slug>', enviarDatos2.as_view(), name='enviar_datos2'),
     path('VerDatos/<slug:slug>', verDatos.as_view(), name='ver_Datos'),    
+    path('lista_SinRevisar/', Lista_ProyectosSinRevisar.as_view(), name='lista_datosSinrevisar'),
+    path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
+    path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),
     ]

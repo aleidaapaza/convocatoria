@@ -49,22 +49,25 @@ class municipio(ListView):
         n_entidad = self.kwargs.get('entidad',0)
         entidades = entidad_s(n_entidad)
         if n_entidad <3:
-            municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial=entidades).filter(estado='NINGUNO').order_by('-nombre_municipio')
+            municipios_f = Municipios.objects.filter(
+                            departamento=departamentos,
+                            entidad_territorial=entidades,
+                            estado='NINGUNO'
+                        ).order_by('nombre_municipio')
         else:
-            municipios_f = Municipios.objects.filter(departamento=departamentos).filter(entidad_territorial='GOBIERNO AUTÓNOMO MUNICIPAL').filter(estado='NINGUNO').order_by('-nombre_municipio')
+            municipios_f = Municipios.objects.filter(
+                            departamento=departamentos, 
+                            entidad_territorial='GOBIERNO AUTÓNOMO MUNICIPAL'
+                        ).order_by('nombre_municipio')
         fecha = Convocatoria.objects.get(estado=True)
         context['convocatoria']=fecha
-        fechaHoy = datetime.now()
-        print(fechaHoy, 'fecha actual')
-        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
         fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
         context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
-
-        if municipios_f.acount() == 0:
+        contarMun = municipios_f.acount()
+        if  contarMun == 0:
             context['object_list'] = 0
         else:
             context['object_list'] = municipios_f
-        print(municipios_f)
         context['dep'] = departamentos
         context['ent'] = entidades
         context['n_ent'] = n_entidad        

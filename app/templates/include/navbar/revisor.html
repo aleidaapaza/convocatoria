@@ -6,7 +6,18 @@
             <i class="fa fa-align-justify" aria-hidden="true"></i></button>
         </li>
         <li class="height-100 d-flex align-items-center justify-content-center p-3">
-            {{ titulo }}
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" class="nav-link font-weight-bold text-white">
+                        <i class="fas fa-user-alt"></i> Bienvenido {{ request.user.username }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'user:Logout' %}" class="nav-link font-weight-bold text-white">
+                        <i class="fas fa-sign-in-alt"></i> Cerrar sesión
+                    </a>
+                </li>
+            </ul>
         </li>
     </ul>
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
@@ -17,11 +28,40 @@
         <div class="offcanvas-body">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}">LISTA DE SOLICITUDES</a>
+                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}"><i class="fas fa-home"></i> INICIO</a>
                     <hr>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}">LISTA DE APROBADOS</a>
+                    <a class="nav-link active" href="{% url 'convocatoria:lista_convocatoria' %}"><i class="fas fa-list-alt"></i> LISTA DE CONVOCATORIAS</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaCompleta' %}"><i class="fas fa-th-list"></i> LISTA COMPLETA</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' %}"><i class="fas fa-file-alt"></i> LISTA DE SOLICITUDES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaRechazados' %}"><i class="fas fa-times-circle"></i> LISTA DE NO APROBADOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fas fa-sign-in-alt"></i> LISTA DE APROBADOS CON INICIO DE SESION</a>
+                </li>
+                <hr>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title" id="offcanvasWithBothOptionsLabel">LISTA DE APROBADOS QUE ENVIARON DATOS</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datos' %}"><i class="fas fa-database"></i> COMPLETA</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosSinrevisar' %}"><i class="fas fa-eye-slash"></i> SIN REVISAR</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosObservados' %}"><i class="fas fa-exclamation-triangle"></i> OBSERVADOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosAprobados' %}"><i class="fas fa-check-circle"></i> APROBADOS (SIN OBSERVACIONES)</a>
                     <hr>
                 </li>
             </ul>
