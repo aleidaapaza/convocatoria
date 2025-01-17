@@ -36,7 +36,7 @@ class Postulacion(models.Model):
     modificacion = models.BooleanField(default=False)
     convocatoria = models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='postulacionConvocatoria', null=True, blank=True)
     datos_proyecto = models.OneToOneField(DatosProyectoBase, null=True, blank=True, on_delete=models.CASCADE, related_name='postulacion', to_field='slug')
-
+    fecha_ultimaconexion = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'
     

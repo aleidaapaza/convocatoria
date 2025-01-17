@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, ListView, TemplateView
+from django.views.generic import CreateView, UpdateView, ListView, TemplateView, DetailView
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -42,7 +42,14 @@ class Reg_Convocatoria(CreateView):
         self.object = self.get_object
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
+            elabEDTP = form.cleaned_data.get('montoElabEDTP')
+            print(elabEDTP)
+            if elabEDTP == 0 or elabEDTP == None:
+                conv = form.save(commit=False)
+                conv.montoElabEDTP = 0
+                conv.save()
+            else:
+                form.save()
             return HttpResponseRedirect(reverse('convocatoria:lista_convocatoria', args=[]))
         else:
             return self.render_to_response(self.get_context_data(form=form))
@@ -69,10 +76,31 @@ class Act_Convocatoria(UpdateView):
         objeto = self.model.objects.get(slug=slug)     
         form = self.form_class(request.POST, instance = objeto)
         if form.is_valid():
-            form.save()
+            elabEDTP = form.cleaned_data.get('montoElabEDTP')
+            print(elabEDTP)
+            if elabEDTP == 0 or elabEDTP == None:
+                conv = form.save(commit=False)
+                conv.montoElabEDTP = 0
+                conv.save()
+            else:
+                form.save()
             return HttpResponseRedirect(reverse('convocatoria:Actualizar_convocatoria', args=[slug]))
         else:
             return self.render_to_response(self.get_context_data(form=form))
+
+class Ver_Convocatoria(DetailView):  # Cambiar de UpdateView a DetailView
+    model = Convocatoria
+    template_name = 'convocatoria/V_Convocatoria.html'  # Plantilla para mostrar los datos
+    context_object_name = 'convocatoria'  # Usamos el nombre 'convocatoria' para la instancia en la plantilla
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'DETALLES DE LA CONVOCATORIA'
+        context['entity'] = 'Detalles de la Convocatoria'
+        context['accion'] = 'Ver Detalles'
+        context['accion2'] = 'Volver'
+        context['accion2_url'] = reverse('convocatoria:lista_convocatoria')
+        return context
 
 class ListaConvocatoria(ListView):
     model = Convocatoria
@@ -88,8 +116,10 @@ class ListaConvocatoria(ListView):
             context['error'] = 'REGISTRAR CONVOCATORIA'
             context['message'] = 'Existe una convocatoria vigente actualmente, para registrar otra convocatoria se necesita que las anteriores no esten activas'
         else:
-            context['entity_registro'] = reverse_lazy('convocatoria:registro_convocatoria')
-            context['entity_registro_nom'] = 'REGISTRAR CONVOCATORIA'
+            if self.request.user.is_authenticated:
+                if self.request.user.is_superuser:                            
+                    context['entity_registro'] = reverse_lazy('convocatoria:registro_convocatoria')
+                    context['entity_registro_nom'] = 'REGISTRAR CONVOCATORIA'
         return context
     
 class Index(TemplateView):
@@ -118,6 +148,9 @@ class Index(TemplateView):
                 print(user_sl)
                 context['slug']=user_sl
                 postulacion_p = Postulacion.objects.get(slug =user_sl)
+                postulacion_p.fecha_ultimaconexion = datetime.now()
+                print(postulacion_p.fecha_ultimaconexion, "ultima conexion")
+                postulacion_p.save()
                 context['proyecto'] = postulacion_p
                 context['postulacion'] = postulacion_p
                 context['datosProyecto'] = DatosProyectoBase.objects.filter(slug=user_sl).count()

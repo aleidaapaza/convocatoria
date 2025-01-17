@@ -360,13 +360,15 @@ class fichaSolicitud(UpdateView):
                     return HttpResponseRedirect(reverse('proyecto:lista_inicio', args=[]))
                 else:
                     return self.render_to_response(self.get_context_data(form=form, form2=form2 ))
-            else:                
+            else:   
+                print(estado_post,'estado')   
+                form.save()
                 postulacion_c = Postulacion.objects.get(slug=slug)
                 municipio_c = Municipios.objects.get(id=postulacion_c.municipio.id)
                 municipio_c.estado="NINGUNO"
                 municipio_c.p_a=True
                 municipio_c.save()
-                return HttpResponseRedirect(reverse('solicitud:ListaSolicitud', args=[]))
+                return HttpResponseRedirect(reverse('solicitud:ListaRechazados', args=[]))
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
 

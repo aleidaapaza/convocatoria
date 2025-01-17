@@ -18,6 +18,9 @@
                                     {% for error in field.errors %}
                                         <span style="color: red">({{ error }})</span>
                                     {% endfor %}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{% autoescape off %}{{ field.help_text|safe }}{% endautoescape %}</small>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

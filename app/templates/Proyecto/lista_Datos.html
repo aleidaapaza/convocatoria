@@ -17,13 +17,9 @@
             <td> {{ proyecto.slug }}</td>
             <td> {{ proyecto.datos_basicos.nombre }}</td>
             <td>{{ proyecto.fechaenvio }}</td>
-            {% if request.user.is_revisor %}
-                <td> {{ proyecto.revisor.revisor_perfil.persona.nombrecompleto }}</td>
-            {% elif request.user.is_superuser%}
-                <td> {{ proyecto.revisor.superuser_perfil.persona.nombrecompleto }}
-                {{ proyecto.revisor.revisor_perfil.persona.nombrecompleto }}</td>
-
-            {% endif %}
+            <td>            
+                 {{ proyecto.revisor.revisor_perfil.persona.nombrecompleto }}
+            </td>
             <td> {{ proyecto.estado }}</td>
             <td>
                 <a href=" {% url 'proyecto:ver_Datos' proyecto.slug %} " type="button"

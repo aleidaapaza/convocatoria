@@ -55,26 +55,18 @@ class Reg_DeclaracionJurada(CreateView):
             itcp_d = form.cleaned_data.get('itcp')
             carta_d = form.cleaned_data.get('carta')
             consultoria_d = form.cleaned_data.get('consultoria')
-
-            # Validación del tamaño de los archivos
             if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo declaracion no debe superar los 2 MB.')
-            
+                messages.error(request, 'El archivo declaracion no debe superar los 2 MB.')            
             if carta_d and carta_d.size > 2 * 1024 * 1024:  # 2 MB
                 messages.error(request, 'El archivo carta no debe superar los 2 MB.')
-
-            # Si hay errores, volvemos a renderizar la página con los errores
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
-
-            # Si no hay errores, guardamos el formulario
             declaracion = form.save(commit=False)
             declaracion.slug = slug            
             declaracion.save()
             return HttpResponseRedirect(reverse_lazy('convocatoria:Index', args=[]))
         
         else:
-            # Si el formulario no es válido, se vuelve a renderizar con los errores
             return self.render_to_response(self.get_context_data(form=form))
 
 class Act_DeclaracionJurada(UpdateView):

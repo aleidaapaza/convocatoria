@@ -16,13 +16,16 @@
             </div>
 </div>
 {% if proyectoDatos.estado == "CON OBSERVACION" %}
-            <div class="alert alert-danger">
-                <ul>
-                    <li>SE REALIZO OBSERVACIONES A LOS DATOS</li>
-                    <li> {{proyectoDatos.comentarios}} </li>
-                </ul>
-            </div>
-        {% endif %}
+    <div class="alert alert-danger">
+        <h3 class="text-center">SE REALIZO OBSERVACIONES A LOS DATOS</h3>
+        <p> {{proyectoDatos.comentarios}} </p>
+    </div>
+{% elif proyectoDatos.estado == "APROBADO" %}
+    <div class="alert alert-success">
+            <h3 class="text-center ">DATOS APROBADOS</h3>
+    </div>
+{% endif %}
+
 <div class="row d-flex">    
     <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

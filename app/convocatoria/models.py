@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
+from convocatoria.choices import megas
 # Create your models here.
 
 def set_slug(sender, instance, *args, **kwargs):
@@ -22,7 +23,7 @@ class Convocatoria(models.Model):
     montoElabEDTP = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     montoEjecEDTP = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estado = models.BooleanField(default=False)
-
+    tamañoDoc = models.IntegerField(choices=megas, null=False, blank=False, default=2)
     def __str__(self):
         return f' {self.slug} {self.nombre}'
 

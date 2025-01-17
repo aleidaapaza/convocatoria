@@ -794,7 +794,6 @@ class verDatos(View):
             'formulario' : formulario,
             'form' : form,
         }
-
         return render(self.request, self.template_name, context)
     
     def post(self, request, slug):
@@ -820,9 +819,7 @@ class Lista_Proyectos(ListView):
     template_name = 'Proyecto/lista.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_Proyectos, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado=True)
-        
-        # Añadimos el título y la entidad
+        proyectos = self.model.objects.filter(estado=True)        
         context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION'
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION'

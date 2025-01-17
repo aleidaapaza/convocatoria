@@ -137,6 +137,6 @@ class ActualizacionRev(UpdateView):
         if form2.is_valid() and form3.is_valid():          
             form2.save()
             form3.save()
-            return HttpResponseRedirect(reverse('solicitud:Actualizar_Ficha_eNC', args=[slug]))
+            return HttpResponseRedirect(reverse('user:lista_revisor', args=[]))
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))

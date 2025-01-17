@@ -38,7 +38,7 @@ class R_Convocatoria(forms.ModelForm):
         decimal_places=2,  # Decimales
         widget=forms.NumberInput(attrs={'placeholder': '0.00'}),
         label="MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA ELABORACION DEL EDTP",
-        required=True
+        required=False
     )
     montoEjecEDTP = forms.DecimalField(
         max_digits=10,   # Total de dígitos
@@ -79,15 +79,17 @@ class A_Convocatoria(forms.ModelForm):
         decimal_places=2,  # Decimales
         widget=forms.NumberInput(attrs={'placeholder': '0.00'}),
         label="MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA ELABORACION DEL EDTP",
-        required=True
+        required=False,
+        help_text="Ingrese el monto en caso de que se realice el financiamiento para la ELABORACION DEL EDTP, caso contrario dejar en blanco o monto 0. <br>Introduce el monto máximo permitido por el FONABOSQUE para la ejecución del EDTP Ejemplo: 1000.00."
     )
     montoEjecEDTP = forms.DecimalField(
         max_digits=10,   # Total de dígitos
         decimal_places=2,  # Decimales
         widget=forms.NumberInput(attrs={'placeholder': '0.00'}),
         label="MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA EJECUCION DEL EDTP",
-        required=True
-    )
+        required=True,
+        help_text="Introduce el monto máximo permitido por el FONABOSQUE para la ejecución del EDTP (Ejemplo: 1000.00)."
+    ) 
     '''
     estado = forms.BooleanField(
         label="ESTADO DE LA CONVOCATORIA (VIGENTE/NO VIGENTE)",  # Etiqueta del campo
@@ -105,5 +107,9 @@ class A_Convocatoria(forms.ModelForm):
             'fechaLanzamiento': 'FECHA DE LANZAMIENTO DE LA CONVOCATORIA',
             'fechaCierre': 'FECHA DE CIERRE DE LA CONVOCATORIA',
             'estado': 'ESTADO DE LA CONVOCATORIA (VIGENTE/NO VIGENTE)',
+            'tamañoDoc' : 'TAMAÑO PERMITIDO POR DOCUMENTO PARA EL ITCP-DECLARACION JURADA'
+        }
+        help_texts = {
+            'tamañoDoc' : 'Selecciona la cantidad maxima de MB.'
         }
     

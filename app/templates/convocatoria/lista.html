@@ -25,10 +25,18 @@
             <td> {{ convocatoria.montoEjecEDTP }} </td>
             <td> {{ convocatoria.estado }} </td>
             <td>
-                <a href=" {% url 'convocatoria:Actualizar_convocatoria' convocatoria.slug %} " type="button"
-                   class="btn btn-primary btn-xs">
-                   <i class="fas fa-edit"></i>                   
-                </a>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <a href=" {% url 'convocatoria:Actualizar_convocatoria' convocatoria.slug %} " type="button" class="btn btn-primary btn-xs">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                {% else %}
+                    <a href=" {% url 'convocatoria:Ver_convocatoria' convocatoria.slug %} " type="button" class="btn btn-primary btn-xs">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                {% endif %}
+            {% endif %}
+               
             </td>
         </tr>
     {% endfor %}
