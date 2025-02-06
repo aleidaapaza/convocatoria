@@ -19,15 +19,38 @@ from convocatoria.models import Convocatoria
 
 from user.form import Reg_EncargadoMAE, Reg_ResponsableP, Reg_Persona_Res, Reg_Persona_MAE, User_Reg, Update_MAE
 from solicitud.form import Update_Postulacion, update_Post
-from solicitud.choices import departamento_s, entidad_s
+from solicitud.choices import departamento_s, entidad_s, financiamiento_s
 
+class departamento(TemplateView):
+    template_name = 'homepage/departamento.html'
+    def get_context_data(self, **kwargs):
+        context = super(departamento, self).get_context_data(**kwargs)
+        financiamiento = self.kwargs.get('financiamiento', 0)
+        financiamiento_d = financiamiento_s(financiamiento)
+        context['fin'] = financiamiento
+        context['fin_d'] = financiamiento_d
+        context['entity'] = 'DEPARTAMENTO'
+        fecha = Convocatoria.objects.get(estado=True)
+        context['convocatoria']=fecha
+        fechaHoy = datetime.now()
+        print(fechaHoy, 'fecha actual')
+        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
+        fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
+        context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
+        return context
 
 class entidad(TemplateView):
     template_name = 'homepage/entidadTerritorial.html'
     def get_context_data(self, **kwargs):
         context = super(entidad, self).get_context_data(**kwargs)
+        financiamiento = self.kwargs.get('financiamiento', 0)
         departamento = self.kwargs.get('departamento', 0)
+        financiamiento_d = financiamiento_s(financiamiento)
+        context['fin'] = financiamiento
+        context['fin_d'] = financiamiento_d
+        departamentos = departamento_s(departamento)
         context['dep'] = departamento
+        context['dep_d'] = departamentos
         context['entity'] = 'ENTIDAD TERRITORIAL'
         fecha = Convocatoria.objects.get(estado=True)
         context['convocatoria']=fecha
@@ -36,7 +59,6 @@ class entidad(TemplateView):
         fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
         fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
         context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
-
         return context
 
 class municipio(ListView):
@@ -44,9 +66,11 @@ class municipio(ListView):
     template_name = 'homepage/municipio.html'
     def get_context_data(self, **kwargs):
         context = super(municipio, self).get_context_data(**kwargs)
+        n_financiamiento = self.kwargs.get('financiamiento', 0)
         n_departamento = self.kwargs.get('departamento', 0)
-        departamentos = departamento_s(n_departamento)
         n_entidad = self.kwargs.get('entidad',0)
+        financiamiento = financiamiento_s(n_financiamiento)
+        departamentos = departamento_s(n_departamento)
         entidades = entidad_s(n_entidad)
         if n_entidad <3:
             municipios_f = Municipios.objects.filter(
@@ -70,7 +94,9 @@ class municipio(ListView):
             context['object_list'] = municipios_f
         context['dep'] = departamentos
         context['ent'] = entidades
-        context['n_ent'] = n_entidad        
+        context['fin'] = financiamiento
+        context['n_ent'] = n_entidad
+        context['n_fin'] = n_financiamiento
         context['entity'] = 'ENTIDAD TERRITORIAL'
         return context
 
@@ -89,16 +115,17 @@ class mae_r(CreateView):
         context = super().get_context_data(**kwargs)
         n_municipio = self.kwargs.get('pk', 0)
         n_entidad = self.kwargs.get('entidad', 0)
+        n_financiamiento = self.kwargs.get('financiamiento', 0)        
         aux_municipio = Municipios.objects.get(id=n_municipio)
         if n_entidad < 3:
             context['aux_entidad'] = aux_municipio.entidad_territorial
         else:
             context['aux_entidad'] = entidad_s(n_entidad)
+        context['aux_financiamiento'] = financiamiento_s(n_financiamiento)
         if 'form' not in context:
             context['form'] = self.form_class(self.request.GET, self.request.FILES)
         if 'form2' not in context:
             context['form2'] = self.second_form_class(self.request.GET)
-
         context['aux_departamento'] = aux_municipio.departamento
         context['aux_municipio'] = aux_municipio.nombre_municipio
         context['titulo'] = 'Registro de encargado de la MAE'
@@ -119,6 +146,8 @@ class mae_r(CreateView):
         self.object = self.get_object
         municipio_pk = kwargs['pk']
         n_entidad = kwargs['entidad']
+        n_financiamiento = self.kwargs.get('financiamiento', 0)        
+        financiamiento = financiamiento_s(n_financiamiento)
         if n_entidad < 3:
             municipiobj = Municipios.objects.get(id=municipio_pk)
         else:
@@ -166,6 +195,8 @@ class mae_r(CreateView):
                 mae=encar_Mae,
                 responsable=responsablePr,
                 convocatoria=convocatoria,
+                tipo_financiamiento = n_financiamiento,
+                creador = None,
             )
             id_post = postulacion_f.slug
             print(id_post,"esto es el id de la postulacion")
@@ -189,6 +220,8 @@ class ResponsableProy(UpdateView):
         if 'form2' not in context:
             context['form2'] = self.second_form_class(self.request.GET)
         postulacion_p = self.model.objects.get(slug=slug)
+        n_financiamiento = financiamiento_s(postulacion_p.tipo_financiamiento)
+        context['financiamiento'] = n_financiamiento
         context['postulacion'] = postulacion_p
         context['titulo'] = 'Registro de encargado del proyecto'
         context['entity'] = 'Registro de encargado del proyecto'
@@ -228,6 +261,7 @@ class Confirmacion(TemplateView):
         postulacion = Postulacion.objects.get(slug=slug)
         context['entity'] = 'confirmacion solicitud'
         context['postulacion'] = postulacion
+        context['n_financiamiento'] = financiamiento_s(postulacion.tipo_financiamiento)
         fecha = Convocatoria.objects.get(estado=True)
         context['convocatoria']=fecha
         fechaHoy = datetime.now()
@@ -297,6 +331,8 @@ class fichaSolicitud(UpdateView):
                 context['userMun'] = user
             else:
                 context['password'] = 'La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo'
+        n_financiamiento = financiamiento_s(postulacion_p.tipo_financiamiento)
+        context['financiamiento'] = n_financiamiento
         context['postulacion'] = postulacion_p
         context['titulo'] = 'Registro de encargado del proyecto'
         context['activate'] = False
@@ -310,13 +346,11 @@ class fichaSolicitud(UpdateView):
         self.object = self.get_object()
         slug = self.kwargs.get('slug', None)
         postulacion_pr = self.model.objects.get(slug=slug)
-        print(postulacion_pr,'propuesta')
-        print(postulacion_pr.responsable.slug,'propuesta')
+        encargado = self.request.user
         responsable_pr = self.second_model.objects.get(slug = postulacion_pr.mae.slug)
         form = self.form_class(request.POST, instance = postulacion_pr)
         form2 = self.second_form_class(request.POST, request.FILES, instance = responsable_pr)
         form3 = self.third_form_class(request.POST)
-
         if form.is_valid() and form2.is_valid():
             carnet_file = form2.cleaned_data.get('carnet')
             asignacion_file = form2.cleaned_data.get('asignacion')
@@ -332,7 +366,9 @@ class fichaSolicitud(UpdateView):
             print('estado', estado_post)
             if estado_post:
                 print(estado_post,'estado')
-                form.save()
+                postulacion = form.save(commit=False)
+                postulacion.creador = encargado
+                postulacion.save()
                 if  form3.is_valid():
                     user_Pr = form3.save(commit=False)
                     print(user_Pr.username, "username")
@@ -345,13 +381,12 @@ class fichaSolicitud(UpdateView):
                     datos_proyecto = self.four_model.objects.create(
                         slug = slug,
                         user = user_Pr,
-                        nombre = 'PRY',
+                        nombre = 'NOMBRE DEL PROYECTO',
                         n_comunidades = '0',
-                        comunidades = 'comunidades',
+                        comunidades = 'NOMBRE DE LAS COMUNIDADES',
                         tipologia_proy = False,
-                        periodo_ejecu = '0',
+                        periodo_ejecu = '0'
                     )
-                    print(datos_proyecto)
                     postulacion_c = Postulacion.objects.get(slug=slug)
                     municipio_c = Municipios.objects.get(id=postulacion_c.municipio.id)
                     municipio_c.estado="APROBADO"
@@ -361,8 +396,10 @@ class fichaSolicitud(UpdateView):
                 else:
                     return self.render_to_response(self.get_context_data(form=form, form2=form2 ))
             else:   
-                print(estado_post,'estado')   
-                form.save()
+                print(estado_post,'estado')
+                postulacion = form.save(commit=False)
+                postulacion.creador = encargado
+                postulacion.save()
                 postulacion_c = Postulacion.objects.get(slug=slug)
                 municipio_c = Municipios.objects.get(id=postulacion_c.municipio.id)
                 municipio_c.estado="NINGUNO"

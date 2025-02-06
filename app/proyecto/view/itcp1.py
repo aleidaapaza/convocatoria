@@ -1,12 +1,9 @@
 import os
-from urllib import request
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, View
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView
 from django.utils import timezone
 
-from django.conf import settings
 from django.contrib import messages
 
 from solicitud.models import Postulacion
@@ -26,6 +23,7 @@ class RegistroDatosBasicos(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'DATOS PRINCIPALES DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'DATOS PRINCIPALES DEL PROYECTO'
@@ -47,8 +45,6 @@ class RegistroDatosBasicos(UpdateView):
                 else:
                     context['message_title'] = 'Información'
                     context['message_content'] = message.message
-        # Definir la URL de siguiente paso
-        context['next_url'] = reverse('proyecto:registro_justificacion', args=[slug])
         return context
 
     def post(self, request, *args, **kwargs):
@@ -58,17 +54,17 @@ class RegistroDatosBasicos(UpdateView):
         datos_proy = DatosProyectoBase.objects.get(slug=postulacion_pr.slug)
         form = self.form_class(request.POST, instance=self.object)
         if form.is_valid():
-            print('Formulario validado')
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
             postulacion_pr.datos_proyecto = datos_proy
             postulacion_pr.save()
-            # Agregar mensaje de éxito al contexto
             messages.success(request, 'DATOS PRINCIPALES DEL PROYECTO - se actualizo correctamente.')
-            return redirect('proyecto:registro_justificacion', slug=slug)
+            if postulacion_pr.tipo_financiamiento == 1:
+                return redirect('proyecto:registro_justificacion', slug=slug)
+            else:
+                return redirect('proyecto:registro_ObjetivoGeneral', slug=slug)
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
-            print(form.errors)
             return self.render_to_response(self.get_context_data(form=form))
         

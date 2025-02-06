@@ -29,6 +29,7 @@ class Reg_ImpactoAmbiental(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES'
@@ -61,6 +62,7 @@ class Act_ImpactoAmbiental(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p  
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES'

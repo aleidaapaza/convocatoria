@@ -26,6 +26,7 @@ urlpatterns = [
     path('',include('convocatoria.urls')),
     path('solicitud/',include('solicitud.urls')),
     path('admin/', admin.site.urls),
+    path('tinymce/', include('tinymce.urls')),
     path('userl/',include('user.urls')),
     path('proyecto/',include('proyecto.urls')),
     path('descargar_modelo_acta/<slug:slug>/<int:id>', descargar_archivo, name='descargar_modeloacta'),

@@ -4,6 +4,7 @@ from django import forms
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
                              Modelo_Acta, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
                              Conclusion_recomendacion, Declaracion_jurada, Proyecto)
+from proyecto.models import (ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica)
 
 from proyecto.choices import riesgos, nivel
 
@@ -14,8 +15,7 @@ class Reg_DatosBase(ModelForm):
             form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
             form.field.widget.attrs['autocomplete'] = 'off'
         self.fields['tipologia_proy'].widget.attrs['class'] = 'form-check-input'
-        self.fields['solicitud_financ'].widget.attrs['class'] = 'form-check-input'
-        
+
     class Meta:
         model = DatosProyectoBase
         fields = '__all__'
@@ -24,9 +24,8 @@ class Reg_DatosBase(ModelForm):
             'nombre': 'NOMBRE DEL PROYECTO',
             'n_comunidades': 'N° DE COMUNIDADES BENEFICIARIAS DEL PROYECTO',
             'comunidades': 'COMUNIDADES BENEFICIARIAS DEL PROYECTO',
-            'tipologia_proy': 'TIPOLOGIA DEL PROYECTO',
-            'periodo_ejecu': 'PERIODO DE EJECUCION DEL PROYECTO (EN AÑOS)',
-            'solicitud_financ': 'SOLICITUD DE FINANCIAMIENTO PARA LA FORMULACION DEL EDTP',
+            'tipologia_proy': '¿EL PROYECTO ES DE TIPOLOGIA III - PROYECTO DE DESARROLLO SOCIAL?',
+            'periodo_ejecu': 'PERIODO DE EJECUCION DEL PROYECTO (EN MESES)',
         }
 
 class Reg_Justificacion(ModelForm):
@@ -196,7 +195,9 @@ class R_Declaracion_jurada(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
             form.field.widget.attrs['autocomplete'] = 'off'
-
+        self.fields['declaracion'].required = False
+        self.fields['carta_elab'].required = False
+        self.fields['carta_ejec'].required = False
     class Meta:
         model = Declaracion_jurada
         fields = '__all__'
@@ -208,7 +209,10 @@ class R_Declaracion_juradaTotal(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
             form.field.widget.attrs['autocomplete'] = 'off'
-
+        self.fields['declaracion'].required = False
+        self.fields['itcp'].required = False
+        self.fields['carta_elab'].required = False
+        self.fields['carta_ejec'].required = False
     class Meta:
         model = Declaracion_jurada
         fields = '__all__'
@@ -225,7 +229,7 @@ class R_Declaracion_ITCP(ModelForm):
         model = Declaracion_jurada
         fields = ['itcp']
         labels = {
-            'itcp':'INGRESE EL ARCHIVO ITCP FOLIADO Y RUBRICADO:'
+            'itcp':'INGRESE EL ARCHIVO ESCANEADO DEL ITCP EN PDF CON LA FIRMA DE LA MAE Y EL TECNICO ETA:'
         }
 
 class R_Proyecto(ModelForm):
@@ -241,4 +245,62 @@ class R_Proyecto(ModelForm):
         labels = {
             'estado': 'ESTADO DE REVISION DE DATOS DE PROYECTO:',
             'comentarios': 'EN CASO DE TENER OBSERVACIONES, INGRESE LAS OBSERVACIONES:',
+        }
+
+class R_ObjEjec(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = ObjetivoGeneralEjec
+        fields = ['objetivo_general']
+        labels = {
+            'objetivo_general': 'OBJETIVO GENERAL:',
+        }
+
+class R_Hectarea(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = ObjetivoGeneralEjec
+        fields = ['hectareas', 'tipo_hectareas']
+        labels = {
+            'hectareas': 'Nro de Hectareas de Forestacion y/o Reforestacion y/o Manejo sustentable de bosque::',
+        }
+    
+class R_ObjetivoEsp(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = ObjetivoEspecificoEjec
+        fields = ['objetivo', 'componente', 'meta']
+        labels = {
+            'objetivo': 'Objetivo Especifico:',
+            'componente': 'Componente:',
+            'meta': 'Meta:',
+        }
+
+class R_Ubicacion(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+
+    class Meta:
+        model = UbicacionGeografica
+        fields = ['alturaForestacion']
+        labels = {
+            'alturaForestacion': 'Altura media zona de forestacion (msnm):',
         }

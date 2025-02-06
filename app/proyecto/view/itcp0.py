@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
 from django.utils import timezone
+from solicitud.choices import financiamiento_s
 
 from django.conf import settings
 from django.contrib import messages
@@ -21,9 +22,8 @@ class DatosPostulacion(TemplateView):
             if self.request.user.is_municipio:
                 user_sl = self.request.user.username_proyecto.slug
                 context['slug']=user_sl
-                print(user_sl)
                 postulacion_p = Postulacion.objects.get(slug =user_sl)
-                print(postulacion_p)
+                context['n_financiamiento'] = financiamiento_s(postulacion_p.tipo_financiamiento)
                 context['proyecto'] = postulacion_p
                 context['postulacion'] = postulacion_p
         return context

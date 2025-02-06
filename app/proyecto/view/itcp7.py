@@ -29,6 +29,7 @@ class R_RiesgoDesastre(View):
         form = Rg_RiesgoDesastre()
         context = {
             'form': form,
+            'postulacion' : proyecto_p,
             'proyecto': proyecto_p,
             'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
@@ -64,9 +65,9 @@ class Act_RiesgoDesastre(View):
         form_data = riesgos
         form = Rg_RiesgoDesastre()  # No necesitamos datos en el formulario, solo los valores pre-cargados
         proyecto_p = Postulacion.objects.get(slug=slug)
-
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'form': form,
             'form_data': form_data,  # Pasamos los registros existentes a la plantilla
             'slug': slug,
@@ -101,14 +102,12 @@ class Act_RiesgoDesastre(View):
         riesgos = request.POST.getlist('riesgo')
         niveles = request.POST.getlist('nivel')
         for riesgo, nivel in zip(riesgos, niveles):
-            obj, created = Riesgo_desastre.objects.update_or_create(
-                slug=slug, 
-                riesgo=riesgo, 
-                defaults={
-                    'nivel': nivel,
-                    'fecha_actualizacion': timezone.now()
-                    }
-            )
+            # Obtén todos los registros que coincidan
+            riesgos_existentes = Riesgo_desastre.objects.filter(slug=slug, riesgo=riesgo)
+            for obj in riesgos_existentes:
+                obj.nivel = nivel
+                obj.fecha_actualizacion = timezone.now()
+                obj.save()
         messages.success(request, 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES - se actualizo correctamente.')
         return redirect('proyecto:registro_DetallePOA', slug=slug)
 
@@ -127,6 +126,7 @@ class R_RiesgoDesastre_R(View):
         context = {
             'form': form,
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
             'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
@@ -145,7 +145,7 @@ class R_RiesgoDesastre_R(View):
         print("nivel", niveles)
         for riesgo, nivel in zip(riesgos, niveles):
             Riesgo_desastre.objects.create(slug=slug, riesgo=riesgo, nivel=nivel)
-        return HttpResponseRedirect(reverse('proyecto:actualizar_RiesgoDesastre', args=[slug,]))
+        return HttpResponseRedirect(reverse('proyecto:registro_RiesgoDesastre', args=[slug,]))
     
 def eliminar_Riesgos(request, objetivo_id):
     if request.method == 'POST':

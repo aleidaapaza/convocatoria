@@ -6,17 +6,17 @@
         {% for field in form %}
             <div class="mb-3 row">
                 <div class="col-sm-4 col-form-label text-end">{{ field.label_tag }}</div>
-                    <div class="col-sm-8">
-                        <div class="">
-                            {{ field }}
-                        </div>
-                        <div class="">
-                            {% for error in field.errors %}
-                                <span style="color: red">({{ error }})</span>
-                            {% endfor %}
-                        </div>
+                <div class="col-sm-8">
+                    <div class="row">
+                        {{ field }}
                     </div>
+                    <div class="row">
+                        {% for error in field.errors %}
+                            <span style="color: red">({{ error }})</span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        {% endfor %}                              
+        {% endfor %}
     </div>
 {% endblock %}

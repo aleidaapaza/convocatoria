@@ -9,6 +9,7 @@ from django.contrib import messages
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
 from reportlab.pdfgen import canvas
 from django.db.models import Prefetch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -22,7 +23,7 @@ from solicitud.models import Postulacion
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
                              Modelo_Acta, Derecho_propietario, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
                              Conclusion_recomendacion, Declaracion_jurada, PresupuestoReferencial,
-                             Proyecto)
+                             Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica)
 
 from proyecto.forms import R_Declaracion_ITCP, R_Proyecto
 
@@ -36,29 +37,47 @@ def generate_pdf(request, slug):
     doc = SimpleDocTemplate(response, pagesize=letter)
     elements = []
     styles = getSampleStyleSheet()
+    postulacion = Postulacion.objects.get(slug=slug)
     
     # Obtener los objetos Postulacion y DatosProyectoBase usando el slug
-    try:
-        postulacion = Postulacion.objects.get(slug=slug)
-        proyecto = DatosProyectoBase.objects.get(slug=slug)
-        justificacion = Justificacion.objects.get(slug=slug)
-        idea = Idea_Proyecto.objects.get(slug=slug)
-        objetivo = Objetivo_especifico.objects.filter(slug=slug)
-        beneficiarios = Beneficiario.objects.get(slug=slug)
-        modelo = Modelo_Acta.objects.filter(slug=slug)
-        derecho = Derecho_propietario.objects.filter(slug=slug)
-        impacto = Impacto_ambiental.objects.get(slug=slug)
-        riesgo = Riesgo_desastre.objects.filter(slug=slug)
-        poa = Detalle_POA.objects.get(slug=slug)
-        conclusion = Conclusion_recomendacion.objects.get(slug=slug)
-        declaracion = Declaracion_jurada.objects.get(slug=slug)
-        presupuesto = PresupuestoReferencial.objects.get(slug=slug)
-    except (Postulacion.DoesNotExist, DatosProyectoBase.DoesNotExist, Justificacion.DoesNotExist, Idea_Proyecto.DoesNotExist,
-            Objetivo_especifico.DoesNotExist, Beneficiario.DoesNotExist, Modelo_Acta.DoesNotExist, Derecho_propietario.DoesNotExist,
-            Impacto_ambiental.DoesNotExist, Riesgo_desastre.DoesNotExist, Detalle_POA.DoesNotExist, Conclusion_recomendacion.DoesNotExist,
-            Declaracion_jurada.DoesNotExist, PresupuestoReferencial.DoesNotExist):
-        return HttpResponse("Los datos no fueron encontrados para este slug.", status=404)
-    
+    if postulacion.tipo_financiamiento == 1:
+        try:
+            postulacion = Postulacion.objects.get(slug=slug)
+            proyecto = DatosProyectoBase.objects.get(slug=slug)
+            justificacion = Justificacion.objects.get(slug=slug)
+            idea = Idea_Proyecto.objects.get(slug=slug)
+            objetivo = Objetivo_especifico.objects.filter(slug=slug)
+            beneficiarios = Beneficiario.objects.get(slug=slug)
+            modelo = Modelo_Acta.objects.filter(slug=slug)
+            derecho = Derecho_propietario.objects.filter(slug=slug)
+            impacto = Impacto_ambiental.objects.get(slug=slug)
+            riesgo = Riesgo_desastre.objects.filter(slug=slug)
+            poa = Detalle_POA.objects.get(slug=slug)
+            conclusion = Conclusion_recomendacion.objects.get(slug=slug)
+            declaracion = Declaracion_jurada.objects.get(slug=slug)
+            presupuesto = PresupuestoReferencial.objects.get(slug=slug)
+        except (Postulacion.DoesNotExist, DatosProyectoBase.DoesNotExist, Justificacion.DoesNotExist, Idea_Proyecto.DoesNotExist,
+                Objetivo_especifico.DoesNotExist, Beneficiario.DoesNotExist, Modelo_Acta.DoesNotExist, Derecho_propietario.DoesNotExist,
+                Impacto_ambiental.DoesNotExist, Riesgo_desastre.DoesNotExist, Detalle_POA.DoesNotExist, Conclusion_recomendacion.DoesNotExist,
+                Declaracion_jurada.DoesNotExist, PresupuestoReferencial.DoesNotExist):
+            return HttpResponse("Los datos no fueron encontrados para este slug.", status=404)
+    else:
+        try:
+            postulacion = Postulacion.objects.get(slug=slug)
+            proyecto = DatosProyectoBase.objects.get(slug=slug)
+            beneficiarios = Beneficiario.objects.get(slug=slug)
+            declaracion = Declaracion_jurada.objects.get(slug=slug)
+            presupuesto = PresupuestoReferencial.objects.get(slug=slug)
+            derecho = Derecho_propietario.objects.filter(slug=slug)
+            obj_general = ObjetivoGeneralEjec.objects.get(slug=slug)
+            obj_especifico = ObjetivoEspecificoEjec.objects.filter(slug=slug)
+            ubicacion = UbicacionGeografica.objects.get(slug=slug)            
+        except (Postulacion.DoesNotExist, DatosProyectoBase.DoesNotExist, Beneficiario.DoesNotExist, Declaracion_jurada.DoesNotExist,
+                PresupuestoReferencial.DoesNotExist, Derecho_propietario.DoesNotExist, ObjetivoGeneralEjec.DoesNotExist, 
+                ObjetivoEspecificoEjec.DoesNotExist, UbicacionGeografica.DoesNotExist):
+            return HttpResponse("Los datos no fueron encontrados para este slug.", status=404)
+            
+            
     # Estilos personalizados
     style_right = ParagraphStyle(
         name='RightAlignStyle',
@@ -93,7 +112,11 @@ def generate_pdf(request, slug):
     elements.append(convocatoria_title)
 
     # Título del documento
-    title = f"<u>Informe Técnico de Condiciones Previas</u>"
+    if postulacion.tipo_financiamiento == 1:
+        title = f"<u>Informe Técnico de Condiciones Previas</u>"
+    else:
+        title = f"<u>Estudio de Diseño Técnico de Preinversion</u>"
+        
     title_paragraph = Paragraph(title, style_center)
     elements.append(title_paragraph)
 
@@ -131,7 +154,7 @@ def generate_pdf(request, slug):
     style_lef = stylesl['Normal']
     style_lef.fontName = 'Helvetica'
     style_lef.fontSize = 7  # Tamaño de la fuente para las celdas
-    style_lef.alignment = 0  # Alineación horizontal centrado (1 = centrado)
+    style_lef.alignment = TA_JUSTIFY    # Alineación horizontal centrado (1 = centrado)
     style_lef.valign = 'middle'  # Alineación vertical en el medio
     style_lef.justification = 'LEFT'  # O 'CENTER' o 'RIGHT' según sea necesario
     style_lef.leading = 8  # Controla la separación entre las líneas (reduce el espacio entre las líneas)
@@ -221,8 +244,8 @@ def generate_pdf(request, slug):
     # Tabla nombre proyecto 
     # -------------------------
     data_nombre = [
-        ["<b>NOMBRE DEL PROYECTO</b>",str(proyecto.nombre)],
-        ["<b>BENEFICIARIOS</b>",str(proyecto.comunidades)],
+        ["<b>NOMBRE DEL PROYECTO</b>",str(proyecto.nombre).replace("\n", "<br />")],
+        ["<b>BENEFICIARIOS</b>",str(proyecto.comunidades).replace("\n", "<br />")],
     ]
     data_nombre = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_nombre]
     table_nombre = Table(data_nombre, colWidths=[130, 390], rowHeights=25)
@@ -235,123 +258,186 @@ def generate_pdf(request, slug):
         tipologi = ''
 
     data_tipo = [
-        ["<b>TIPOLOGIA DEL PROYECTO</b>", str(tipologi), "<b>PERIODO DE EJECUCION</b>", str(proyecto.periodo_ejecu), "<b>FINANCIAMIENTO EDTP</b>", "Sí" if proyecto.solicitud_financ else "No"],
+        ["<b>TIPOLOGIA DEL PROYECTO</b>", str(tipologi), "<b>PERIODO DE EJECUCION (MESES)</b>", str(proyecto.periodo_ejecu).replace("\n", "<br />")],
     ]
     data_tipo = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_tipo]
-    table_tipo = Table(data_tipo, colWidths=[130, 130, 90, 40, 90, 40], rowHeights=20)
+    table_tipo = Table(data_tipo, colWidths=[130, 130 , 130, 130], rowHeights=20)
     table_tipo.setStyle(table_style_V)
     table_tipo.splitByRow = True
     elements.append(table_tipo)
     elements.append(Spacer(1, 10))
+    
+    if postulacion.tipo_financiamiento == 1:
+        # Título de sección
+        subt2 = f"2.- JUSTIFICACION DE LA INICIATIVA DEL PROYECTO:"
+        subt2_title = Paragraph(subt2, style_left)
+        elements.append(subt2_title)
 
-    # Título de sección
-    subt2 = f"2.- JUSTIFICACION DE LA INICIATIVA DEL PROYECTO:"
-    subt2_title = Paragraph(subt2, style_left)
-    elements.append(subt2_title)
+        # -------------------------
+        # Tabla justificacion 
+        # -------------------------
 
-    # -------------------------
-    # Tabla justificacion 
-    # -------------------------
+        data_justificacion = [
+            ["El proyecto esta acorde a los principios y derechos establecidos en Constitución Política del Estado ?", "Sí" if justificacion.justificacion1 else "No"],
+            ["El proyecto esta acorde a Los lineamientos de la Agenda Patriótica 2025 y la Ley N° 300 Marco de la Madre Tierra y Desarrollo Integral para Vivir Bien ?", "Sí" if justificacion.justificacion2 else "No"],
+            ["El Proyecto esta acorde a la normativa del Plan Sectorial de Desarrollo Integral del Ministerio de Medio Ambiente y Agua ?", "Sí" if justificacion.justificacion3 else "No"],
+            ["El Proyecto esta acorde a la normativa de la Ley de Autonomías y Descentralización 'ANDRES IBAÑEZ' ? ", "Sí" if justificacion.justificacion4 else "No"],
+            ["El Proyecto esta acorde a la normativa de la Ley Forestal ?", "Sí" if justificacion.justificacion5 else "No"],
+            ["El Proyecto esta acorde al Plan Territorial de Desarrollo Integral (PTDI) ?", "Sí" if justificacion.justificacion6 else "No"],
+            ["El Proyecto está dentro de la normativa de los Planes de Gestión Territorial Comunitaria (PGTC)?", "Sí" if justificacion.justificacion7 else "No"],
+        ]
+        data_justificacion = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_justificacion]
+        table_justificacion = Table(data_justificacion, colWidths=[490, 30], rowHeights=15)
+        table_justificacion.setStyle(table_style_V)
+        table_justificacion.splitByRow = True
+        elements.append(table_justificacion)
 
-    data_justificacion = [
-        ["El proyecto esta acorde a los principios y derechos establecidos en Constitución Política del Estado ?", "Sí" if justificacion.justificacion1 else "No"],
-        ["El proyecto esta acorde a Los lineamientos de la Agenda Patriótica 2025 y la Ley N° 300 Marco de la Madre Tierra y Desarrollo Integral para Vivir Bien ?", "Sí" if justificacion.justificacion2 else "No"],
-        ["El Proyecto esta acorde a la normativa del Plan Sectorial de Desarrollo Integral del Ministerio de Medio Ambiente y Agua ?", "Sí" if justificacion.justificacion3 else "No"],
-        ["El Proyecto esta acorde a la normativa de la Ley de Autonomías y Descentralización 'ANDRES IBAÑEZ' ? ", "Sí" if justificacion.justificacion4 else "No"],
-        ["El Proyecto esta acorde a la normativa de la Ley Forestal ?", "Sí" if justificacion.justificacion5 else "No"],
-        ["El Proyecto esta acorde al Plan Territorial de Desarrollo Integral (PTDI) ?", "Sí" if justificacion.justificacion6 else "No"],
-        ["El Proyecto está dentro de la normativa de los Planes de Gestión Territorial Comunitaria (PGTC)?", "Sí" if justificacion.justificacion7 else "No"],
-    ]
-    data_justificacion = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_justificacion]
-    table_justificacion = Table(data_justificacion, colWidths=[490, 30], rowHeights=15)
-    table_justificacion.setStyle(table_style_V)
-    table_justificacion.splitByRow = True
-    elements.append(table_justificacion)
+        elements.append(Spacer(1, 10))
 
-    elements.append(Spacer(1, 10))
+        # Título de sección
+        subt3 = f"3.- IDEA DEL PROYECTO:"
+        subt3_title = Paragraph(subt3, style_left)
+        elements.append(subt3_title)
 
-    # Título de sección
-    subt3 = f"3.- IDEA DEL PROYECTO:"
-    subt3_title = Paragraph(subt3, style_left)
-    elements.append(subt3_title)
+        # -------------------------
+        # Tabla Idea de proyecto 
+        # -------------------------
 
-    # -------------------------
-    # Tabla Idea de proyecto 
-    # -------------------------
+        data_idea = [
+            ["<b>ANTECEDENTES</b>"],
+            [str(idea.antecedente).replace("\n", "<br />")],
+            ["<b>DIAGNOSTICO DEL PROYECTO</b>"],
+            [str(idea.diagnostico).replace("\n", "<br />")],
+            ["<b>PLANTEAMIENTO DEL PROBLEMA / NECESIDAD A RESOLVER CON EL PROYECTO</b>"],
+            [str(idea.planteamiento_problema).replace("\n", "<br />")],
+            ["<b>ACTORES INVOLUCRADOS</b>"],
+            [str(idea.actores_involucrados).replace("\n", "<br />")],
+            ["<b>ALTERNATIVA DE SOLUCION 1</b>"],
+            [str(idea.alternativa_1).replace("\n", "<br />")],
+            ["<b>ALTERNATIVA DE SOLUCION 2</b>"],
+            [str(idea.alternativa_2).replace("\n", "<br />")],
+            ["<b>ALTERNATIVA ELEGIDA</b>"],
+            [str(idea.elige_alternativa)],
+            ["<b>JUSTIFICACION DE LA ALTERNATIVA ELEGIDA</b>"],
+            [str(idea.justificacion_alter).replace("\n", "<br />")],
+            ["<b>OBJETIVO GENERAL DEL PROYECTO</b>"],
+            [str(idea.objetivo_general).replace("\n", "<br />")],
+        ]
+        data_idea = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_idea]
+        table_idea = Table(data_idea, colWidths=[520])
+        table_idea.setStyle(table_style_V)
+        table_idea.splitByRow = True
+        elements.append(table_idea)
+        
+        elements.append(Spacer(1, 10)) 
+        subt4 = f"Objetivos especificos:"
+        subt4_title = Paragraph(subt4, style_left)
+        elements.append(subt4_title)
 
-    data_idea = [
-        ["<b>ANTECEDENTES</b>"],
-        [str(idea.antecedente)],
-        ["<b>DIAGNOSTICO DEL PROYECTO</b>"],
-        [str(idea.diagnostico)],
-        ["<b>PLANTEAMIENTO DEL PROBLEMA / NECESIDAD A RESOLVER CON EL PROYECTO</b>"],
-        [str(idea.planteamiento_problema)],
-        ["<b>ACTORES INVOLUCRADOS</b>"],
-        [str(idea.actores_involucrados)],
-        ["<b>ALTERNATIVA DE SOLUCION 1</b>"],
-        [str(idea.alternativa_1)],
-        ["<b>ALTERNATIVA DE SOLUCION 2</b>"],
-        [str(idea.alternativa_2)],
-        ["<b>ALTERNATIVA ELEGIDA</b>"],
-        [str(idea.elige_alternativa)],
-        ["<b>JUSTIFICACION DE LA ALTERNATIVA ELEGIDA</b>"],
-        [str(idea.justificacion_alter)],
-        ["<b>OBJETIVO GENERAL DEL PROYECTO</b>"],
-        [str(idea.objetivo_general)],
-    ]
-    data_idea = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_idea]
-    table_idea = Table(data_idea, colWidths=[520])
-    table_idea.setStyle(table_style_V)
-    table_idea.splitByRow = True
-    elements.append(table_idea)
+        # -------------------------
+        # Tabla de MAE
+        # -------------------------
 
-    subt4 = f"Objetivos especificos:"
-    subt4_title = Paragraph(subt4, style_left)
-    elements.append(subt4_title)
+        data_objetivo = [
+            ["<b>OBJETIVO ESPECIFICO</b>", "<b>COMPONENTE</b>", "<b>SITUACION ACTUAL / LINEA DE BASE</b>", "<b>INDICADOR</b>", "<b>META</b>"]
+        ]
+        for objetivos in objetivo:
+            data_objetivo.append([
+                str(objetivos.objetivo).replace("\n", "<br />"),
+                str(objetivos.componente).replace("\n", "<br />"),
+                str(objetivos.linea_base).replace("\n", "<br />"),
+                str(objetivos.indicador).replace("\n", "<br />"),
+                str(objetivos.meta).replace("\n", "<br />"),
+            ])
 
-    # -------------------------
-    # Tabla de MAE
-    # -------------------------
+        data_objetivo = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_objetivo]
+        table_objetivo = Table(data_objetivo, colWidths=[104, 104, 104, 104, 104])
+        table_objetivo.setStyle(table_style)
+        table_objetivo.splitByRow = True
+        elements.append(table_objetivo)
+        elements.append(Spacer(1, 10))
 
-    data_objetivo = [
-        ["<b>OBJETIVO ESPECIFICO</b>", "<b>COMPONENTE</b>", "<b>SITUACION ACTUAL / LINEA DE BASE</b>", "<b>INDICADOR</b>", "<b>META</b>"]
-    ]
-    for objetivos in objetivo:
-        data_objetivo.append([
-            str(objetivos.objetivo),
-            str(objetivos.componente),
-            str(objetivos.linea_base),
-            str(objetivos.indicador),
-            str(objetivos.meta),
-        ])
+        # Título de sección
+        subt5 = f"Beneficiarios del Proyecto:"
+        subt5_title = Paragraph(subt5, style_left)
+        elements.append(subt5_title)
 
-    data_objetivo = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_objetivo]
-    table_objetivo = Table(data_objetivo, colWidths=[104, 104, 104, 104, 104])
-    table_objetivo.setStyle(table_style)
-    table_objetivo.splitByRow = True
-    elements.append(table_objetivo)
-    elements.append(Spacer(1, 10))
+        # -------------------------
+        # Tabla Idea de proyecto 
+        # -------------------------
 
-    # Título de sección
-    subt5 = f"Beneficiarios del Proyecto:"
-    subt5_title = Paragraph(subt5, style_left)
-    elements.append(subt5_title)
+        data_beneficio = [
+            ["<b>BENEFICIOS ESPERADOS DEL PROYECTO (AMBIENTAL, SOCIAL Y ECONOMICO)</b>"],
+            [str(idea.beneficios_alter).replace("\n", "<br />")],
+        ]
+        data_beneficio = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_beneficio]
+        table_beneficio = Table(data_beneficio, colWidths=[520])
+        table_beneficio.setStyle(table_style_V)
+        table_beneficio.splitByRow = True
+        elements.append(table_beneficio)
+        elements.append(Spacer(1, 5))
 
-    # -------------------------
-    # Tabla Idea de proyecto 
-    # -------------------------
+    else:
+        subt2 = f"2.- OBJETIVO:"
+        subt2_title = Paragraph(subt2, style_left)
+        elements.append(subt2_title)
+        
+        # Título de sección
+        subt3 = f"OBJETIVO GENERAL"
+        subt3_title = Paragraph(subt3, style_left)
+        elements.append(subt3_title)
+        # -------------------------
+        # Tabla Objetivo General
+        # -
+        data_obj_general = [
+            ["<b>OBJETIVO GENERAL DEL PROYECTO</b>"],
+            [str(obj_general.objetivo_general).replace("\n", "<br />")],
+        ]
+        data_obj_general = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_obj_general]
+        table_obj_general = Table(data_obj_general, colWidths=[520])
+        table_obj_general.setStyle(table_style_V)
+        table_obj_general.splitByRow = True
+        elements.append(table_obj_general)        
+        elements.append(Spacer(1, 5)) 
+        
+        subt4  = f"OBJETIVO ESPECIFICO, COMPONENTES Y METAS:"
+        subt4_title = Paragraph(subt4, style_left)
+        elements.append(subt4_title)
+        
+        data_obj_esp = [
+            ["<b>OBJETIVO ESPECIFICO</b>", "<b>COMPONENTE</b>", "<b>META</b>"]
+        ]
+        for objetivos in obj_especifico:
+            data_obj_esp.append([
+                str(objetivos.objetivo).replace("\n", "<br />"),
+                str(objetivos.componente).replace("\n", "<br />"),
+                str(objetivos.meta).replace("\n", "<br />"),
+            ])
 
-    data_beneficio = [
-        ["<b>BENEFICIOS ESPERADOS DEL PROYECTO (AMBIENTAL, SOCIAL Y ECONOMICO)</b>"],
-        [str(idea.beneficios_alter)],
-    ]
-    data_beneficio = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_beneficio]
-    table_beneficio = Table(data_beneficio, colWidths=[520])
-    table_beneficio.setStyle(table_style_V)
-    table_beneficio.splitByRow = True
-    elements.append(table_beneficio)
-    elements.append(Spacer(1, 5))
-
+        data_obj_esp = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_obj_esp]
+        table_obj_esp = Table(data_obj_esp, colWidths=[174, 173, 173])
+        table_obj_esp.setStyle(table_style)
+        table_obj_esp.splitByRow = True
+        elements.append(table_obj_esp)
+        elements.append(Spacer(1, 5))
+        # -------------------------
+        # Tabla Nro de Hectareas
+        # -----------------------
+        data_hectarea = [
+            ["<b>NÚMERO DE HECTAREAS DE FORESTACIÓN Y/O REFORESTACIÓN Y/O MANEJO SUSTENTABLE DE BOSQUE:</b>", str(obj_general.hectareas).replace("\n", "<br />") + "ha." + str(obj_general.tipo_hectareas).replace("\n", "<br />")]
+        ]
+        
+        data_hectarea = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_hectarea]
+        table_hectarea = Table(data_hectarea, colWidths=[150, 370])
+        table_hectarea.setStyle(table_style_V)
+        table_hectarea.splitByRow = True
+        elements.append(table_hectarea)        
+        elements.append(Spacer(1, 10)) 
+        
+        subt6  = f"03. BENEFICIARIOS"
+        subt6_title = Paragraph(subt6, style_left)
+        elements.append(subt6_title)
+        
     total_directo = beneficiarios.mujer_directo + beneficiarios.hombre_directo
     total_indirecto = beneficiarios.hombre_indirecto + beneficiarios.mujer_indirecto
     total_hombres = beneficiarios.hombre_directo + beneficiarios.hombre_indirecto
@@ -382,152 +468,194 @@ def generate_pdf(request, slug):
 
     elements.append(Spacer(1, 10))
 
-    # Título de sección
-    subt6 = f"04.- ITCP - MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO:"
-    subt6_title = Paragraph(subt6, style_left)
-    elements.append(subt6_title)
+    if postulacion.tipo_financiamiento == 1:
+        
+        # Título de sección
+        subt6 = f"04.- ITCP - MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO:"
+        subt6_title = Paragraph(subt6, style_left)
+        elements.append(subt6_title)
 
-    # -------------------------
-    # Tabla Idea de proyecto 
-    # -------------------------
-   
-    data_modelo = [
-        ["<b>Tipo y Nombre de Beneficiario</b>", "<b>Acta</b>", "<b>Justificacion</b>"]
-    ]
-    for modelos in modelo:
-        data_modelo.append([
-            str(modelos.comunidades),
-            str(modelos.si_acta),
-            str(modelos.no_acta),
-        ])
-
-    data_modelo = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_modelo]
-    table_modelo = Table(data_modelo, colWidths=[130,195,195])
-    table_modelo.setStyle(table_style)
-    table_modelo.splitByRow = True
-    elements.append(table_modelo)
-    elements.append(Spacer(1, 10))
-
-    # Título de sección
-    subt7 = f"05.- ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO"
-    subt7_title = Paragraph(subt7, style_left)
-    elements.append(subt7_title)
-
-    # -------------------------
-    # Tabla Idea de proyecto 
-    # -------------------------
-   
-    data_derecho = [
-        ["<b>Descripcion del Derecho Propietario</b>", "<b>Registro del Derecho Propietario</b>", "<b>De no contar con derecho propietario determinar las acciones a realizar y plazo</b>", "<b>Georeferenciacion</b>"]
-    ]
-    for derechos in derecho:
-        data_derecho.append([
-            str(derechos.descripcion),
-            str(derechos.si_registro),
-            str(derechos.no_registro),
-            "Z="+str(derechos.zone)+"K " + "\n" + str(derechos.easting) + "m E" + "\n" + str(derechos.northing) + "m N" + "\n",
-        ])
-
-    data_derecho = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_derecho]
-    table_derecho = Table(data_derecho, colWidths=[130, 130, 130, 130])
-    table_derecho.setStyle(table_style)
-    table_derecho.splitByRow = True
-    elements.append(table_derecho)
-    elements.append(Spacer(1, 10))
+        # -------------------------
+        # Tabla Idea de proyecto 
+        # -------------------------
     
-    # Título de sección
-    subt8 = f"06.- IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES"
-    subt8_title = Paragraph(subt8, style_left)
-    elements.append(subt8_title)
+        data_modelo = [
+            ["<b>Tipo y Nombre de Beneficiario</b>", "<b>Acta</b>", "<b>Justificacion</b>"]
+        ]
+        for modelos in modelo:
+            data_modelo.append([
+                str(modelos.comunidades).replace("\n", "<br />"),
+                str(modelos.si_acta),
+                str(modelos.no_acta).replace("\n", "<br />"),
+            ])
 
-    # -------------------------
-    # Tabla Impacto Ambientales
-    # -------------------------
+        data_modelo = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_modelo]
+        table_modelo = Table(data_modelo, colWidths=[130,195,195])
+        table_modelo.setStyle(table_style)
+        table_modelo.splitByRow = True
+        elements.append(table_modelo)
+        elements.append(Spacer(1, 10))
 
-    data_impacto = [
-        ["<b>Componente Ambiental</b>","<b>Bosque</b>","<b>Suelo</b>","<b>Agua</b>","<b>Aire</b>","<b>Biodiversidad</b>"],
-        ["<b>Nivel</b>",str(impacto.bosque_nivel),str(impacto.suelo_nivel),str(impacto.agua_nivel),str(impacto.aire_nivel),str(impacto.biodiversidad_nivel)],
-        ["<b>Temporalidad</b>",str(impacto.bosque_tempo),str(impacto.suelo_tempo),str(impacto.agua_tempo),str(impacto.aire_tempo),str(impacto.biodiversidad_tempo)],
-    ]
-    data_impacto = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_impacto]
-    table_impacto = Table(data_impacto, colWidths=[130, 78, 78, 78, 78, 78])
-    table_impacto.setStyle(table_style_V)
-    table_impacto.splitByRow = True
-    elements.append(table_impacto)
-    elements.append(Spacer(1, 10))
+        # Título de sección
+        subt7 = f"05.- ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO"
+        subt7_title = Paragraph(subt7, style_left)
+        elements.append(subt7_title)
+
+        # -------------------------
+        # Tabla Idea de proyecto 
+        # -------------------------
     
-    # Título de sección
-    subt9 = f"07.- IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES"
-    subt9_title = Paragraph(subt9, style_left)
-    elements.append(subt9_title)
+        data_derecho = [
+            ["<b>Descripcion del Derecho Propietario</b>", "<b>Registro del Derecho Propietario</b>", "<b>De no contar con derecho propietario determinar las acciones a realizar y plazo</b>", "<b>Georeferenciacion</b>"]
+        ]
+        for derechos in derecho:
+            data_derecho.append([
+                str(derechos.descripcion).replace("\n", "<br />"),
+                str(derechos.si_registro),
+                str(derechos.no_registro).replace("\n", "<br />"),
+                "Z="+str(derechos.zone)+"K " + "\n" + str(derechos.easting) + "m E" + "\n" + str(derechos.northing) + "m N" + "\n",
+            ])
+
+        data_derecho = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_derecho]
+        table_derecho = Table(data_derecho, colWidths=[130, 130, 130, 130])
+        table_derecho.setStyle(table_style)
+        table_derecho.splitByRow = True
+        elements.append(table_derecho)
+        elements.append(Spacer(1, 10))
+        
+        # Título de sección
+        subt8 = f"06.- IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES"
+        subt8_title = Paragraph(subt8, style_left)
+        elements.append(subt8_title)
+
+        # -------------------------
+        # Tabla Impacto Ambientales
+        # -------------------------
+
+        data_impacto = [
+            ["<b>Componente Ambiental</b>","<b>Bosque</b>","<b>Suelo</b>","<b>Agua</b>","<b>Aire</b>","<b>Biodiversidad</b>"],
+            ["<b>Nivel</b>",str(impacto.bosque_nivel),str(impacto.suelo_nivel),str(impacto.agua_nivel),str(impacto.aire_nivel),str(impacto.biodiversidad_nivel)],
+            ["<b>Temporalidad</b>",str(impacto.bosque_tempo),str(impacto.suelo_tempo),str(impacto.agua_tempo),str(impacto.aire_tempo),str(impacto.biodiversidad_tempo)],
+        ]
+        data_impacto = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_impacto]
+        table_impacto = Table(data_impacto, colWidths=[130, 78, 78, 78, 78, 78])
+        table_impacto.setStyle(table_style_V)
+        table_impacto.splitByRow = True
+        elements.append(table_impacto)
+        elements.append(Spacer(1, 10))
+        
+        # Título de sección
+        subt9 = f"07.- IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES"
+        subt9_title = Paragraph(subt9, style_left)
+        elements.append(subt9_title)
+        
+        # -------------------------
+        # Tabla Riesgos Ambientales
+        # -------------------------
     
-    # -------------------------
-    # Tabla Riesgos Ambientales
-    # -------------------------
-   
-    data_riesgo = [
-        ["<b>Riesgo</b>", "<b>Nivel</b>"]
-    ]
-    for riesgos in riesgo:
-        data_riesgo.append([
-            str(riesgos.riesgo),
-            str(riesgos.nivel),
-        ])
+        data_riesgo = [
+            ["<b>Riesgo</b>", "<b>Nivel</b>"]
+        ]
+        for riesgos in riesgo:
+            data_riesgo.append([
+                str(riesgos.riesgo),
+                str(riesgos.nivel),
+            ])
 
-    data_riesgo = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_riesgo]
-    table_riesgo = Table(data_riesgo, colWidths=[260, 260])
-    table_riesgo.setStyle(table_style)
-    table_riesgo.splitByRow = True
-    elements.append(table_riesgo)
-    elements.append(Spacer(1, 10))
-    
+        data_riesgo = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_riesgo]
+        table_riesgo = Table(data_riesgo, colWidths=[130, 130])
+        table_riesgo.setStyle(table_style)
+        table_riesgo.splitByRow = True
+        elements.append(table_riesgo)
+        elements.append(Spacer(1, 10))
+        
+        # Título de sección
+        subt9 = f"08.- OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO"
+        subt9_title = Paragraph(subt9, style_left)
+        elements.append(subt9_title)
+
+        # -------------------------
+        # Tabla Detalles Poa
+        # -------------------------
+
+        data_poa = [
+            ["<b>DETALLE</b>"],
+            [str(poa.descripcion).replace("\n", "<br />")],
+        ]
+        data_poa = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_poa]
+        table_poa = Table(data_poa, colWidths=[520])
+        table_poa.setStyle(table_style_V)
+        table_poa.splitByRow = True
+        elements.append(table_poa)
+        elements.append(Spacer(1, 10))
+    else:
+        subt7  = f"04. UBICACION POSICION GEOGRAFICA:"
+        subt7_title = Paragraph(subt7, style_left)
+        elements.append(subt7_title)
+        
+        data_der_prop = [
+            ["<b>DESCRIPCION</b>", "<b>ADJUNTAR DERECHO PROPIETARIO</b>", "<b>DE NO CONTAR CON UN DERECHO PROPIETARIO DETERMINAR LAS ACCIONES A REALIZAR</b>", "<b>GEOREFERENCIA (SISTEMA DE REFERENCIA WGS-84 PROYECCION UTM)</b>"]
+        ]
+        for derechos in derecho:
+            data_der_prop.append([
+                str(derechos.descripcion).replace("\n", "<br />"),
+                str(derechos.si_registro),
+                str(derechos.no_registro).replace("\n", "<br />"),
+                "Z="+str(derechos.zone)+"K " + "\n" + str(derechos.easting) + "m E" + "\n" + str(derechos.northing) + "m N" + "\n",
+            ])
+
+        data_der_prop = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_der_prop]
+        table_der_prop = Table(data_der_prop, colWidths=[130, 130, 130])
+        table_der_prop.setStyle(table_style)
+        table_der_prop.splitByRow = True
+        elements.append(table_der_prop)
+        elements.append(Spacer(1, 5))
+        
+        data_ubi = [
+            ["<b>Altura media zona de forestación</b>", str(ubicacion.alturaForestacion) + "msnm"]
+        ]
+        
+        data_ubi = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_ubi]
+        table_ubi = Table(data_ubi, colWidths=[150, 370])
+        table_ubi.setStyle(table_style)
+        table_ubi.splitByRow = True
+        elements.append(table_ubi)
+        elements.append(Spacer(1, 5))
     # Título de sección
-    subt9 = f"08.- OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO"
-    subt9_title = Paragraph(subt9, style_left)
-    elements.append(subt9_title)
-
-    # -------------------------
-    # Tabla Detalles Poa
-    # -------------------------
-
-    data_poa = [
-        ["<b>Detalle</b>"],
-        [str(poa.descripcion)],
-    ]
-    data_poa = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_poa]
-    table_poa = Table(data_poa, colWidths=[520])
-    table_poa.setStyle(table_style_V)
-    table_poa.splitByRow = True
-    elements.append(table_poa)
-    elements.append(Spacer(1, 10))
-
-    # Título de sección
-    subt10 = f"09.- PRESUPUESTO REFERENCIAL"
+    if postulacion.tipo_financiamiento == 1:    
+        subt10 = f"09.- PRESUPUESTO REFERENCIAL"
+    else:
+        subt10 = f"05.- COSTO DEL PROYECTO"
+        
     subt10_title = Paragraph(subt10, style_left)
     elements.append(subt10_title)
+    if postulacion.tipo_financiamiento == 1:
+        # Título de sección
+        subt11 = f"Elaboración Estudio de Diseño Técnico de Preinversión - EDTP:"
+        subt11_title = Paragraph(subt11, style_left)
+        elements.append(subt11_title)
+        
+        # -------------------------
+        # Tabla Presupuesto referencial
+        # -------------------------
+
+        data_presupuestoelab = [
+            ["<b>FONABOSQUE (Bs.)</b>","<b>SOLICITANTE (Bs.)</b>","<b>TOTAL (Bs.)</b>","<b>FONABOSQUE %</b>","<b>SOLICITANTE %</b>","<b>% TOTAL</b>",],
+            [str(presupuesto.elab_fona), str(presupuesto.elab_sol), str(presupuesto.elab_total), str(presupuesto.elab_fona_p), str(presupuesto.elab_sol_p), str(presupuesto.elab_total_p)],
+        ]
+        data_presupuestoelab = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_presupuestoelab]
+        table_presLab = Table(data_presupuestoelab, colWidths=[90, 90, 80, 90, 90, 80])
+        table_presLab.setStyle(table_style_V)
+        table_presLab.splitByRow = True
+        elements.append(table_presLab)
+        elements.append(Spacer(1, 5))
+        
+        subt12 = f"Presupuesto referencial para la Ejecucion del Estudio de Diseño Técnico de Preinversión - EDTP:"
 
     # Título de sección
-    subt11 = f"Elaboración Estudio de Diseño Técnico de Preinversión - EDTP:"
-    subt11_title = Paragraph(subt11, style_left)
-    elements.append(subt11_title)
+    else:
+        subt12 = f"Ejecución Estudio de Diseño Técnico de Preinversión - EDTP:"
     
-    # -------------------------
-    # Tabla Presupuesto referencial
-    # -------------------------
-
-    data_presupuestoelab = [
-        ["<b>FONABOSQUE (Bs.)</b>","<b>SOLICITANTE (Bs.)</b>","<b>TOTAL (Bs.)</b>","<b>FONABOSQUE %</b>","<b>SOLICITANTE %</b>","<b>% TOTAL</b>",],
-        [str(presupuesto.elab_fona), str(presupuesto.elab_sol), str(presupuesto.elab_total), str(presupuesto.elab_fona_p), str(presupuesto.elab_sol_p), str(presupuesto.elab_total_p)],
-    ]
-    data_presupuestoelab = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_presupuestoelab]
-    table_presLab = Table(data_presupuestoelab, colWidths=[90, 90, 80, 90, 90, 80])
-    table_presLab.setStyle(table_style_V)
-    table_presLab.splitByRow = True
-    elements.append(table_presLab)
-    elements.append(Spacer(1, 5))
-
-    # Título de sección
-    subt12 = f"Ejecución Estudio de Diseño Técnico de Preinversión - EDTP:"
     subt12_title = Paragraph(subt12, style_left)
     elements.append(subt12_title)
     # -------------------------
@@ -545,42 +673,57 @@ def generate_pdf(request, slug):
     elements.append(table_presEjec)
     elements.append(Spacer(1, 10))
 
-    # Título de sección
-    subt13 = f"10.- CONCLUCIONES Y RECOMENDACIONES"
-    subt13_title = Paragraph(subt13, style_left)
-    elements.append(subt13_title)
+    if postulacion.tipo_financiamiento == 1:
+            
+        # Título de sección
+        subt13 = f"10.- CONCLUCIONES Y RECOMENDACIONES"
+        subt13_title = Paragraph(subt13, style_left)
+        elements.append(subt13_title)
 
-    # -------------------------
-    # Tabla Conclusiones y recomendaciones
-    # -------------------------
+        # -------------------------
+        # Tabla Conclusiones y recomendaciones
+        # -------------------------
 
-    data_conclusion = [
-        ["<b>CONCLUSIONES</b>"],
-        [str(conclusion.conclusion)],
-        ["<b>RECOMENDACIONES</b>"],
-        [str(conclusion.recomendacion)],
-    ]
-    data_conclusion = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_conclusion]
-    table_conclusion = Table(data_conclusion, colWidths=[520])
-    table_conclusion.setStyle(table_style_V)
-    table_conclusion.splitByRow = True
-    elements.append(table_conclusion)
-    elements.append(Spacer(1, 10))
+        data_conclusion = [
+            ["<b>CONCLUSIONES</b>"],
+            [str(conclusion.conclusion).replace("\n", "<br />")],
+            ["<b>RECOMENDACIONES</b>"],
+            [str(conclusion.recomendacion).replace("\n", "<br />")],
+        ]
+        data_conclusion = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_conclusion]
+        table_conclusion = Table(data_conclusion, colWidths=[520])
+        table_conclusion.setStyle(table_style_V)
+        table_conclusion.splitByRow = True
+        elements.append(table_conclusion)
+        elements.append(Spacer(1, 10))
 
-    # Título de sección
-    subt14 = f"11.- DECLARACION JURADA"
+        # Título de sección
+        subt14 = f"11.- DECLARACION JURADA"
+    else:
+        subt14 = f"06.- DECLARACION JURADA"
+        
     subt14_title = Paragraph(subt14, style_left)
     elements.append(subt14_title)
     # -------------------------
     # Tabla Declaracion jurada
     # -------------------------
+    if postulacion.tipo_financiamiento == 1:
+        data_declaracion = [
+                ["<b>DECLARACION JURADA</b>"],
+                [str(declaracion.declaracion)],
+                ["<b>CARTA DE SOLICITUD DE FINANCIAMIENTO PARA ELABORACION DE EDTP</b>"],
+                [str(declaracion.carta_elab)],
+                ["<b>CARTA DE SOLICITUD DE FINANCIAMIENTO PARA EJECUCION DE EDTP</b>"],
+                [str(declaracion.carta_ejec)]
+            ]
+    else:
+        data_declaracion = [
+                ["<b>DECLARACION JURADA</b>"],
+                [str(declaracion.declaracion)],
+                ["<b>CARTA DE SOLICITUD DE FINANCIAMIENTO PARA EJECUCION DE EDTP</b>"],
+                [str(declaracion.carta_ejec)]
+            ]
 
-    data_declaracion = [
-        ["<b>DECLARACION JURADA</b>"],
-        [str(declaracion.declaracion)],
-        ["<b>CARTA DE SOLICITUD DE:FINANCIAMIENTO PARA ELABORACION DE EDTP Y FINANCIAMIENTO PARA EJECUCION DE EDTP</b>"],
-        [str(declaracion.carta)],
-    ]
     data_declaracion = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_declaracion]
     table_declaracion = Table(data_declaracion, colWidths=[520])
     table_declaracion.setStyle(table_style_V)

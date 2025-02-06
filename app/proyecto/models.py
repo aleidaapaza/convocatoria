@@ -5,7 +5,7 @@ import uuid
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 
-from proyecto.choices import periodo_ejecucion, elige_alternativas, nivel, temporalidad, riesgos, estado_proyecto
+from proyecto.choices import periodo_ejecucion, elige_alternativas, nivel, temporalidad, riesgos, estado_proyecto,tipo_hectareas
 from user.models import User
 
 from proyecto.upload import docModeloActa, docDerechoPropietario, docDeclaracionjurada
@@ -27,7 +27,6 @@ class DatosProyectoBase(models.Model):
     tipologia_proy = models.BooleanField()
     periodo_ejecu = models.IntegerField(choices=periodo_ejecucion)
     fecha_registro = models.DateTimeField(auto_now_add=True)
-    solicitud_financ = models.BooleanField(default=True)
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -210,7 +209,9 @@ class Impacto_ambiental(models.Model):
     biodiversidad_tempo = models.CharField(choices=temporalidad, max_length=255)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
-
+    otro_nombre = models.CharField(max_length=255, blank=True, null=True)
+    otro_tempo = models.CharField(choices=temporalidad, max_length=255, blank=True, null=True)
+    otro_nivel = models.CharField(choices=nivel, max_length=255, blank=True, null=True)
     def __str__(self):
         return f'{self.slug}'
 
@@ -273,7 +274,8 @@ class Declaracion_jurada(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     declaracion = models.FileField(upload_to=docDeclaracionjurada)
     itcp = models.FileField(upload_to=docDeclaracionjurada)
-    carta = models.FileField(upload_to=docDeclaracionjurada)
+    carta_elab = models.FileField(upload_to=docDeclaracionjurada, null=True, blank=True)
+    carta_ejec = models.FileField(upload_to=docDeclaracionjurada, null=True, blank=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -330,6 +332,42 @@ class Proyecto(models.Model):
 # = models.ForeignKey(, on_delete=models.CASCADE, related_name='proyecto_')
         
     class Meta:
-        verbose_name = _('Proyecto')
-        verbose_name_plural = _('Proyectos')
-        db_table = 'Proyecto'
+        verbose_name = _('ProyectoITCP')
+        verbose_name_plural = _('ProyectosITCP')
+        db_table = 'ProyectoITCP'
+
+class ObjetivoGeneralEjec(models.Model):
+    slug = models.SlugField(null=False, blank=False, unique=True)
+    fechaenvio = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    objetivo_general = models.TextField(null=False, blank=False)
+    hectareas = models.IntegerField(null=False, blank=False, default=0)
+    tipo_hectareas =  models.CharField(choices=tipo_hectareas, null=False, blank=False, default="")
+
+    class Meta:
+        verbose_name = _('ObjetivoGeneralEjec')
+        verbose_name_plural = _('ObjetivosGeneralesEjec')
+        db_table = 'ObjetivoGeneralEjec'
+    
+class ObjetivoEspecificoEjec(models.Model):
+    slug = models.SlugField(null=False, blank=False, unique=False)
+    fechaenvio = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    objetivo = models.TextField(null=False, blank=False)   
+    componente = models.TextField(null=False, blank=False)   
+    meta = models.TextField(null=False, blank=False)
+
+    class Meta:
+        verbose_name = _('ObjetivoEspecificoEjec')
+        verbose_name_plural = _('ObjetivosEspecificoEjec')
+        db_table = 'ObjetivoEspecificoEjec'
+
+class UbicacionGeografica(models.Model):
+    slug = models.SlugField(null=False, blank=False, unique=True)
+    fechaenvio = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    alturaForestacion = models.IntegerField()
+    class Meta:
+        verbose_name = _('UbicacionGeografica')
+        verbose_name_plural = _('UbicacionesGeografica')
+        db_table = 'UbicacionGeografica'

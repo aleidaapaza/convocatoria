@@ -15,9 +15,8 @@ class LoginView(View):
 
     def get(self, request):
         form = LoginForm()
-        activate = True
         entity = 'Inicio de sesion'
-        return render(request, 'login/login.html', {'form': form, 'activate':activate, 'entity':entity})
+        return render(request, 'login/login.html', {'form': form, 'entity':entity})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -37,7 +36,7 @@ class LoginView(View):
 
 def cierreSesion(request):
     logout(request)
-    messages.success(request, 'sesion finalizada exitosamente')
+    messages.success(request, 'SESIÓN FINALIZADA EXITOSAMENTE')
     return redirect('convocatoria:Index')
 
 class ListaRevisores(ListView):
@@ -46,7 +45,6 @@ class ListaRevisores(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['titulo'] = 'LISTA DE REVISORES'
-        context['activate'] = True
         context['entity'] = 'LISTA DE REVISORES'
         context['object_list'] = self.model.objects.all()
         context['entity_registro'] = reverse_lazy('user:Registro_Revisor', args=[])

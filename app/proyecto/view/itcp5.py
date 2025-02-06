@@ -1,5 +1,4 @@
 import os
-from urllib import request
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -25,13 +24,13 @@ class R_Derecho_propietario(View):
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'titulo': 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
             'entity2': 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)',
             'accion': 'Registrar',
             'accion2': 'Cancelar',
             'accion2_url': reverse_lazy('convocatoria:Index'),
-            'error_messages': []  # Inicializa una lista vacía para los mensajes de error
         }
         return render(self.request, self.template_name, context)
     
@@ -98,6 +97,7 @@ class A_Derecho_propietario(View):
 
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'derecho': objetivos,
             'titulo': 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
@@ -106,7 +106,7 @@ class A_Derecho_propietario(View):
             'accion2': 'Cancelar',
             'accion2_url': reverse('convocatoria:Index'),
             'entity_registro': reverse_lazy('proyecto:registro_DerechoPropietario_R', args=[slug]),
-            'entity_registro_nom': 'Registrar',
+            'entity_registro_nom': 'Registrar otros',
             'error_messages': [],  # Inicializa los mensajes de error
         }
         for message in messages.get_messages(self.request):
@@ -167,6 +167,7 @@ class A_Derecho_propietario(View):
             objetivos = Derecho_propietario.objects.filter(slug=slug)
             context = {
                 'proyecto': proyecto_p,
+                'postulacion' : proyecto_p,
                 'derecho': objetivos,
                 'titulo': 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)',
                 'entity': 'REGISTRO DATOS DEL PROYECTO',
@@ -263,6 +264,7 @@ class R_Derecho_propietario_R(View):
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'titulo': 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
             'entity2': 'ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO Y/O TITULO EJECUTORIAL (MANEJO INTEGRAL SUSTENTABLE DE BOSQUES)',

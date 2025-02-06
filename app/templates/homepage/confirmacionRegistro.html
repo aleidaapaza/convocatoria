@@ -2,79 +2,96 @@
 {% load static %}
 {% block contenido %}
     {% if not user.is_authenticated%}
-        <div class="row">
-            {% if not postulacion.modificacion %}
-            <div class="col-4 col-sm-2">
-                <div class="linea-pasos">
-                    <ul>
-                        <li class="paso">Paso 1</li>
-                        <li class="paso">Paso 2</li>
-                        <li class="paso">Paso 3</li>
-                        <li class="paso">Paso 4</li>
-                        <li class="paso">Paso 5</li>
-                        <li class="paso activo">FIN</li>
-                    </ul>
+        {% if not postulacion.modificacion %}
+                <div class="text-center py-3">
+                    <div class="row justify-content-md-center">
+                        <div class="col steps">
+                            <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                            <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                            <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                            <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                            <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                            <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                            <div class="step-circle bg-success text-white">FIN</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
             {% else %}
-            {% endif %}            
-            <div class="col-8 col-sm-10">
+        {% endif %}  
+        <div class="row">                      
+            <div class="col">
                 <div class="row d-flex">
                     <h1 class="text-center text-bg-success ">DATOS REGISTRADOS Y ENVIADOS</h1>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CODIGO DE REGISTRO</div>
-                            <div class="col-md-8 col-sm-12">
+                        <div class="mb-3 row bg-info rounded-4">
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label py-3">CODIGO DE REGISTRO</div>
+                            <div class="col-md-8 col-sm-12 py-3">
                             <h4 class= " bg-white d-flex align-items-center border border-success-subtle">{{postulacion.slug}}</h4>
                             <p>Guarde este codigo en el caso de que se tenga que modificar algun campo</p>
                             </div>
                         </div>
-                        <hr>                
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>                            
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.entidad_territorial}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA ENTIDAD EJECUTORIA</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.nombre_municipio}}</div>
-                        </div>
-                        <hr>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.nombre}} {{postulacion.mae.persona.apellido}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.cargo}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CELULAR DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.celular}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DOMICILIO LEGAL PARA NOTIFICACION</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.correo}}</div>
-                        </div>
-                        <hr>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.nombre}} {{postulacion.responsable.persona.apellido}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.cargo}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">N° DE CELULAR DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.celular}}</div>
-                        </div>                        
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.correo}}</div>
-                        </div>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold bg-info-subtle">TIPO DE FINANCIAMIENTO</td>
+                                    <td>{{ n_financiamiento }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="table-info">
+                                <th scope="col">CODIGO DE LA SOLICITUD</th>
+                                <th scope="col">DEPARTAMENTO</th>
+                                <th scope="col">ENTIDAD TERRITORIAL AUTONOMA</th>
+                                <th scope="col">NOMBRE DE LA ENTIDAD EJECUTORIA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td> {{postulacion.slug}} </td>
+                                    <td> {{postulacion.municipio.departamento}} </td>
+                                    <td> {{postulacion.municipio.entidad_territorial}} </td>
+                                    <td> {{postulacion.municipio.nombre_municipio}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                                <thead>
+                                    <tr class="table-info">
+                                    <th scope="col">NOMBRE DE LA MAE</th>
+                                    <th scope="col">CARGO DE LA MAE</th>
+                                    <th scope="col">CELULAR DE LA MAE</th>
+                                    <th scope="col">CORREO DOMICILIO LEGAL PARA NOTIFICACION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td> {{postulacion.mae.persona.nombrecompleto}} </td>
+                                        <td> {{postulacion.mae.persona.cargo}} </td>
+                                        <td> {{postulacion.mae.persona.celular}} </td>
+                                        <td> {{postulacion.mae.correo}} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <hr>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="table-info">
+                                    <th scope="col">NOMBRE DEL RESPONSABLE DEL PROYECTO</th>
+                                    <th scope="col">CARGO DEL RESPONSABLE DEL PROYECTO</th>
+                                    <th scope="col">CELULAR DEL RESPONSABLE DEL PROYECTO</th>
+                                    <th scope="col">CORREO ELECTRONICO DEL RESPONSABLE DEL PROYECTO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td> {{postulacion.responsable.persona.nombrecompleto}} </td>
+                                        <td> {{postulacion.responsable.persona.cargo}} </td>
+                                        <td> {{postulacion.responsable.persona.celular}} </td>
+                                        <td> {{postulacion.responsable.correo}} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         <hr>                                         
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">FECHA Y HORA DEL ENVIO</div>

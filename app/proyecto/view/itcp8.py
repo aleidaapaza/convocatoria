@@ -37,6 +37,7 @@ class Reg_DetallePOA(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
@@ -69,6 +70,7 @@ class Act_DetallePOA(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p  
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'

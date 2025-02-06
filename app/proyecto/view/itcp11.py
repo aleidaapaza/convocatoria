@@ -36,10 +36,15 @@ class Reg_DeclaracionJurada(CreateView):
         if 'form' not in context:
             context['form'] = self.form_class(self.request.GET, self.request.FILES)
         proyecto_p = Postulacion.objects.get(slug=slug)
+        if proyecto_p.tipo_financiamiento == 1:
+            titulo = "ITCP-DECLARACION JURADA"
+        else:
+            titulo = "DECLARACION JURADA"
         context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-DECLARACION JURADA'
+        context['postulacion'] = proyecto_p
+        context['titulo'] = titulo
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-DECLARACION JURADA'
+        context['entity2'] = titulo
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
@@ -49,25 +54,34 @@ class Reg_DeclaracionJurada(CreateView):
         self.object = self.get_object
         slug = self.kwargs.get('slug', None)
         form = self.form_class(request.POST, request.FILES)
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
 
         if form.is_valid():
             declaracion_d = form.cleaned_data.get('declaracion')
-            itcp_d = form.cleaned_data.get('itcp')
-            carta_d = form.cleaned_data.get('carta')
-            consultoria_d = form.cleaned_data.get('consultoria')
+            carta_ejec = form.cleaned_data.get('carta_ejec')
+
             if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo declaracion no debe superar los 2 MB.')            
-            if carta_d and carta_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo carta no debe superar los 2 MB.')
+                messages.error(request, 'El archivo DECLARACION JURADA no debe superar los 2 MB.')            
+            if carta_ejec and carta_ejec.size > 2 * 1024 * 1024:  # 2 MB
+                messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP no debe superar los 2 MB.')
+
+            if proyecto_p.tipo_financiamiento == 1:
+                carta_elab = form.cleaned_data.get('carta_elab')
+                if carta_elab and carta_elab.size > 2 * 1024 * 1024:  # 2 MB
+                    messages.error(request, 'El CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP no debe superar los 2 MB.')
+
+            # Si hay mensajes de error, retornar la respuesta con el formulario y los mensajes
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
+
+            # Si no hay errores, guardar el formulario
             declaracion = form.save(commit=False)
             declaracion.slug = slug            
             declaracion.save()
             return HttpResponseRedirect(reverse_lazy('convocatoria:Index', args=[]))
-        
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
+
+        # Si el formulario no es válido, devolver el contexto con los mensajes de error
+        return self.render_to_response(self.get_context_data(form=form))
 
 class Act_DeclaracionJurada(UpdateView):
     model = Declaracion_jurada
@@ -81,59 +95,56 @@ class Act_DeclaracionJurada(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         objeto = self.model.objects.get(slug=slug)
-        context['proyecto'] = proyecto_p  
+        if proyecto_p.tipo_financiamiento == 1:
+            titulo = "ITCP-DECLARACION JURADA"
+        else:
+            titulo = "DECLARACION JURADA"
+        context['postulacion'] = proyecto_p
         context['objeto'] = objeto  
-        context['titulo'] = 'ITCP-DECLARACION JURADA'
+        context['titulo'] = titulo
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-DECLARACION JURADA'
+        context['entity2'] = titulo
         context['accion'] = 'Actualizar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
-        if messages:
-        # Si hay mensajes de éxito, error, etc.
-            for message in messages.get_messages(self.request):
-                if message.level_tag == 'success':
-                    context['message_title'] = 'Actualización Exitosa'
-                    context['message_content'] = message.message
-                elif message.level_tag == 'error':
-                    context['message_title'] = 'Error al Actualizar'
-                    context['message_content'] = message.message
-                elif message.level_tag == 'warning':
-                    context['message_title'] = 'Advertencia'
-                    context['message_content'] = message.message
-                else:
-                    context['message_title'] = 'Información'
-                    context['message_content'] = message.message
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         slug = self.kwargs.get('slug', None)
         objeto = self.model.objects.get(slug=slug)     
-        form = self.form_class(request.POST, instance = objeto)
+        form = self.form_class(request.POST, request.FILES, instance = objeto)
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
         if form.is_valid():
-            print("valido")
             declaracion_d = form.cleaned_data.get('declaracion')
             itcp_d = form.cleaned_data.get('itcp')
-            carta_d = form.cleaned_data.get('carta')
-            consultoria_d = form.cleaned_data.get('consultoria')
-
-            # Validación del tamaño de los archivos
+            carta_ejec = form.cleaned_data.get('carta_ejec')
             if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo declaracion no debe superar los 2 MB.')
+                messages.error(request, 'El archivo DECLARACION JURADA no debe superar los 2 MB.')            
+            tamano_maximo = int(proyecto_p.convocatoria.tamanoDoc)
+            if itcp_d and itcp_d.size > tamano_maximo * 1024 * 1024:  # Tamaño máximo en MB
+                messages.error(request, 'El archivo ITCP no debe superar los ' + str(proyecto_p.convocatoria.tamanoDoc) + ' MB')
+
+            if carta_ejec and carta_ejec.size > 2 * 1024 * 1024:  # 2 MB
+                messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP no debe superar los 2 MB.')
             
-            if carta_d and carta_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo carta no debe superar los 2 MB.')
+            if proyecto_p.tipo_financiamiento == 1:
+                carta_elab = form.cleaned_data.get('carta_elab')
+                if carta_elab and carta_elab.size > 2 * 1024 * 1024:  # 2 MB
+                    messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP no debe superar los 2 MB.')
             
-            # Si hay errores, volvemos a renderizar la página con los errores
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
 
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            messages.success(request, 'TCP-DECLARACION JURADA - se actualizo correctamente.')
-            return redirect('convocatoria:Index')        
+            if proyecto_p.tipo_financiamiento == 1:
+                messages.success(request, 'ITCP-DECLARACION JURADA - se actualizo correctamente.')
+                return redirect('convocatoria:Index', slug=slug)
+            else:
+                messages.success(request, 'DECLARACION JURADA - se actualizo correctamente.')
+                return redirect('convocatoria:Index', slug=slug)   
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
             return self.render_to_response(self.get_context_data(form=form))
@@ -147,10 +158,10 @@ def descargar_docDeclaracion(request, slug, num):
         response = HttpResponse(documento.itcp, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{documento.itcp.name}"'
     elif num == 3:
-        response = HttpResponse(documento.carta, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{documento.carta.name}"'
+        response = HttpResponse(documento.carta_elab, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{documento.carta_elab.name}"'
     elif num == 4:
-        response = HttpResponse(documento.consultoria, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{documento.consultoria.name}"'
+        response = HttpResponse(documento.carta_ejec, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{documento.carta_ejec.name}"'
     
     return response

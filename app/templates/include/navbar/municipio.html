@@ -47,89 +47,143 @@
                     
                 {% else %}
                     <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}">
-                        <i class="fas fa-clipboard-list"></i> INICIO
-                    </a>
-                    <hr>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:datos_postulacion' proyecto.slug %}">
-                        <i class="fas fa-clipboard-list"></i> 00. DATOS DE POSTULACION
-                    </a>
-                    <hr>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_Base' proyecto.slug %}">
-                        <i class="fas fa-cogs"></i>     01.DATOS PRINCIPALES DEL PROYECTO
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_justificacion' proyecto.slug %}">
-                        <i class="fas fa-flag"></i>     02. ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}">
-                        <i class="fas fa-lightbulb"></i>    03. ITCP-IDEA DEL PROYECTO
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_obj_especifico' proyecto.slug %}">
-                        <i class="fas fa-bullseye"></i>     03.01. ITCP-OBJETIVOS SECUNDARIOS
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_Beneficios' proyecto.slug %}">
-                        <i class="fas fa-gift"></i>         03.02. ITCP-BENEFICIOS ESPERADOS DEL PROYECTO
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_Beneficiarios' proyecto.slug %}">
-                        <i class="fas fa-users"></i> 03.03. ITCP-BENEFICIARIOS
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_ModeloActa' proyecto.slug %}">
-                        <i class="fas fa-file-alt"></i> 04. ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_DerechoPropietario' proyecto.slug %}">
-                        <i class="fas fa-gavel"></i> 05. ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_ImpactoAmbiental' proyecto.slug %}">
-                        <i class="fas fa-leaf"></i> 06. ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}">
-                        <i class="fas fa-exclamation-triangle"></i> 07. ITCP-IDENTIFICACION DE RIESGOS DE DESASTRES
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_DetallePOA' proyecto.slug %}">
-                        <i class="fas fa-book"></i> 08. ITCP-INSCRIPCIÓN EN EL POA Y OTROS ASPECTOS NECESARIOS
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_PresupuestoRef' proyecto.slug %}">
-                        <i class="fas fa-dollar-sign"></i> 09. ITCP-PRESUPUESTO REFERENCIAL
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_ConclRec' proyecto.slug %}">
-                        <i class="fas fa-comments"></i> 10.ITCP-CONCLUSIONES Y RECOMENDACIONES
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:registro_DeclaracionJurada' proyecto.slug %}">
-                        <i class="fas fa-clipboard-check"></i> 11.ITCP-DECLARACION JURADA
-                    </a>
-                </li>
-                {% endif %}
-                
+                        <a class="nav-link active" href="{% url 'convocatoria:Index' %}">
+                            <i class="fas fa-clipboard-list"></i> INICIO
+                        </a>
+                        <hr>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:datos_postulacion' proyecto.slug %}">
+                            <i class="fas fa-clipboard-list"></i> 00. DATOS DE POSTULACION
+                        </a>
+                        <hr>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_Base' proyecto.slug %}">
+                            <i class="fas fa-cogs"></i>     01.DATOS PRINCIPALES DEL PROYECTO
+                        </a>
+                    </li>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_justificacion' proyecto.slug %}">
+                            <i class="fas fa-flag"></i>     02. ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO
+                        </a>
+                    </li>
+                    {% endif %}                                
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}">
+                            <i class="fas fa-lightbulb"></i>
+                        {% if postulacion.tipo_financiamiento == 1 %}
+                        03. ITCP-IDEA DEL PROYECTO
+                        {% else %}
+                        02. OBJETIVO GENERAL DEL PROYECTO
+                        {% endif %}   
+                        </a>
+                    </li>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_obj_especifico' proyecto.slug %}">
+                                <i class="fas fa-bullseye"></i>
+                                03.01. ITCP-OBJETIVOS SECUNDARIOS
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="">
+                                <i class="fas fa-bullseye"></i>
+                                02.01. OBJETIVO ESPECIFICOS, COMPONENTENTES Y METAS.
+                            </a>
+                        </li>
+                    {% endif %}                                
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_Beneficios' proyecto.slug %}">
+                                <i class="fas fa-gift"></i>
+                                03.02. ITCP-BENEFICIOS ESPERADOS DEL PROYECTO
+                            </a>
+                        </li>
+                    {% endif %}                
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_Beneficiarios' proyecto.slug %}">
+                            <i class="fas fa-users"></i>
+                            {% if postulacion.tipo_financiamiento == 1 %}
+                            03.03. ITCP-BENEFICIARIOS
+                            {% else %}
+                            03. BENEFICIARIOS
+                            {% endif %} 
+                        </a>
+                    </li>
+                    {% if postulacion.tipo_financiamiento == 1 %}                 
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_ModeloActa' proyecto.slug %}">
+                                <i class="fas fa-file-alt"></i>
+                                04. ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_DerechoPropietario' proyecto.slug %}">
+                            <i class="fas fa-gavel"></i> 
+                            05. ITCP-ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_DerechoPropietarioE' proyecto.slug %}">
+                            <i class="fas fa-gavel"></i> 
+                            04. UBICACION POSICION GEOGRAFICA
+                        </a>
+                    </li>
+                    {% endif %}                
+                    {% if postulacion.tipo_financiamiento == 1 %}                
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_ImpactoAmbiental' proyecto.slug %}">
+                                <i class="fas fa-leaf"></i>
+                                06. ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES
+                            </a>
+                        </li>                
+                    {% endif %}
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                    07. ITCP-IDENTIFICACION DE RIESGOS DE DESASTRES
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_DetallePOA' proyecto.slug %}">
+                                <i class="fas fa-book"></i> 
+                                08. ITCP-INSCRIPCIÓN EN EL POA Y OTROS ASPECTOS NECESARIOS
+                            </a>
+                        </li>
+                    {% endif %}            
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'proyecto:registro_PresupuestoRef' proyecto.slug %}">
+                            <i class="fas fa-dollar-sign"></i> 
+                            {% if postulacion.tipo_financiamiento == 1 %}
+                            09. ITCP-PRESUPUESTO REFERENCIAL
+                            {% else %}
+                            05. COSTO DEL PROYECTO
+                            {% endif %} 
+                        </a>
+                    </li>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_ConclRec' proyecto.slug %}">
+                                <i class="fas fa-comments"></i> 10.ITCP-CONCLUSIONES Y RECOMENDACIONES
+                            </a>
+                        </li>
+                    {% endif %}             
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_DeclaracionJurada' proyecto.slug %}">
+                                <i class="fas fa-clipboard-check"></i> 11.ITCP-DECLARACION JURADA
+                            </a>
+                        </li>
+
+                {% endif %}                
             </ul>
         </div>
     </div>

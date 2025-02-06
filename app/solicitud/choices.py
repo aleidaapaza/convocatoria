@@ -24,6 +24,13 @@ estado_proyecto = {
     ('APROBADO', 'APROBADO'),
 }
 
+def financiamiento_s(numero):
+    financiamiento = {
+        1: "FINANCIAMIENTO PARA ELABORACION DEL EDTP",
+        2: "FINANCIAMIENTO PARA EJECUCION DEL EDTP",
+    }
+    return financiamiento.get(numero, "Financiamiento no encontrado")
+
 def departamento_s(numero):
     departamentos = {
         1: "LA PAZ",

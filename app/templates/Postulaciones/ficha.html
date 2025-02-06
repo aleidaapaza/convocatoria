@@ -9,163 +9,189 @@
                 </a>
             </div>
         </div>
-        <h4>CODIGO: {{postulacion.slug}} </h4>
+        <div class="row bg-info rounded-4 py-2">
+            <h4>CODIGO DE LA SOLICITUD: {{postulacion.slug}} </h4>
+        </div>
+        <hr>
         <div class="row">
-            <div class="col-md-6 col-sm-12 mb- pe-3">
-            {% if postulacion.municipio.estado == 'SOLICITUD' %}
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <h4 class="text-center text-bg-success">CAMBIAR DATOS</h4>
-                    {% for field in form2 %}
-                        <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                <div class="col-sm-8">
-                                    <div class="">
-                                        {{ field }}
+            <div class="pe-3">
+                {% if postulacion.municipio.estado == 'SOLICITUD' %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 mb- pe-3">
+                                <h4 class="text-center text-bg-success">CAMBIAR DATOS</h4>
+                                {% for field in form2 %}
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                            <div class="col-sm-8">
+                                                <div class="">
+                                                    {{ field }}
+                                                </div>
+                                            <div class="">
+                                                {% for error in field.errors %}
+                                                    <span style="color: red">({{ error }})</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     </div>
-                                <div class="">
-                                    {% for error in field.errors %}
-                                        <span style="color: red">({{ error }})</span>
-                                    {% endfor %}
-                                </div>
+                                {% endfor %} 
                             </div>
-                        </div>
-                    {% endfor %} 
-                    <h4 class="text-center text-bg-success">HABILITAR USUARIOS</h4>
-                    {% for field in form %}
-                        <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                <div class="col-sm-8">
-                                    <div class="">
-                                        {{ field }}
+                            <div class="col-md-6 col-sm-12 mb- pe-3">
+                                <h4 class="text-center text-bg-success">HABILITAR USUARIOS</h4>
+                                {% for field in form %}
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                            <div class="col-sm-8">
+                                                <div class="">
+                                                    {{ field }}
+                                                </div>
+                                            <div class="">
+                                                {% for error in field.errors %}
+                                                    <span style="color: red">({{ error }})</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     </div>
-                                <div class="">
-                                    {% for error in field.errors %}
-                                        <span style="color: red">({{ error }})</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}  
-                    {% for field in form3 %}
-                        <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                <div class="col-sm-8">
-                                    <div class="">
-                                        {{ field }}
+                                {% endfor %}
+                                {% for field in form3 %}
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                            <div class="col-sm-8">
+                                                <div class="">
+                                                    {{ field }}
+                                                </div>
+                                            <div class="">
+                                                {% for error in field.errors %}
+                                                    <span style="color: red">({{ error }})</span>
+                                                {% endfor %}
+                                                {% if field.help_text %}
+                                                <small style="color: grey">{{ field.help_text }}</small>
+                                            {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
-                                <div class="">
-                                    {% for error in field.errors %}
-                                        <span style="color: red">({{ error }})</span>
-                                    {% endfor %}
-                                    {% if field.help_text %}
-                                    <small style="color: grey">{{ field.help_text }}</small>
+                                {% endfor %}
+                                {% if password %}
+                                <p class='bg-warning'>La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo</p>
+                                {% else %}
                                 {% endif %}
+                                
+                                <div class="row text-center row mt-2">
+                                    <div class="col">
+                                        <button class="btn btn-success" type="submit">
+                                        <i class="fas fa-save"></i>GUARDAR</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
-                    {% endfor %}
-                    {% if password %}
-                    <p class='bg-warning'>La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo</p>
-                    {% else %}
-                    {% endif %}
-                    
-                    <div class="row text-center row mt-2">
-                        <div class="col">
-                            <button class="btn btn-success" type="submit">
-                            <i class="fas fa-save"></i>GUARDAR</button>
-                        </div>
+                                               
+                    </form>
+                {% else %}
+                    <div class="mb-3 row">
+                        <div class="col-md-4 col-sm-12 fw-bold col-form-label">ESTADO DE LA POSTULACION:</div>
+                        <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">
+                        {% if postulacion.estado %}
+                            APROBADO
+                        {% else %}
+                            RECHAZADO
+                        {% endif %}
+                        </div>                            
                     </div>
-                </form>
-            {% else %}
-                <div class="mb-3 row">
-                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">ESTADO DE LA POSTULACION</div>
-                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">
-                    {% if postulacion.estado %}
-                        APROBADO
-                    {% else %}
-                        RECHAZADO
-                    {% endif %}
-                    </div>                            
-                </div>
-                <div class="mb-3 row">
-                    {% if userMun %}
-                        <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE USUARIO</div>
-                        <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{userMun.username}}</div>
-                    {% else %}
-                    {% endif %}
-                                                
-                </div>
-            {% endif %}                
+                    <div class="mb-3 row">
+                        {% if userMun %}
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE USUARIO PARA EL MUNICIPIO:</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{userMun.username}}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3 row">
+                        {% if postulacion.creador %}
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENCARGADO DE LA REVISION:</div>
+                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.creador}}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
-
-            <div class="col-md-6 col-sm-12">
-                <div class="row d-flex">
-                    <h4 class="text-center text-bg-info ">DATOS PROPORCIONADOS</h4>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO CARNET</div>
-                            <div class="col-md-8 col-sm-12">
-                            <a href="{{ postulacion.mae.asignacion.url }}" target="_blank">
+            <div class="row">
+                <h4 class="text-center text-bg-info ">DATOS PROPORCIONADOS</h4>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold bg-info-subtle"> VER DOCUMENTO CARNET</td>
+                            <td><a href="{{ postulacion.mae.asignacion.url }}" target="_blank">
                                 <button type="button" class="btn btn-secondary">Abrir PDF</button>
-                            </a>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">VER DOCUMENTO DESIGNACION</div>
-                            <div class="col-md-8 col-sm-12">
-                            <a href="{{ postulacion.mae.carnet.url }}" target="_blank">
+                            </a></td>
+                            <td class="fw-bold bg-info-subtle"> VER DOCUMENTO DESIGNACION </td>
+                            <td> <a href="{{ postulacion.mae.carnet.url }}" target="_blank">
                                 <button type="button" class="btn btn-secondary">Abrir PDF</button>
-                            </a>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.departamento}}</div>                            
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.entidad_territorial}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA ENTIDAD EJECUTORIA</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.municipio.nombre_municipio}}</div>
-                        </div>
-                        <hr>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.nombre}}{{postulacion.mae.nombre.persona.apellido}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.cargo}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CELULAR DE LA MAE</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.persona.celular}}</div>
-                      </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DOMICILIO LEGAL PARA NOTIFICACION</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.mae.correo}}</div>
-                        </div>
-                        <hr>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.nombre}} {{postulacion.responsable.persona.apellido}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CARGO DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.cargo}}</div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">N° DE CELULAR DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.persona.celular}}</div>
-                        </div>                        
-                        <div class="mb-3 row">
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">CORREO ELECTRONICO DEL RESPONSABLE DEL PROYECTO</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.responsable.correo}}</div>
-                        </div>
-                        <hr>                                         
+                            </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold bg-info-subtle">TIPO DE FINANCIAMIENTO</td>
+                            <td>{{ financiamiento }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-info">
+                        <th scope="col">CODIGO DE LA SOLICITUD</th>
+                        <th scope="col">DEPARTAMENTO</th>
+                        <th scope="col">ENTIDAD TERRITORIAL AUTONOMA</th>
+                        <th scope="col">NOMBRE DE LA ENTIDAD EJECUTORIA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> {{postulacion.slug}} </td>
+                            <td> {{postulacion.municipio.departamento}} </td>
+                            <td> {{postulacion.municipio.entidad_territorial}} </td>
+                            <td> {{postulacion.municipio.nombre_municipio}} </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">NOMBRE DE LA MAE</th>
+                            <th scope="col">CARGO DE LA MAE</th>
+                            <th scope="col">CELULAR DE LA MAE</th>
+                            <th scope="col">CORREO DOMICILIO LEGAL PARA NOTIFICACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{postulacion.mae.persona.nombrecompleto}} </td>
+                                <td> {{postulacion.mae.persona.cargo}} </td>
+                                <td> {{postulacion.mae.persona.celular}} </td>
+                                <td> {{postulacion.mae.correo}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">NOMBRE DEL RESPONSABLE DEL PROYECTO</th>
+                            <th scope="col">CARGO DEL RESPONSABLE DEL PROYECTO</th>
+                            <th scope="col">CELULAR DEL RESPONSABLE DEL PROYECTO</th>
+                            <th scope="col">CORREO ELECTRONICO DEL RESPONSABLE DEL PROYECTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{postulacion.responsable.persona.nombrecompleto}} </td>
+                                <td> {{postulacion.responsable.persona.cargo}} </td>
+                                <td> {{postulacion.responsable.persona.celular}} </td>
+                                <td> {{postulacion.responsable.correo}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <div class="row d-flex">                       
                         <div class="mb-3 row">
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">FECHA Y HORA DEL ENVIO</div>
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.fecha_registro}}</div>

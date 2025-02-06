@@ -2,23 +2,6 @@
 {% load static %}
 {% block contenido %}
     {% if user.is_authenticated %}
-        <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
-        {% if entity_registro %}
-            <div class="col-md-3 mt-2">
-                <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
-            </div>
-        {% endif %} 
-        <hr>
-        {% if error_messages %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for message in error_messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
         <div class="modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -34,34 +17,61 @@
                 </div>
             </div>
         </div>
-        <hr>
-        {% block errores %}
+        
+        <div class="text-center bg-secondary rounded-3 text-white"><h3 class="py-1">{{ titulo }}</h3>  </div>
+        
+        {% if entity_registro %}
+            <div class="col-md-3 py-2">
+                <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
+            </div>
+        {% endif %}
 
+        {% if error_messages %}
+            <hr>
+            {% for message in error_messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if messages %}
+            <hr>
+            {% for message in messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}             
+        {% endif %} 
+        {% block errores %}
         {% endblock %}
+        {% block mensajeAyuda %}        
+        {% endblock mensajeAyuda %}
+        <hr>
         <div class="row">
             <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-                <div class="row mt-2">
+                <div class="row py-2">
                     {% block formulario %}
                     
                     {% endblock formulario %}
                 </div>
-                <div class="row text-center row mt-2">
+                <div class="row text-center py-2">
                     <div class="col">
                         <button class="btn btn-success" type="submit">
-                        <i class="fas fa-save"></i>{{accion}}</button>
+                        <i class="fas fa-save"></i> {{accion}}</button>
                     </div>
                     <div class="col">
                         <a href="{{ accion2_url }}" class="btn btn-danger">
-                        <i class="fas fa-trash-alt"></i>{{ accion2 }}</a>
+                        <i class="fas fa-trash-alt"></i> {{ accion2 }}</a>
                     </div>
                 </div>
             </form>
         </div>    
     {% else %}
     
-    {% endif %}
-
+    {% endif %}    
 {% endblock contenido %}
 
 {% block funcScript %}
@@ -72,6 +82,13 @@
             // Mostrar el modal
             $('#messageModal').modal('show');
         });
+    {% elif error_messages%}
+        $(document).ready(function() {
+            // Mostrar el modal
+            $('#messageModal').modal('show');
+        });
     {% endif %}
+
 </script>
+
 {% endblock funcScript %}

@@ -1,0 +1,78 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block mensajeAyuda %}
+<div class="card bg-info rounded-3">
+    <div class="py-1">
+        <ul style="line-height: 1.2">
+            <li><b>OBJETIVOS ESPECÍFICOS</b>:<p>
+            Son los resultados que se desean alcanzar de manera más concreta y detallada dentro del proyecto, pero son más delimitados en cuanto a tiempo, alcance y recursos. deben ser claros, medibles, realistas y deben tener una temporalidad
+            </p></li>
+            <li><b>COMPONENTE</b>:<p>
+            Deben ser Específicos y claros, que englobe todas las actividades a realizarse en el mismo (ejemplo: Infraestructura, producción de plantines, establecimiento de plantaciones, etc.).
+            </p></li>        
+            <li><b>META</b>:<p>
+            Deben tener las siguientes características:
+                <ul>
+                    <li><b>Específicas y claras:</b>
+                    Definen exactamente lo que se quiere lograr.
+                    </li>
+                    <li><b>Medibles y alcanzables:</b>
+                    Deben ser cuantificables y realistas.
+                    </li>
+                    <li><b>Con plazo definido:</b>
+                    Deben estar asociadas a una fecha o periodo para su logro.
+                    </li>
+                </ul>
+            </p></li>
+        </ul>
+    </div>
+</div>
+<hr>
+{% endblock mensajeAyuda %}
+
+{% block formulario %}
+    <div class="row card card-body">
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>OBJETIVO ESPECÍFICO</th>
+                        <th>COMPONENTE</th>
+                        <th>META</th>
+                    </tr>
+                </thead>
+                <tbody id="product-rows">
+                    {% for objetivo in objetivos_esp %}
+                        <tr>
+                            <td><textarea name="objetivo_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.objetivo }}</textarea></td>
+                            <td><textarea name="componente_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.componente }}</textarea></td>
+                            <td><textarea name="meta_{{ objetivo.id }}" rows="5" class="form-control form-control-sm font-weight-bold border border-info">{{ objetivo.meta }}</textarea></td>                             
+                            <td>
+                            <form method="post" action="{% url 'proyecto:eliminarObjetivoEjec' objetivo.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                                              
+    </div>
+    <div class="row card card-body">
+        <div class="mb-3 row">
+                <div class="col-sm-4 col-form-label text-end fw-bold">{{ form.hectareas.label_tag }}</div>
+                <div class="col-sm-4 col-form-label text-end fw-bold">{{ form.hectareas }}</div>
+                <div class="col-sm-4 col-form-label text-end fw-bold">{{ form.tipo_hectareas }}</div>
+        </div>        
+    </div>
+{% endblock %}
+
+{% block funcScript %}
+<script>
+    
+    function removeRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+{% endblock %}

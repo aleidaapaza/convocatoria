@@ -7,52 +7,48 @@
                 <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
             </div>
         {% endif %}
-        {% if error_messages %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for message in error_messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
         {% include "include/mensaje_confirmacion.html" %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <h5 class="text-center bg-success rounded-3 text-white"> Elaboración Estudio de Diseño Técnico de Preinversión - EDTP </h5>
-        <div id="mensajeelabSolicBs" style="color: red;"></div>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>FONABOSQUE (Bs.)</th>
-                        <th>SOLICITANTE (Bs.)</th>
-                        <th>TOTAL (Bs.)</th>
-                        <th>%FONABOSQUE %</th>
-                        <th>%SOLICITANTE %</th>
-                        <th>% TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody id="product-rows">
-                    <tr>
-                        <td id="elabFonaBs">{{objetivo.elab_fona}}</td>
-                        <input type="hidden" id="elabFonaBsHidden" name="elabFonaBs">
-                        <td><input type="text" id="elabSolicBs" name="elabSolicBs" 
-                        value="{{objetivo.elab_sol}}" class="form-control form-control-sm font-weight-bold border border-info"></td>
-                        <td id="elabTotalBs" name="elabTotalBs">{{objetivo.elab_total}}</td>
-                        <input type="hidden" id="elabTotalBsHidden" name="elabTotalBs" >
-                        <td id="elabFonaPor" name="elabFonaPor">{{objetivo.elab_fona_p}} %</td>
-                        <input type="hidden" id="elabFonaPorHidden" name="elabFonaPor">
-                        <td id="elabSolicPor" name="elabSolicPor">{{objetivo.elab_sol_p}} %</td>
-                        <input type="hidden" id="elabSolicPorHidden" name="elabSolicPor">
-                        <td id="elabTotalPor" name="elabTotalPor">{{objetivo.elab_total_p}} %</td>
-                        <input type="hidden" id="elabTotalPorHidden" name="elabTotalPor">                
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        {% if proyecto.tipo_financiamiento == 1 %}
+            <h5 class="text-center bg-success rounded-3 text-white"> Elaboración Estudio de Diseño Técnico de Preinversión - EDTP </h5>
+            <div id="mensajeelabSolicBs" style="color: red;"></div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>FONABOSQUE (Bs.)</th>
+                            <th>SOLICITANTE (Bs.)</th>
+                            <th>TOTAL (Bs.)</th>
+                            <th>%FONABOSQUE %</th>
+                            <th>%SOLICITANTE %</th>
+                            <th>% TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-rows">
+                        <tr>
+                            <td id="elabFonaBs">{{objetivo.elab_fona}}</td>
+                            <input type="hidden" id="elabFonaBsHidden" name="elabFonaBs">
+                            <td><input type="text" id="elabSolicBs" name="elabSolicBs" 
+                            value="{{objetivo.elab_sol}}" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                            <td id="elabTotalBs" name="elabTotalBs">{{objetivo.elab_total}}</td>
+                            <input type="hidden" id="elabTotalBsHidden" name="elabTotalBs" >
+                            <td id="elabFonaPor" name="elabFonaPor">{{objetivo.elab_fona_p}} %</td>
+                            <input type="hidden" id="elabFonaPorHidden" name="elabFonaPor">
+                            <td id="elabSolicPor" name="elabSolicPor">{{objetivo.elab_sol_p}} %</td>
+                            <input type="hidden" id="elabSolicPorHidden" name="elabSolicPor">
+                            <td id="elabTotalPor" name="elabTotalPor">{{objetivo.elab_total_p}} %</td>
+                            <input type="hidden" id="elabTotalPorHidden" name="elabTotalPor">                
+                        </tr>
+                    </tbody>
+                </table>
+            </div>   
+        <h5 class="text-center bg-success rounded-3 text-white"> 
+        Presupuesto referencial para la Ejecucion del Estudio de Diseño Técnico de Preinversión - EDTP </h5>
+        {% else %}
         <h5 class="text-center bg-success rounded-3 text-white"> 
         Ejecución Estudio de Diseño Técnico de Preinversión - EDTP </h5>
+        {% endif %}
         <div id="mensajeejecFonaBs" style="color: red;"></div>
         <div id="mensajeejecFPor" style="color: red;"></div>    
         <div id="mensajeejecSPor" style="color: red;"></div>    
@@ -111,7 +107,7 @@
         });
     {% endif %}
 </script>
-<script>    
+<script>
     document.querySelector('form').addEventListener('submit', function(event) {
         let elabSolicBs = document.getElementById('elabSolicBs');
         // Reemplazar coma por punto
@@ -122,33 +118,52 @@
 
     $(document).ready(function() {
         function calcular() {
-            var elabSolicBs = parseFloat($('#elabSolicBs').val()) || 0;
-            if (elabSolicBs > 21000.00) {
-                $('#mensajeelabSolicBs').text("El valor de la solicitud supera los 21,000 Bs.");
-                $('#elabSolicBs').val('0.00'); 
-                elabSolicBs = 0;  // Si es mayor, asigna 0
-            } else {
-                $('#mensajeelabSolicBs').text("");  // Limpiar mensaje si el valor es menor
+            if (tipo_fin == 1) {
+                var elabSolicBs = parseFloat($('#elabSolicBs').val()) || 0;
+                var elaboracionEdtpF = parseFloat({{proyecto.convocatoria.montoElabEDTP}}).toFixed(2);
+                var totalelab = ((100 * elaboracionEdtpF) / 70).toFixed(2);
+                var elaboracionEdtpS = (totalelab - elaboracionEdtpF).toFixed(2);
+                
+                if (elabSolicBs > elaboracionEdtpS) {
+                    $('#mensajeelabSolicBs').text("El valor máximo que se otorga por parte del FONABOSQUE es de monto Bs. " + elaboracionEdtpF);
+                    $('#elabSolicBs').val('0.00');
+                    elabSolicBs = 0;  // Si es mayor, asigna 0
+                } else {
+                    $('#mensajeelabSolicBs').text("");  // Limpiar mensaje si el valor es menor
+                }
+
+                var elabFonaBs = (elabSolicBs * 70 / 30);
+                elabFonaBs = (elabFonaBs === 0) ? "-" : elabFonaBs.toFixed(2);
+                var elabTotalBs = (elabSolicBs + (elabFonaBs !== "-" ? parseFloat(elabFonaBs) : 0)).toFixed(2);
+                var elabFonaPor = (elabTotalBs === 0 || isNaN(parseFloat(elabFonaBs)) || isNaN(elabTotalBs)) ? "-" : ((parseFloat(elabFonaBs) * 100 / parseFloat(elabTotalBs)).toFixed(2));
+                var elabSolicPor = (elabTotalBs === 0 || isNaN(parseFloat(elabSolicBs)) || isNaN(elabTotalBs)) ? "-" : ((parseFloat(elabSolicBs) * 100 / parseFloat(elabTotalBs)).toFixed(2));
+                var elabTotalPor = (parseFloat(elabFonaPor) + parseFloat(elabSolicPor)).toFixed(2);
+
+                }
+                
+                var ejecFonaBs = parseFloat($('#ejecFonaBs').val()) || 0;
+                var ejecucionEdtp = parseFloat({{proyecto.convocatoria.montoEjecEDTP}}).toFixed(2);
+                var ejecucionEdtp_aux = ejecucionEdtp;
+                var tipo_fin = parseInt({{proyecto.tipo_financiamiento}});
+                if (tipo_fin == 1) {
+                    var montoejec = ejecucionEdtp_aux - elaboracionEdtpF;
+                    ejecucionEdtp = parseFloat(montoejec);
             }
-            var elabFonaBs = (elabSolicBs * 70 / 30);
-            elabFonaBs = (elabFonaBs === 0) ? "-" : elabFonaBs.toFixed(2);
-            var elabTotalBs = (elabSolicBs + (elabFonaBs !== "-" ? parseFloat(elabFonaBs) : 0)).toFixed(2);
-            var elabFonaPor = (elabTotalBs === 0 || isNaN(parseFloat(elabFonaBs)) || isNaN(elabTotalBs)) ? "-" : ((parseFloat(elabFonaBs) * 100 / parseFloat(elabTotalBs)).toFixed(2));
-            var elabSolicPor = (elabTotalBs === 0 || isNaN(parseFloat(elabSolicBs)) || isNaN(elabTotalBs)) ? "-" : ((parseFloat(elabSolicBs) * 100 / parseFloat(elabTotalBs)).toFixed(2));
-            var elabTotalPor = (parseFloat(elabFonaPor) + parseFloat(elabSolicPor)).toFixed(2);
-            var ejecFonaBs = parseFloat($('#ejecFonaBs').val()) || 0;
-            if (ejecFonaBs > 1000000.00) {
-                $('#mensajeejecFonaBs').text("El valor de la solicitud supera los 1,000,000 Bs.");
-                $('#ejecFonaBs').val('0.00'); 
+
+            if (ejecFonaBs > ejecucionEdtp) {
+                $('#mensajeejecFonaBs').text("El valor de la solicitud supera el monto de Bs. " + ejecucionEdtp);
+                $('#ejecFonaBs').val('0.00');
                 ejecFonaBs = 0;  // Si es mayor, asigna 0
             } else {
                 $('#mensajeejecFonaBs').text("");  // Limpiar mensaje si el valor es menor
             }
+
             var ejecSolicBs = parseFloat($('#ejecSolicBs').val()) || 0;
-            var ejecTotalBs = ejecFonaBs + ejecSolicBs
+            var ejecTotalBs = ejecFonaBs + ejecSolicBs;
             var ejecFonaPor = (ejecTotalBs === 0 || isNaN(parseFloat(ejecFonaBs)) || isNaN(ejecTotalBs)) ? "-" : ((parseFloat(ejecFonaBs) * 100 / parseFloat(ejecTotalBs)).toFixed(2));
             var ejecSolicPor = (ejecTotalBs === 0 || isNaN(parseFloat(ejecSolicBs)) || isNaN(ejecTotalBs)) ? "-" : ((parseFloat(ejecSolicBs) * 100 / parseFloat(ejecTotalBs)).toFixed(2));
             var ejecTotalPor = (parseFloat(ejecFonaPor) + parseFloat(ejecSolicPor)).toFixed(2);
+
             $('#elabFonaBs').text(elabFonaBs);
             $('#elabTotalBs').text(elabTotalBs);
             $('#elabFonaPor').text(elabFonaPor + '%');
@@ -158,13 +173,23 @@
             $('#ejecFonaPor').text(ejecFonaPor + '%');
             $('#ejecSolicPor').text(ejecSolicPor + '%');
             $('#ejecTotalPor').text(ejecTotalPor + '%');
-            if (ejecFonaPor > 70.00 || ejecSolicPor < 30.00) {
-                $('#mensajeejecFPor').text("El %Fonabosque% supera el 70%");
-                $('#mensajeejecSPor').text("El %Solicitud% es menor al 30%");
+
+            if (tipo_fin == 1) {
+                if (ejecFonaPor > 70.00 && ejecSolicPor < 30.00) {
+                    $('#mensajeejecFPor').text("El %Fonabosque% supera el 70%");
+                    $('#mensajeejecSPor').text("El %Solicitud% es menor al 30%");
+                    } else {
+                        $('#mensajeejecFPor').text("");
+                        $('#mensajeejecSPor').text("");
+                    }
             } else {
-                $('#mensajeejecFPor').text("");
-                $('#mensajeejecSPor').text("");
-            }
+                if (ejecSolicPor < 10.00) {
+                        $('#mensajeejecSPor').text("El %Solicitud% es menor al 10%");
+                    } else {
+                        $('#mensajeejecSPor').text("");
+                    }        
+                }
+
             $('#elabFonaBsHidden').val(elabFonaBs);
             $('#elabTotalBsHidden').val(elabTotalBs);
             $('#elabFonaPorHidden').val(elabFonaPor);
@@ -174,9 +199,38 @@
             $('#ejecFonaPorHidden').val(ejecFonaPor);
             $('#ejecSolicPorHidden').val(ejecSolicPor);
             $('#ejecTotalPorHidden').val(ejecTotalPor);
+
+            // Revisar si los mensajes de error existen
+            checkErrorMessages();
         }
+
         // Ejecutar la función calcular cuando haya cambios en los campos
         $('#elabSolicBs, #ejecFonaBs, #ejecSolicBs').on('input', calcular);
+
+        // Función para verificar si algún mensaje de error existe
+        function checkErrorMessages() {
+            // Revisar si alguno de los mensajes tiene texto
+            if ($('#mensajeejecSPor').text() !== "" || 
+                $('#mensajeejecFPor').text() !== "" || 
+                $('#mensajeejecFonaBs').text() !== "" || 
+                $('#mensajeelabSolicBs').text() !== "") {
+                // Si existe texto en cualquiera de los elementos, deshabilitar el botón
+                $('button[type="submit"]').prop('disabled', true);
+            } else {
+                // Si no hay texto en ninguno, habilitar el botón
+                $('button[type="submit"]').prop('disabled', false);
+            }
+        }
+
+        // Llamar a la función para verificar los mensajes al cargar la página
+        checkErrorMessages();
+
+        // Escuchar cambios en los campos de mensaje de error
+        $('#mensajeejecSPor, #mensajeejecFPor, #mensajeejecFonaBs, #mensajeelabSolicBs').on('input', function() {
+            checkErrorMessages();
+        });
     });
 </script>
+
+
 {% endblock funcScript %}

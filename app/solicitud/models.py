@@ -9,6 +9,7 @@ from solicitud.choices import departamentos, entidad_territorial_autonoma, estad
 from user.models import EncargadoMAE, ResponsableP
 from convocatoria.models import Convocatoria
 from proyecto.models import DatosProyectoBase
+from user.models import User
 # Create your models here.
 
 class Municipios(models.Model):
@@ -17,7 +18,7 @@ class Municipios(models.Model):
     nombre_municipio = models.CharField(max_length=255)
     estado = models.CharField(choices=estado_proyecto, max_length=255)
     p_a= models.BooleanField(_('Postulo Anteriormente'),default=False)
-        
+
     def __str__(self):
         return f' {self.departamento}-{self.entidad_territorial}-{self.nombre_municipio}-{self.estado}'
     
@@ -37,6 +38,9 @@ class Postulacion(models.Model):
     convocatoria = models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='postulacionConvocatoria', null=True, blank=True)
     datos_proyecto = models.OneToOneField(DatosProyectoBase, null=True, blank=True, on_delete=models.CASCADE, related_name='postulacion', to_field='slug')
     fecha_ultimaconexion = models.DateTimeField(null=True, blank=True)
+    tipo_financiamiento = models.IntegerField(default='1')
+    creador = models.OneToOneField(User, blank=True, null= True, on_delete=models.CASCADE)
+
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'
     

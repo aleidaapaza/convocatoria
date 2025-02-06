@@ -19,30 +19,44 @@
                 </td>
                 <td><p> {{form.declaracion}} </p>
                     {% if objeto.declaracion %}
-                            <a href="{% url 'descargar_docDeclaracion' objeto.slug '1' %}" class="btn btn-info">
-                                Descargar Archivos
-                            </a>
-                        {% else %}
-                        {% endif %}
+                        <a href="{% url 'descargar_docDeclaracion' objeto.slug '1' %}" class="btn btn-info">
+                            Descargar Archivos
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
+            {% if proyecto.tipo_financiamiento == 1 %}
             <tr>
                 <td>
-                <p>CARTA DE SOLICITUD DE: <br> FINANCIAMIENTO PARA ELABORACION DE EDTP Y <br> FINANCIAMIENTO PARA EJECUCION DE EDTP</p></td>
+                    CARTA DE SOLICITUD DE <br> FINANCIAMIENTO PARA ELABORACION DE EDTP                    
+                </td>
                 <td>
                     <a href=" {% static 'doc/cartas_de_elaboracion_edtp.docx' %} " class="btn btn-primary">Cartas de Solicitud de <br> Financiamiento para <br> Elaboración EDTP
                     </a>
-                    <hr>
+                </td>
+                <td><p> {{form.carta_elab}} </p>
+                {% if objeto.carta_elab %}
+                    <a href="{% url 'descargar_docDeclaracion' objeto.slug '3' %}" class="btn btn-info">
+                        Descargar Archivos
+                    </a>
+                {% endif %}
+                </td>
+            </tr>
+            {% endif %}            
+            <tr>
+                <td>
+                    CARTA DE SOLICITUD DE <br> FINANCIAMIENTO PARA EJECUCION DE EDTP                   
+                </td>
+                <td>
                     <a href=" {% static 'doc/cartas_de_ejecucion_edtp.docx' %} " class="btn btn-primary">Cartas de Solicitud de <br> Financiamiento para <br> Ejecución EDTP
                     </a>
                 </td>
-                <td><p> {{form.carta}} </p>
-                {% if objeto.carta %}
-                            <a href="{% url 'descargar_docDeclaracion' objeto.slug '3' %}" class="btn btn-info">
-                                Descargar Archivos
-                            </a>
-                        {% else %}
-                        {% endif %}
+                <td><p> {{form.carta_ejec}} </p>
+                {% if objeto.carta_ejec %}
+                    <a href="{% url 'descargar_docDeclaracion' objeto.slug '4' %}" class="btn btn-info">
+                        Descargar Archivos
+                    </a>
+                {% endif %}
                 </td>
             </tr>
         </tbody>

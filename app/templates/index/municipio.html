@@ -1,24 +1,28 @@
 {% load static%}
 {% block contenido %}
-<div class="modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="messageModalLabel">{{ message_title }}</h5>
-                    </div>
-                    <div class="modal-body">
-                        {{ message_content }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
+{% include "include/mensaje_confirmacion.html" %}
+{% if error_messages %}
+            <hr>
+            {% for message in error_messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
-</div>
+            {% endfor %}
+        {% endif %}
+        {% if messages %}
+            <hr>
+            {% for message in messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}             
+        {% endif %} 
 {% if proyectoDatos.estado == "CON OBSERVACION" %}
     <div class="alert alert-danger">
         <h3 class="text-center">SE REALIZO OBSERVACIONES A LOS DATOS</h3>
-        <p> {{proyectoDatos.comentarios}} </p>
+        <p> {{proyectoDatos.comentarios|linebreaksbr}} </p>
     </div>
 {% elif proyectoDatos.estado == "APROBADO" %}
     <div class="alert alert-success">
@@ -27,9 +31,8 @@
 {% endif %}
 
 <div class="row d-flex">    
-    <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        
+    <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} - {{postulacion.tipo_financiamiento}} </h3>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">        
         {% if not vista %}
             <a class="btn btn-primary me-md-2" type="button" href="{% url 'proyecto:registro_Base' proyecto.slug %}">Empezar/continuar el registro</a>        
         {% endif %}
@@ -89,47 +92,77 @@
                         {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <tr>                        
+                            <td>02</td>
+                            <td><a {% if not justificacion > 0 %} href="{% url 'proyecto:registro_justificacion' proyecto.slug %}"
+                            {% endif %}>ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</a></td>
+                            <td>
+                            {% if justificacion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>    
+                    {% endif %}                    
                     <tr>
-                        <td>02</td>
-                        <td><a {% if not justificacion > 0 %} href="{% url 'proyecto:registro_justificacion' proyecto.slug %}"
-                        {% endif %}>ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO</a></td>
-                        <td>
-                        {% if justificacion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
+                        {% if postulacion.tipo_financiamiento == 1 %}
+                            <td>03</td>
+                            <td><a {% if not ideaProyecto > 0 %}
+                            href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}"
+                            {% endif %}>ITCP-IDEA DEL PROYECTO</a></td>
+                            <td>
+                            {% if ideaProyecto > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        {% else %}
+                            <td>02</td>
+                            <td><a {% if not ObjetivoGeneral > 0 %}
+                            href="{% url 'proyecto:registro_ObjetivoGeneral' proyecto.slug %}"
+                            {% endif %}>OBJETIVO GENERAL</a></td>
+                            <td>
+                            {% if ObjetivoGeneral > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        {% endif %}                        
                     </tr>
                     <tr>
-                        <td>03</td>
-                        <td><a {% if not ideaProyecto > 0 %}
-                        href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}"
-                        {% endif %}>ITCP-IDEA DEL PROYECTO</a></td>
-                        <td>
-                        {% if ideaProyecto > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
+                        {% if postulacion.tipo_financiamiento == 1 %}
+                            <td>03.1</td>
+                            <td><a {% if not objetivoEsp > 0 %}
+                            href="{% url 'proyecto:registro_obj_especifico' proyecto.slug %}"
+                            {% endif %}>OBJETIVOS ESPECIFICOS.</a></td>
+                            <td>
+                            {% if objetivoEsp > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        {% else %}
+                            <td>02.1</td>
+                            <td><a {% if not ObjetivoEspecifico > 0 %}
+                            href="{% url 'proyecto:registro_ObjetivoEspecifico' proyecto.slug %}"
+                            {% endif %}>OBJETIVOS ESPECIFICOS, COMPONENTES Y METAS.</a></td>
+                            <td>
+                            {% if ObjetivoEspecifico > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        {% endif %}                        
                     </tr>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <tr>
+                            <td>03.2</td>
+                            <td><a {% if not beneficio %}
+                            href="{% url 'proyecto:registro_Beneficios' proyecto.slug %}"
+                            {% endif %}>BENEFICIOS ESPERADOS DEL PROYECTO</a></td>
+                            <td>
+                            {% if beneficio %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}                        
                     <tr>
-                        <td>03.1</td>
-                        <td><a {% if not objetivoEsp > 0 %}
-                        href="{% url 'proyecto:registro_obj_especifico' proyecto.slug %}"
-                        {% endif %}>OBJETIVOS SECUNDARIOS</a></td>
-                        <td>
-                        {% if objetivoEsp > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>03.2</td>
-                        <td><a {% if not beneficio %}
-                        href="{% url 'proyecto:registro_Beneficios' proyecto.slug %}"
-                        {% endif %}>BENEFICIOS ESPERADOS DEL PROYECTO</a></td>
-                        <td>
-                        {% if beneficio %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
-                    <tr>
+                        {% if postulacion.tipo_financiamiento == 1 %}
                         <td>03.3</td>
+                        {% else %}
+                        <td>03</td>                        
+                        {% endif %}                        
                         <td><a {% if not beneficiario > 0 %}
                         href="{% url 'proyecto:registro_Beneficiarios' proyecto.slug %}"
                         {% endif %}>BENEFICIARIOS</a></td>
@@ -138,16 +171,19 @@
                         {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
-                    <tr>
-                        <td>04</td>
-                        <td><a {% if not modeloActa > 0 %}
-                        href="{% url 'proyecto:registro_ModeloActa' proyecto.slug %}"
-                        {% endif %}>ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</a></td>
-                        <td>
-                        {% if modeloActa > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <tr>
+                            <td>04</td>
+                            <td><a {% if not modeloActa > 0 %}
+                            href="{% url 'proyecto:registro_ModeloActa' proyecto.slug %}"
+                            {% endif %}>ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO</a></td>
+                            <td>
+                            {% if modeloActa > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}                    
+                    {% if postulacion.tipo_financiamiento == 1 %}
                     <tr>
                         <td>05</td>
                         <td><a {% if not DerechoPropie > 0 %}
@@ -158,60 +194,96 @@
                         {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
+                    {% else %}
+                        <tr>
+                            <td>04</td>
+                            <td><a {% if not Ubicacion > 0 %}
+                            href="{% url 'proyecto:registro_DerechoPropietarioE' proyecto.slug %}"
+                            {% endif %}>UBICACION POSICION GEOGRAFICA</a></td>
+                            <td>
+                            {% if Ubicacion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <tr>
+                            <td>06</td>
+                            <td><a {% if not impactoAmbiental > 0 %}
+                            href="{% url 'proyecto:registro_ImpactoAmbiental' proyecto.slug %}"
+                            {% endif %}>ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</a></td>
+                            <td>
+                            {% if impactoAmbiental > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>07</td>
+                            <td><a {% if not riesgoDesastre > 0 %}
+                            href="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}"
+                            {% endif %}>ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES</a></td>
+                            <td>
+                            {% if riesgoDesastre > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>08</td>
+                            <td><a {% if not detallePoa > 0 %}
+                            href="{% url 'proyecto:registro_DetallePOA' proyecto.slug %}"
+                            {% endif %}>ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO</a></td>
+                            <td>
+                            {% if detallePoa > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}                    
                     <tr>
-                        <td>06</td>
-                        <td><a {% if not impactoAmbiental > 0 %}
-                        href="{% url 'proyecto:registro_ImpactoAmbiental' proyecto.slug %}"
-                        {% endif %}>ITCP-IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES</a></td>
-                        <td>
-                        {% if impactoAmbiental > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>07</td>
-                        <td><a {% if not riesgoDesastre > 0 %}
-                        href="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}"
-                        {% endif %}>ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES</a></td>
-                        <td>
-                        {% if riesgoDesastre > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>08</td>
-                        <td><a {% if not detallePoa > 0 %}
-                        href="{% url 'proyecto:registro_DetallePOA' proyecto.slug %}"
-                        {% endif %}>ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO</a></td>
-                        <td>
-                        {% if detallePoa > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
-                    <tr>
+                        {% if postulacion.tipo_financiamiento == 1 %}
                         <td>09</td>
+                        {% else %}                    
+                        <td>05</td>
+                        {% endif %}
                         <td><a {% if not Presupuesto > 0 %}
                         href="{% url 'proyecto:registro_PresupuestoRef' proyecto.slug %}"
-                        {% endif %}>ITCP-PRESUPUESTO REFERENCIAL</a></td>
+                        {% endif %}>
+                        {% if postulacion.tipo_financiamiento == 1 %}
+                            ITCP-PRESUPUESTO REFERENCIAL
+                        {% else %}                    
+                            COSTO DEL PROYECTO
+                        {% endif %}
+                        </a></td>
                         <td>
                         {% if Presupuesto > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
                         {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
                         </td>
                     </tr>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <tr>
+                            <td>10</td>
+                            <td><a {% if not conclusion > 0 %}
+                            href="{% url 'proyecto:registro_ConclRec' proyecto.slug %}"
+                            {% endif %}>ITCP-CONCLUSIONES Y RECOMENDACIONES</a></td>
+                            <td>
+                            {% if conclusion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
                     <tr>
-                        <td>10</td>
-                        <td><a {% if not conclusion > 0 %}
-                        href="{% url 'proyecto:registro_ConclRec' proyecto.slug %}"
-                        {% endif %}>ITCP-CONCLUSIONES Y RECOMENDACIONES</a></td>
-                        <td>
-                        {% if conclusion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                        {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}
-                        </td>
-                    </tr>
-                    <tr>
+                        {% if postulacion.tipo_financiamiento == 1 %}
                         <td>11</td>
+                        {% else %}                    
+                        <td>06</td>
+                        {% endif %}
                         <td><a {% if not declaracion > 0 %}
-                        href="{% url 'proyecto:registro_DeclaracionJurada' proyecto.slug %}"{% endif %} >ITCP-DECLARACION JURADA</a></td>
+                        href="{% url 'proyecto:registro_DeclaracionJurada' proyecto.slug %}"{% endif %}>
+                        {% if postulacion.tipo_financiamiento == 1 %}
+                        ITCP-DECLARACION JURADA
+                        {% else %}                    
+                        DECLARACION JURADA
+                        {% endif %}
+                        </a></td>
                         <td>
                         {% if declaracion > 0 %}<i class="fa fa-check-circle text-success" aria-hidden="true"></i>
                         {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>{% endif %}

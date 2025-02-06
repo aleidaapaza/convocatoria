@@ -1,6 +1,15 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block contenido %}
+    {% if messages %}
+            <div class="card bg-danger text-white">
+                <ul class="py-1">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>            
+        {% endif %}
     <div class="row">
             <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -9,7 +18,7 @@
                     <hr>
                     {% for field in form %}
                         <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag|safe }}</div>
                                 <div class="col-sm-8">
                                     <div class="">
                                         {{ field }}

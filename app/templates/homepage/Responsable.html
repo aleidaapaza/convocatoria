@@ -2,21 +2,24 @@
 {% load static %}
 {% block contenido %}
     {% if not user.is_authenticated%}
-        <div class="row">
-            <div class="col-4 col-sm-2">
-                <div class="linea-pasos">
-                    <ul>
-                        <li class="paso">Paso 1</li>
-                        <li class="paso">Paso 2</li>
-                        <li class="paso">Paso 3</li>
-                        <li class="paso">Paso 4</li>                        
-                        <li class="paso activo">Paso 5</li>
-                        <li class="paso">FIN</li>
-                    </ul>
+        <div class="text-center py-3">
+                <div class="row justify-content-md-center">
+                    <div class="col steps">
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle bg-success text-white">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-8 col-sm-10">
+        </div>
+        <div class="row">
+            <div class="col">
                 <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ financiamiento }}</div>
                     <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
                     <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ postulacion.municipio.departamento }}</div>
                     <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
@@ -27,7 +30,7 @@
                 <div class="row">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <h3 class="text-center text-bg-primary">REGISTRO DE LA RESPONSABLE</h3>
+                        <h3 class="text-center text-bg-primary">REGISTRO DEL RESPONSABLE DEL PROYECTO</h3>
                         <div class="row mt-2">
                             <div class="col-md-6 card card-body">
                                 {% for field2 in form2 %}

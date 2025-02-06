@@ -18,11 +18,9 @@ class Reg_Justificaciones(CreateView):
 
     def get(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug', None)
-        postulacion_p = get_object_or_404(Postulacion, slug=slug)
-        
+        postulacion_p = get_object_or_404(Postulacion, slug=slug)        
         if self.model.objects.filter(slug=postulacion_p.slug).exists():
             return redirect('proyecto:actualizar_justificacion', slug=postulacion_p.slug)
-
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -32,6 +30,7 @@ class Reg_Justificaciones(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
@@ -64,6 +63,7 @@ class Act_Justificacion(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p  
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
@@ -71,7 +71,6 @@ class Act_Justificacion(UpdateView):
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
         if messages:
-        # Si hay mensajes de éxito, error, etc.
             for message in messages.get_messages(self.request):
                 if message.level_tag == 'success':
                     context['message_title'] = 'Actualización Exitosa'

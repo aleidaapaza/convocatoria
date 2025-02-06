@@ -27,6 +27,7 @@ class R_Modelo_Acta(View):
         else:
             context = {
                 'proyecto': proyecto_p,
+                'postulacion' : proyecto_p,
                 'titulo': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
                 'entity': 'REGISTRO DATOS DEL PROYECTO',
                 'entity2': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
@@ -75,6 +76,7 @@ class R_Modelo_Acta(View):
             # Renderiza de nuevo con los mensajes de error
             context = {
                 'proyecto': get_object_or_404(Postulacion, slug=slug),
+                'postulacion' : get_object_or_404(Postulacion, slug=slug),
                 'titulo': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
                 'entity': 'REGISTRO DATOS DEL PROYECTO',
                 'entity2': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
@@ -110,6 +112,7 @@ class A_Modelo_Acta(View):
         objetivos = Modelo_Acta.objects.filter(slug=slug) # Formulario vacío para nuevos objetivos
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'modelo_acta': objetivos,
             'titulo': 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
@@ -168,6 +171,7 @@ class A_Modelo_Acta(View):
                 objetivos = Modelo_Acta.objects.filter(slug=slug)
                 context = {
                         'proyecto': proyecto_p,
+                        'postulacion' : proyecto_p,
                         'modelo_acta': objetivos,
                         'titulo': 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
                         'entity': 'REGISTRO DATOS DEL PROYECTO',
@@ -226,6 +230,7 @@ class R_Modelo_Acta_R(View):
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'titulo': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
             'entity2': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
@@ -262,6 +267,7 @@ class R_Modelo_Acta_R(View):
         if error_messages:
             context = {
                 'proyecto': get_object_or_404(Postulacion, slug=slug),
+                'postulacion' : get_object_or_404(Postulacion, slug=slug),
                 'titulo': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
                 'entity': 'REGISTRO DATOS DEL PROYECTO',
                 'entity2': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',

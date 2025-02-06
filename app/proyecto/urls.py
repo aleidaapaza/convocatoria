@@ -16,14 +16,40 @@ from proyecto.view.itcp9 import Reg_PresupuestoRef, Act_PresupuestoRef
 from proyecto.view.itcp10 import Reg_ConclRec, Act_ConclRec
 from proyecto.view.itcp11 import Reg_DeclaracionJurada, Act_DeclaracionJurada
 
+from proyecto.viewEjec.edtp02 import (R_ObjetivoGeneral, A_ObjetivoGeneral, 
+                                      R_ObjetivoEspecifico, A_ObjetivoEspecifico,
+                                    eliminar_objetivoEjec, Reg_ObjetivoEsp)
+from proyecto.viewEjec.edtp04 import (R_DerechoPropietarioE, A_DerechoPropietarioE, 
+                                      eliminar_DerechoE, R_DerechoPropietarioER)
 
 app_name = 'proyecto'
 
 urlpatterns = [
+    path('Reg_ObjetivoGeneral/<slug:slug>', R_ObjetivoGeneral.as_view(), name='registro_ObjetivoGeneral'),
+    path('Act_ObjetivoGeneral/<slug:slug>', A_ObjetivoGeneral.as_view(), name='actualizar_ObjetivoGeneral'),
+    path('Reg_ObjetivoEspecifico/<slug:slug>', R_ObjetivoEspecifico.as_view(), name='registro_ObjetivoEspecifico'),
+    path('Act_ObjetivoEspecifico/<slug:slug>', A_ObjetivoEspecifico.as_view(), name='actualizar_ObjetivoEspecifico'),
+    path('eliminar-objetivoE/<int:objetivo_id>/', eliminar_objetivoEjec, name='eliminarObjetivoEjec'),
+    path('Act_ObjetivoEspecificoE/<slug:slug>', Reg_ObjetivoEsp.as_view(), name='actualizar_ObjetivoEspecificoE'),
+    path('Reg_DerechoPropietarioE/<slug:slug>', R_DerechoPropietarioE.as_view(), name='registro_DerechoPropietarioE'),
+    path('Act_DerechoPropietarioE/<slug:slug>', A_DerechoPropietarioE.as_view(), name='actualizar_DerechoPropietarioE'),
+    path('eliminar-DerechoPropE/<int:objetivo_id>/', eliminar_DerechoE, name='eliminar_DerechoE'),
+    path('Act_DerechoPropietarioER/<slug:slug>', R_DerechoPropietarioER.as_view(), name='agregar_DerechoPropietarioE'),
+
+    #Lista
     path('lista_aprobados/', Lista_Proyectos.as_view(), name='lista_inicio'),
     path('lista_aprobadosDatos/', Lista_ProyectosDatos.as_view(), name='lista_datos'),
+    #Datos Postulacion
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
+    #ITCP y EDTP
     path('Reg_DatosPrincipales/<slug:slug>', RegistroDatosBasicos.as_view(), name='registro_Base'),
+    path('Reg_Beneficiarios/<slug:slug>', R_Beneficiarios.as_view(), name='registro_Beneficiarios'),
+    path('Act_Beneficiarios/<slug:slug>', A_Beneficiarios.as_view(), name='actualizar_Beneficiarios'),
+    path('Reg_DeclaracionJurada/<slug:slug>', Reg_DeclaracionJurada.as_view(), name='registro_DeclaracionJurada'),
+    path('Act_DeclaracionJurada/<slug:slug>', Act_DeclaracionJurada.as_view(), name='actualizar_DeclaracionJurada'),
+    path('Reg_PresupuestoReferencial/<slug:slug>', Reg_PresupuestoRef.as_view(), name='registro_PresupuestoRef'),
+    path('Act_PresupuestoReferencial/<slug:slug>', Act_PresupuestoRef.as_view(), name='actualizar_PresupuestoRef'),
+    #ITCP
     path('Reg_Justificacion/<slug:slug>', Reg_Justificaciones.as_view(), name='registro_justificacion'),
     path('Act_Justificacion/<slug:slug>', Act_Justificacion.as_view(), name='actualizar_justificacion'),
     path('Reg_Idea_Proyecto/<slug:slug>', Reg_Idea_Proyecto.as_view(), name='registro_Idea_proyecto'),
@@ -32,9 +58,7 @@ urlpatterns = [
     path('Reg_Objetivos_Especificos/<slug:slug>/', Reg_Objetivo_especifico01.as_view(), name='registro_obj_especifico_01'),
     path('Act_Objetivos_Especificos/<slug:slug>', Act_Objetivo_especifico.as_view(), name='actualizar_obj_especifico'),
     path('eliminar-objetivo/<int:objetivo_id>/', eliminar_objetivo, name='eliminar_objetivo'),
-    path('Beneficios/<slug:slug>/', R_Beneficios.as_view(), name='registro_Beneficios'),
-    path('Reg_Beneficiarios/<slug:slug>', R_Beneficiarios.as_view(), name='registro_Beneficiarios'),
-    path('Act_Beneficiarios/<slug:slug>', A_Beneficiarios.as_view(), name='actualizar_Beneficiarios'),
+    path('Beneficios/<slug:slug>/', R_Beneficios.as_view(), name='registro_Beneficios'),    
     path('Reg_ModeloActa/<slug:slug>', R_Modelo_Acta.as_view(), name='registro_ModeloActa'),
     path('Reg_ModeloActaR/<slug:slug>', R_Modelo_Acta_R.as_view(), name='registro_ModeloActa01'),
     path('Act_ModeloActa/<slug:slug>', A_Modelo_Acta.as_view(), name='actualizar_ModeloActa'),
@@ -53,13 +77,14 @@ urlpatterns = [
     path('Act_DetallePOA/<slug:slug>', Act_DetallePOA.as_view(), name='actualizar_DetallePOA'),
     path('Reg_ConclusionRecomendacion/<slug:slug>', Reg_ConclRec.as_view(), name='registro_ConclRec'),
     path('Act_ConclusionRecomendacion/<slug:slug>', Act_ConclRec.as_view(), name='actualizar_ConclRec'),
-    path('Reg_DeclaracionJurada/<slug:slug>', Reg_DeclaracionJurada.as_view(), name='registro_DeclaracionJurada'),
-    path('Act_DeclaracionJurada/<slug:slug>', Act_DeclaracionJurada.as_view(), name='actualizar_DeclaracionJurada'),
-    path('Reg_PresupuestoReferencial/<slug:slug>', Reg_PresupuestoRef.as_view(), name='registro_PresupuestoRef'),
-    path('Act_PresupuestoReferencial/<slug:slug>', Act_PresupuestoRef.as_view(), name='actualizar_PresupuestoRef'),
+    #EDTP
+
+    #ENVIO DE DATOS    
     path('EnviarDatos/<slug:slug>', EnviarDatos.as_view(), name='enviar_datos'),
     path('EnviarDatos1/<slug:slug>', enviarDatos2.as_view(), name='enviar_datos2'),
+    #VISUALIZAR DATOS ENVIADOS
     path('VerDatos/<slug:slug>', verDatos.as_view(), name='ver_Datos'),    
+    #LISTA ESTADO DE REVISIONES
     path('lista_SinRevisar/', Lista_ProyectosSinRevisar.as_view(), name='lista_datosSinrevisar'),
     path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
     path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),

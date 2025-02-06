@@ -31,9 +31,10 @@ class Reg_Idea_Proyecto(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['postulacion'] = proyecto_p
+        context['titulo'] = 'ITCP-IDEA DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['entity2'] = 'ITCP-IDEA DEL PROYECTO'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
@@ -63,6 +64,7 @@ class Act_Idea_Proyecto(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p  
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-IDEA DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-IDEA DEL PROYECTO'
@@ -84,8 +86,6 @@ class Act_Idea_Proyecto(UpdateView):
                 else:
                     context['message_title'] = 'Información'
                     context['message_content'] = message.message
-        # Definir la URL de siguiente paso
-        context['next_url'] = reverse('proyecto:registro_obj_especifico', args=[slug])
         return context
 
     def post(self, request, *args, **kwargs):
@@ -126,7 +126,8 @@ class Reg_Objetivo_especifico(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['postulacion'] = proyecto_p
+        context['titulo'] = 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
         context['entity3'] = 'OBJETIVOS ESPECIFICOS'
@@ -164,6 +165,7 @@ class Act_Objetivo_especifico(View):
         form = ObjetivoEspecificoForm()  # Formulario vacío para nuevos objetivos
         context = {
             'proyecto': proyecto_p,
+            'postulacion': proyecto_p,
             'objetivos_esp': objetivos,
             'form': form,
             'titulo': 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS',
@@ -191,7 +193,6 @@ class Act_Objetivo_especifico(View):
                     context['message_title'] = 'Información'
                     context['message_content'] = message.message
 
-        context['next_url'] = reverse('proyecto:registro_justificacion', args=[slug])         
         return render(request, self.template_name, context)
 
     def post(self, request, slug):
@@ -215,7 +216,7 @@ def eliminar_objetivo(request, objetivo_id):
         slug = objeto.slug
         objetivo = get_object_or_404(Objetivo_especifico, id=objetivo_id)
         objetivo.delete()
-        return redirect('proyecto:actualizar_obj_especifico', slug=slug)
+        return redirect('proyecto:registro_ObjetivoEspecifico', slug=slug)
     
 class Reg_Objetivo_especifico01(CreateView):
     model=Objetivo_especifico
@@ -229,9 +230,10 @@ class Reg_Objetivo_especifico01(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['postulacion'] = proyecto_p
+        context['titulo'] = 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-JUSTIFCACION DE LA INICIATIVA DEL PROYECTO'
+        context['entity2'] = 'ITCP-IDEA DEL PROYECTO - OBJETIVOS SECUNDARIOS'
         context['entity3'] = 'OBJETIVOS ESPECIFICOS'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
@@ -256,7 +258,7 @@ class Reg_Objetivo_especifico01(CreateView):
                     indicador=indicador,
                     meta=meta
                 )        
-        return HttpResponseRedirect(reverse('proyecto:registro_Beneficiarios', args=[slug]))
+        return HttpResponseRedirect(reverse('proyecto:registro_obj_especifico', args=[slug]))
     
 class R_Beneficios(UpdateView):
     model = Idea_Proyecto
@@ -270,9 +272,10 @@ class R_Beneficios(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
-        context['titulo'] = 'ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO'
+        context['postulacion'] = proyecto_p
+        context['titulo'] = 'ITCP-IDEA DEL PROYECTO - BENEFICIOS ESPERADOS DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO'
+        context['entity2'] = 'ITCP-IDEA DEL PROYECTO'
         context['entity3'] = 'BENEFICIOS ESPERADOS DEL PROYECTO'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
@@ -302,7 +305,7 @@ class R_Beneficios(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            messages.success(request, "ITCP-JUSTIFICACION DE LA INICIATIVA DEL PROYECTO - se actualizo correctamente.")
+            messages.success(request, "ITCP-IDEA DEL PROYECTO - BENEFICIOS ESPERADOS DEL PROYECTO - se actualizo correctamente.")
             return redirect('proyecto:registro_Beneficiarios', slug=postulacion_pr.slug)
         else:
             return self.render_to_response(self.get_context_data(form=form))
@@ -319,15 +322,17 @@ class R_Beneficiarios(View):
         return self.render_form(slug)
 
     def render_form(self, slug):
-        # Obtener el proyecto (Postulacion) y los objetivos basados en el slug
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         objetivos = self.model.objects.filter(slug=slug)
-
-        # Inicializar el contexto
+        if proyecto_p.tipo_financiamiento == 1:
+            titulo = 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS'
+        else:
+            titulo = 'BENEFICIARIOS'
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'objetivos_esp': objetivos,
-            'titulo': 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS',
+            'titulo': titulo,
             'entity': 'REGISTRO DATOS DEL PROYECTO',
             'entity2': 'ITCP-IDEA DEL PROYECTO',
             'entity3': 'BENEFICIARIOS',
@@ -335,8 +340,6 @@ class R_Beneficiarios(View):
             'accion2': 'Cancelar',
             'accion2_url': reverse('convocatoria:Index'),
         }
-        
-        # Renderizar la plantilla con el contexto
         return render(self.request, self.template_name, context)
 
     def post(self, request, slug):
@@ -357,12 +360,16 @@ class R_Beneficiarios(View):
                 familia=familia,
             )
             # Mensaje de éxito después de crear el objeto
-            messages.success(request, "Beneficiario registrado correctamente.")
+            messages.success(request, "ITCP-IDEA DEL PROYECTO - BENEFICIARIOS - Registrado Correctamente")
         except Exception as e:
             # Mensaje de error en caso de fallo
             messages.error(request, f"Error al registrar al beneficiario: {str(e)}")
         # Redirigir a la siguiente página
-        return redirect('proyecto:registro_ModeloActa', slug=slug)
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
+        if proyecto_p.tipo_financiamiento == 1:
+            return redirect('proyecto:registro_ModeloActa', slug=slug)
+        else:
+            return redirect('proyecto:registro_DerechoPropietarioE', slug=slug)
 
 class A_Beneficiarios(View):
     model = Beneficiario
@@ -371,14 +378,21 @@ class A_Beneficiarios(View):
     def get(self, request, slug):
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         objetivos = self.model.objects.get(slug=slug)
-        print(objetivos.hombre_directo, "espa")
+        print(objetivos.hombre_directo, "espa")        
+        if proyecto_p.tipo_financiamiento == 1:
+            titulo = 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS'
+            titulo1 = 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS'
+        else:
+            titulo = 'BENEFICIARIOS'
+            titulo1 = ''
         context = {
             'proyecto': proyecto_p,
+            'postulacion' : proyecto_p,
             'objetivo': objetivos,
-            'titulo': 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS',
+            'titulo': titulo,
             'entity': 'REGISTRO DATOS DEL PROYECTO',
-            'entity2': 'ITCP-IDEA DEL PROYECTO - BENEFICIARIOS',
-            'entity3': 'BENEFICIARIOS',
+            'entity2': titulo,
+            'entity3': titulo1,
             'accion2_url': reverse('convocatoria:Index'),            
             'accion2': 'Cancelar',
         }
@@ -409,6 +423,11 @@ class A_Beneficiarios(View):
         objetivos.familia = int(request.POST.get('familia', objetivos.familia))
         objetivos.fecha_actualizacion = timezone.now()
         objetivos.save()
-        messages.success(request, "ITCP-IDEA DEL PROYECTO - BENEFICIARIOS - se registro correctamente.")
         # Comprobar si se han agregado nuevos objetivos
-        return redirect('proyecto:registro_DerechoPropietario', slug=slug)
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
+        if proyecto_p.tipo_financiamiento == 1:
+            messages.success(request, "ITCP-IDEA DEL PROYECTO - BENEFICIARIOS - se actualizo correctamente.")
+            return redirect('proyecto:registro_DerechoPropietario', slug=slug)
+        else:
+            messages.success(request, "BENEFICIARIOS - se actualizo correctamente.")
+            return redirect('proyecto:registro_DerechoPropietarioE', slug=slug)

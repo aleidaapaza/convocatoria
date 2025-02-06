@@ -2,21 +2,24 @@
 {% load static %}
 {% block contenido %}
     {% if not user.is_authenticated%}
-        <div class="row">
-            <div class="col-4 col-sm-2">
-                <div class="linea-pasos">
-                    <ul>
-                        <li class="paso">Paso 1</li>
-                        <li class="paso">Paso 2</li>
-                        <li class="paso">Paso 3</li>
-                        <li class="paso activo">Paso 4</li>
-                        <li class="paso">Paso 5</li>
-                        <li class="paso">FIN</li>
-                    </ul>
+        <div class="text-center py-3">
+                <div class="row justify-content-md-center">
+                    <div class="col steps">
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle bg-success text-white">5</div>
+                        <div class="step-circle">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-8 col-sm-10">
+        </div>
+        <div class="row">
+            <div class="col">
                 <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_financiamiento }}</div>
                     <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
                     <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_departamento }}</div>
                     <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>

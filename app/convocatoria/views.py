@@ -19,7 +19,7 @@ from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto,
                              Objetivo_especifico, Beneficiario, Modelo_Acta,
                              Derecho_propietario, Impacto_ambiental, Riesgo_desastre,
                              Detalle_POA, Conclusion_recomendacion, Declaracion_jurada,
-                             PresupuestoReferencial, Proyecto)
+                             PresupuestoReferencial, Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica)
 # Create your views here.
 
 
@@ -40,16 +40,24 @@ class Reg_Convocatoria(CreateView):
         return context
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
-        form = self.form_class(request.POST)
+        form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             elabEDTP = form.cleaned_data.get('montoElabEDTP')
-            print(elabEDTP)
-            if elabEDTP == 0 or elabEDTP == None:
-                conv = form.save(commit=False)
-                conv.montoElabEDTP = 0
-                conv.save()
-            else:
-                form.save()
+            documento = form.cleaned_data.get('documento')
+            guia = form.cleaned_data.get('guia')
+            banner = form.cleaned_data.get('banner')
+            if documento and documento.size > 2 * 1024 * 1024:  # 2 MB
+                messages.error(request, 'El archivo DOCUMENTO no debe superar los 2 MB.')
+                
+            if guia and guia.size > 2 * 1024 * 1024:  # 2 MB
+                messages.error(request, 'El archivo GUIA no debe superar los 2 MB.')
+                
+            if banner and banner.size > 2 * 1024 * 1024:  # 2 MB
+                messages.error(request, 'El archivo IMAGEN BANNER no debe superar los 2 MB.')
+            
+            if messages.get_messages(request):
+                return self.render_to_response(self.get_context_data(form=form))
+            form.save()
             return HttpResponseRedirect(reverse('convocatoria:lista_convocatoria', args=[]))
         else:
             return self.render_to_response(self.get_context_data(form=form))
@@ -63,7 +71,7 @@ class Act_Convocatoria(UpdateView):
         context = super(Act_Convocatoria, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
         if 'form' not in context:
-            context['form'] = self.form_class(self.request.GET)
+            context['form'] = self.form_class(self.request.GET, self.request.FILES)
         context['titulo'] = 'ACTUALIZACION DE LA CONVOCATORIA'
         context['entity'] = 'ACTUALIZACION DE LA CONVOCATORIA'
         context['accion'] = 'Actualizar'
@@ -74,7 +82,7 @@ class Act_Convocatoria(UpdateView):
         self.object = self.get_object()
         slug = self.kwargs.get('slug', None)
         objeto = self.model.objects.get(slug=slug)     
-        form = self.form_class(request.POST, instance = objeto)
+        form = self.form_class(request.POST, request.FILES, instance = objeto)
         if form.is_valid():
             elabEDTP = form.cleaned_data.get('montoElabEDTP')
             print(elabEDTP)
@@ -145,34 +153,39 @@ class Index(TemplateView):
             if self.request.user.is_municipio:
                 context['titulo'] = 'AVANCE DEL REGISTRO'
                 user_sl = self.request.user.username_proyecto.slug
-                print(user_sl)
                 context['slug']=user_sl
                 postulacion_p = Postulacion.objects.get(slug =user_sl)
                 postulacion_p.fecha_ultimaconexion = datetime.now()
-                print(postulacion_p.fecha_ultimaconexion, "ultima conexion")
                 postulacion_p.save()
                 context['proyecto'] = postulacion_p
                 context['postulacion'] = postulacion_p
                 context['datosProyecto'] = DatosProyectoBase.objects.filter(slug=user_sl).count()
-                context['justificacion'] = Justificacion.objects.filter(slug=user_sl).count()
-                context['ideaProyecto'] = Idea_Proyecto.objects.filter(slug=user_sl).count()
-                context['objetivoEsp'] = Objetivo_especifico.objects.filter(slug=user_sl).count()
-                if Idea_Proyecto.objects.filter(slug=user_sl).exists():
-                    idea = Idea_Proyecto.objects.get(slug=user_sl)
-                    beneficio = idea.beneficios_alter
-                    if beneficio == None:
-                        context['beneficio'] = False
-                    else:
-                        context['beneficio'] = True
                 context['beneficiario'] = Beneficiario.objects.filter(slug=user_sl).count()
-                context['modeloActa'] = Modelo_Acta.objects.filter(slug=user_sl).count()
-                context['DerechoPropie'] = Derecho_propietario.objects.filter(slug=user_sl).count()
-                context['impactoAmbiental'] = Impacto_ambiental.objects.filter(slug=user_sl).count()
-                context['riesgoDesastre'] = Riesgo_desastre.objects.filter(slug=user_sl).count()
-                context['detallePoa'] = Detalle_POA.objects.filter(slug=user_sl).count()
-                context['conclusion'] = Conclusion_recomendacion.objects.filter(slug=user_sl).count()
                 context['declaracion'] = Declaracion_jurada.objects.filter(slug=user_sl).count()
                 context['Presupuesto'] = PresupuestoReferencial.objects.filter(slug=user_sl).count()
+                
+                if postulacion_p.tipo_financiamiento == 1:
+                    context['justificacion'] = Justificacion.objects.filter(slug=user_sl).count()
+                    context['ideaProyecto'] = Idea_Proyecto.objects.filter(slug=user_sl).count()
+                    context['objetivoEsp'] = Objetivo_especifico.objects.filter(slug=user_sl).count()
+                    if Idea_Proyecto.objects.filter(slug=user_sl).exists():
+                        idea = Idea_Proyecto.objects.get(slug=user_sl)
+                        beneficio = idea.beneficios_alter
+                        if beneficio == None:
+                            context['beneficio'] = False
+                        else:
+                            context['beneficio'] = True
+                    context['modeloActa'] = Modelo_Acta.objects.filter(slug=user_sl).count()
+                    context['DerechoPropie'] = Derecho_propietario.objects.filter(slug=user_sl).count()
+                    context['impactoAmbiental'] = Impacto_ambiental.objects.filter(slug=user_sl).count()
+                    context['riesgoDesastre'] = Riesgo_desastre.objects.filter(slug=user_sl).count()
+                    context['detallePoa'] = Detalle_POA.objects.filter(slug=user_sl).count()
+                    context['conclusion'] = Conclusion_recomendacion.objects.filter(slug=user_sl).count()
+                else:
+                    context['ObjetivoGeneral'] = ObjetivoGeneralEjec.objects.filter(slug=user_sl).count()
+                    context['ObjetivoEspecifico'] = ObjetivoEspecificoEjec.objects.filter(slug=user_sl).count()
+                    context['Ubicacion'] = UbicacionGeografica.objects.filter(slug=user_sl).count()
+                    
                 if Proyecto.objects.filter(slug=user_sl).exists():
                     print(Proyecto.objects.filter(slug=user_sl).exists())
                     proyecto = Proyecto.objects.get(slug=user_sl)
@@ -244,6 +257,7 @@ class Index(TemplateView):
                 if fechalanzamiento <= fechaHoy and fechaHoy <= fechaCierre:
                     context['fechaActivo'] = True
                     context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
+                    print(fechaCierre.isoformat(), "expiracion")
                 elif fechalanzamiento >= fechaHoy:
                     context['fechaActivo'] = False
                     context['fecha_expiracion'] = fechalanzamiento.isoformat() if fechalanzamiento else None
@@ -258,7 +272,7 @@ class Index(TemplateView):
                     fecha.save()
                     context['message_fecha'] = 'SE CERRO LA CONVOCATORIA ACTUAL' 
                     context['estadotemporal']='CIERRE'
-                    context['imagen'] = 'img/fondo/cierre.png'
+                    context['imagen'] = 'img/fondo/cierre.png'                
             elif estado > 0:
                 context['activo'] = False
                 context['message'] = 'Se tiene mas de dos convocatorias activas por favor contactese con el encargado para reportar este error'

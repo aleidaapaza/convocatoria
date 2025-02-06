@@ -143,11 +143,11 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <td> BENEFICIARIOS </td>
+                                <td><b>BENEFICIARIOS</b> </td>
                                 <td> {{proyecto.datos_basicos.comunidades}} </td>
                             </tr>
                             <tr>
-                                <td>NOMBRE DEL PROYECTO </td>
+                                <td><b>NOMBRE DEL PROYECTO</b></td>
                                 <td> {{proyecto.datos_basicos.nombre}} </td>
                             </tr>
                         </tbody>
@@ -155,20 +155,15 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <td> TIPOLOGIA DEL PROYECTO </td>
+                                <td> <b>TIPOLOGIA DEL PROYECTO</b> </td>
                                 <td> 
                                 {% if proyecto.datos_basicos.tipologia_proy %}
                                 Proyecto de Desarrollo Social
                                 {% else %}
                                 {% endif %}
                                 </td>
-                                <td> PERIODO DE EJECUCION </td>
-                                <td> {{proyecto.datos_basicos.periodo_ejecu}} </td>
-                                <td> FINANCIAMIENTO EDTP </td>
-                                <td> {% if proyecto.datos_basicos.solicitud_financ %}
-                                Si
-                                {% else %}No
-                                {% endif %}
+                                <td><b>PERIODO DE EJECUCION</b> </td>
+                                <td> {{proyecto.datos_basicos.periodo_ejecu}} </td>                                
                                 </td>
                             </tr>
                         </tbody>
@@ -238,7 +233,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.antecedente}} </td>
+                                <td> {{proyecto.ideaProyecto.antecedente|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -250,7 +245,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.diagnostico}} </td>
+                                <td> {{proyecto.ideaProyecto.diagnostico|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -262,7 +257,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.planteamiento_problema}} </td>
+                                <td> {{proyecto.ideaProyecto.planteamiento_problema|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -274,7 +269,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.actores_involucrados}} </td>
+                                <td> {{proyecto.ideaProyecto.actores_involucrados|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -286,7 +281,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.alternativa_1}} </td>
+                                <td> {{proyecto.ideaProyecto.alternativa_1|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>                    
@@ -298,7 +293,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.alternativa_2}} </td>
+                                <td> {{proyecto.ideaProyecto.alternativa_2|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -322,7 +317,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.justificacion_alter}} </td>
+                                <td> {{proyecto.ideaProyecto.justificacion_alter|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -334,7 +329,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.ideaProyecto.objetivo_general}} </td>
+                                <td> {{proyecto.ideaProyecto.objetivo_general|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -352,11 +347,11 @@
                         <tbody>
                         {% for objetivos in objetivo %}
                             <tr>
-                                <td> {{objetivos.objetivo}} </td>
-                                <td> {{objetivos.componente}} </td>
-                                <td> {{objetivos.linea_base}} </td>
-                                <td> {{objetivos.indicador}} </td>
-                                <td> {{objetivos.meta}} </td>
+                                <td> {{objetivos.objetivo|linebreaksbr}} </td>
+                                <td> {{objetivos.componente|linebreaksbr}} </td>
+                                <td> {{objetivos.linea_base|linebreaksbr}} </td>
+                                <td> {{objetivos.indicador|linebreaksbr}} </td>
+                                <td> {{objetivos.meta|linebreaksbr}} </td>
                             </tr>
                         {% endfor %}                            
                         </tbody>
@@ -487,7 +482,7 @@
                         <tbody>
                         {% for derechos in derecho %}
                             <tr>
-                                <td> {{derechos.descripcion}} </td>
+                                <td> {{derechos.descripcion|linebreaksbr}} </td>
                                 <td> {{derechos.si_registro}} 
                                 {% if derechos.si_registro %}
                                     <a href="{% url 'descargar_derechoProp' proyecto.slug derechos.id %}" class="btn btn-primary">
@@ -592,7 +587,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.detallePoa.descripcion}} </td>
+                                <td> {{proyecto.detallePoa.descripcion|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -608,6 +603,7 @@
             </h2>
             <div id="collapsenine" class="accordion-collapse collapse" aria-labelledby="headingnine" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    {% if postulacion.tipo_financiamiento == 1 %}                    
                     <b>Elaboracion Estudio de Diseño Tecnico de preinversion - EDTP:</b>
                     <table class="table table-bordered">
                         <thead>
@@ -631,6 +627,7 @@
                             </tr>       
                         </tbody>
                     </table>
+                    {% endif %}
                     <b>Ejecucion Estudio de Diseño Tecnico de preinversion - EDTP:</b>
                     <table class="table table-bordered">
                         <thead>
@@ -674,7 +671,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.conclusion.conclusion}} </td>
+                                <td> {{proyecto.conclusion.conclusion|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -686,7 +683,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.conclusion.recomendacion}} </td>
+                                <td> {{proyecto.conclusion.recomendacion|linebreaksbr}} </td>
                             </tr>
                         </tbody>
                     </table>
@@ -721,17 +718,39 @@
                             </tr>
                         </tbody>
                     </table>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="table-info">
+                                <th scope="col">CARTA DE SOLICITUD DE FINANCIAMIENTO PARA ELABORACION DE EDTP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td> {{proyecto.declaracionJurada.carta_elab}}
+                                    {% if proyecto.declaracionJurada.carta_elab %}
+                                        <a href="{% url 'descargar_docDeclaracion' proyecto.slug '3' %}" class="btn btn-info">
+                                            Descargar Archivos
+                                        </a>
+                                    {% else %}
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
-                            <th scope="col">CARTA DE SOLICITUD DE:FINANCIAMIENTO PARA ELABORACION DE EDTP Y FINANCIAMIENTO PARA EJECUCION DE EDTPA</th>
+                            <th scope="col">CARTA DE SOLICITUD DE FINANCIAMIENTO PARA EJECUCION DE EDTPA</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td> {{proyecto.declaracionJurada.carta}}
-                                {% if proyecto.declaracionJurada.carta %}
-                                    <a href="{% url 'descargar_docDeclaracion' proyecto.slug '3' %}" class="btn btn-info">
+                                <td> {{proyecto.declaracionJurada.carta_ejec}}
+                                {% if proyecto.declaracionJurada.carta_ejec %}
+                                    <a href="{% url 'descargar_docDeclaracion' proyecto.slug '4' %}" class="btn btn-info">
                                         Descargar Archivos
                                     </a>
                                 {% else %}

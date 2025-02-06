@@ -37,6 +37,7 @@ class Reg_ConclRec(CreateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-CONCLUSIONES Y RECOMENDACIONES'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-CONCLUSIONES Y RECOMENDACIONES'
@@ -69,6 +70,7 @@ class Act_ConclRec(UpdateView):
             context['form'] = self.form_class(self.request.GET)
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p  
+        context['postulacion'] = proyecto_p
         context['titulo'] = 'ITCP-CONCLUSIONES Y RECOMENDACIONES'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-CONCLUSIONES Y RECOMENDACIONES'

@@ -62,6 +62,7 @@
 
             // Mostrar la cuenta regresiva en el HTML
             document.getElementById("tiempo").innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+            document.getElementById("tiempoAct").innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
 
             // Si la cuenta regresiva ha llegado a cero, mostrar un mensaje
             if (distancia < 0) {
@@ -70,5 +71,5 @@
             }
 
         }, 1000); // Actualiza cada 1 segundo
-  </script>
+</script>
 {% endblock js %}
