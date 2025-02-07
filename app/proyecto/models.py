@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 import uuid
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
+from datetime import datetime
 
 from proyecto.choices import periodo_ejecucion, elige_alternativas, nivel, temporalidad, riesgos, estado_proyecto,tipo_hectareas
 from user.models import User
@@ -371,3 +372,24 @@ class UbicacionGeografica(models.Model):
         verbose_name = _('UbicacionGeografica')
         verbose_name_plural = _('UbicacionesGeografica')
         db_table = 'UbicacionGeografica'
+        
+class EDTP(models.Model):
+    slug = models.SlugField(null=False, blank=False, unique=True)
+    fechaenvio = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    aceptar = models.BooleanField()
+    estado = models.CharField(choices=estado_proyecto, max_length=50, default='SIN REVISAR')
+    revisor = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    comentarios = models.TextField(null=True, blank=True)
+    datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='EDTPDatosBase')
+    objetivo_gen = models.ForeignKey(ObjetivoGeneralEjec, on_delete=models.CASCADE, related_name='EDTPObjGeneral')
+    Ubicacion = models.ForeignKey(UbicacionGeografica, on_delete=models.CASCADE, related_name='EDTPubicacion')
+    beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, related_name='EDTPproyectoBeneficiario')
+    presupuestoRef = models.ForeignKey(PresupuestoReferencial, on_delete=models.CASCADE, related_name='EDTPPreupuestoRef')
+    declaracionJurada = models.ForeignKey(Declaracion_jurada, on_delete=models.CASCADE, related_name='EDTPDeclaracionJ')
+    fechaEstado = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    
+    class Meta:
+        verbose_name = _('EDTP')
+        verbose_name_plural = _('EDTP')
+        db_table = 'EDTP'

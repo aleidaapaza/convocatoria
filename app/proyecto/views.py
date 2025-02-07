@@ -23,7 +23,8 @@ from solicitud.models import Postulacion
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
                              Modelo_Acta, Derecho_propietario, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
                              Conclusion_recomendacion, Declaracion_jurada, PresupuestoReferencial,
-                             Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica)
+                             Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica,
+                             EDTP)
 
 from proyecto.forms import R_Declaracion_ITCP, R_Proyecto
 
@@ -424,7 +425,7 @@ def generate_pdf(request, slug):
         # Tabla Nro de Hectareas
         # -----------------------
         data_hectarea = [
-            ["<b>NÚMERO DE HECTAREAS DE FORESTACIÓN Y/O REFORESTACIÓN Y/O MANEJO SUSTENTABLE DE BOSQUE:</b>", str(obj_general.hectareas).replace("\n", "<br />") + "ha." + str(obj_general.tipo_hectareas).replace("\n", "<br />")]
+            ["<b>NÚMERO DE HECTAREAS DE FORESTACIÓN Y/O REFORESTACIÓN Y/O MANEJO SUSTENTABLE DE BOSQUE:</b>", str(obj_general.hectareas).replace("\n", "<br />") + " ha. " + str(obj_general.tipo_hectareas).replace("\n", "<br />")]
         ]
         
         data_hectarea = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_hectarea]
@@ -444,7 +445,7 @@ def generate_pdf(request, slug):
     total_mujeres = beneficiarios.mujer_directo + beneficiarios.mujer_indirecto
     total = total_mujeres + total_hombres
     data_beneficiarios = [
-        ["<b>Beneficiarios</b>", "<b>Hombres</b>", "<b>Mujeres</b>", "<b>Total</b>"],
+        ["<b>Nro Beneficiarios</b>", "<b>Hombres</b>", "<b>Mujeres</b>", "<b>Total</b>"],
         ["<b>Directos</b>",str(beneficiarios.hombre_directo),str(beneficiarios.mujer_directo),str(total_directo)],
         ["<b>Indirectos</b>",str(beneficiarios.hombre_indirecto),str(beneficiarios.mujer_indirecto),str(total_indirecto)],
         ["<b>Total</b>",str(total_hombres),str(total_mujeres),str(total)],
@@ -457,8 +458,8 @@ def generate_pdf(request, slug):
     elements.append(Spacer(1, 5))
 
     data_beneficiariosF = [
-        ["<b>Beneficiarios</b>", "<b>Total</b>"],
-        ["<b>Nro Familias</b>",str(beneficiarios.familia)],
+        ["<b>Nro Beneficiarios</b>", "<b>Total</b>"],
+        ["<b>Familias</b>",str(beneficiarios.familia)],
     ]
     data_beneficiariosF = [[Paragraph(str(cell), style_normal) for cell in row] for row in data_beneficiariosF]
     table_beneficiariosF = Table(data_beneficiariosF, colWidths=[130, 390])
@@ -596,23 +597,37 @@ def generate_pdf(request, slug):
         data_der_prop = [
             ["<b>DESCRIPCION</b>", "<b>ADJUNTAR DERECHO PROPIETARIO</b>", "<b>DE NO CONTAR CON UN DERECHO PROPIETARIO DETERMINAR LAS ACCIONES A REALIZAR</b>", "<b>GEOREFERENCIA (SISTEMA DE REFERENCIA WGS-84 PROYECCION UTM)</b>"]
         ]
-        for derechos in derecho:
-            data_der_prop.append([
-                str(derechos.descripcion).replace("\n", "<br />"),
-                str(derechos.si_registro),
-                str(derechos.no_registro).replace("\n", "<br />"),
-                "Z="+str(derechos.zone)+"K " + "\n" + str(derechos.easting) + "m E" + "\n" + str(derechos.northing) + "m N" + "\n",
+        data_der_prop.append([
+                str(derecho[0].descripcion).replace("\n", "<br />"),
+                str(derecho[0].si_registro),
+                str(derecho[0].no_registro).replace("\n", "<br />"),
+                "Z="+str(derecho[0].zone)+"K " + "\n" + str(derecho[0].easting) + "m E" + "\n" + str(derecho[0].northing) + "m N" + "\n",
             ])
 
         data_der_prop = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_der_prop]
-        table_der_prop = Table(data_der_prop, colWidths=[130, 130, 130])
+        table_der_prop = Table(data_der_prop, colWidths=[130, 130, 130, 130])
         table_der_prop.setStyle(table_style)
         table_der_prop.splitByRow = True
         elements.append(table_der_prop)
         elements.append(Spacer(1, 5))
         
+        data_der_prop1 = [
+            ["<b>DESCRIPCION</b>", "<b>GEOREFERENCIA (SISTEMA DE REFERENCIA WGS-84 PROYECCION UTM)</b>"]
+        ]
+        data_der_prop1.append([
+                str(derecho[1].descripcion).replace("\n", "<br />"),
+                "Z="+str(derecho[1].zone)+"K " + "\n" + str(derecho[1].easting) + "m E" + "\n" + str(derecho[1].northing) + "m N" + "\n",
+            ])
+
+        data_der_prop1 = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_der_prop1]
+        table_der_prop1 = Table(data_der_prop1, colWidths=[260, 260])
+        table_der_prop1.setStyle(table_style)
+        table_der_prop1.splitByRow = True
+        elements.append(table_der_prop1)
+        elements.append(Spacer(1, 5))
+        
         data_ubi = [
-            ["<b>Altura media zona de forestación</b>", str(ubicacion.alturaForestacion) + "msnm"]
+            ["<b>Altura media zona de forestación</b>", str(ubicacion.alturaForestacion) + " msnm."]
         ]
         
         data_ubi = [[Paragraph(str(cell), style_lef) for cell in row] for row in data_ubi]
@@ -823,19 +838,32 @@ class EnviarDatos(View):
             # Guardar el formulario o hacer alguna acción con los datos
             declaracion.itcp = form.cleaned_data['itcp']  # Ejemplo de guardar el campo 'itcp'
             declaracion.save()
-            Proyecto.objects.create(
-                slug = slug,
-                datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
-                justificacion = get_object_or_404(Justificacion, slug=slug),
-                ideaProyecto = get_object_or_404(Idea_Proyecto, slug=slug),
-                beneficiario = get_object_or_404(Beneficiario, slug=slug),
-                impactoAmbiental = get_object_or_404(Impacto_ambiental, slug=slug),
-                detallePoa = get_object_or_404(Detalle_POA, slug=slug),
-                conclusion = get_object_or_404(Conclusion_recomendacion, slug=slug),
-                declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),
-                presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
-                aceptar = False,
-            )
+            if proyecto_p.tipo_financiamiento == 1:                
+                Proyecto.objects.create(
+                    slug = slug,
+                    datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
+                    justificacion = get_object_or_404(Justificacion, slug=slug),
+                    ideaProyecto = get_object_or_404(Idea_Proyecto, slug=slug),
+                    beneficiario = get_object_or_404(Beneficiario, slug=slug),
+                    impactoAmbiental = get_object_or_404(Impacto_ambiental, slug=slug),
+                    detallePoa = get_object_or_404(Detalle_POA, slug=slug),
+                    conclusion = get_object_or_404(Conclusion_recomendacion, slug=slug),
+                    declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),
+                    presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
+                    aceptar = False,
+                )
+            else:
+                EDTP.objects.create(
+                    slug = slug,
+                    datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
+                    objetivo_gen = get_object_or_404(ObjetivoGeneralEjec, slug=slug),
+                    Ubicacion = get_object_or_404(UbicacionGeografica, slug=slug),                    
+                    beneficiario = get_object_or_404(Beneficiario, slug=slug),                    
+                    presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),                    
+                    declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),                    
+                    aceptar = False,
+                )
+            
             # Agregar un mensaje de éxito
             messages.success(request, "Los datos se enviaron correctamente.")
 
@@ -860,27 +888,46 @@ class enviarDatos2(View):
     template_name = 'Proyecto/EnviarDatos.html'
 
     def post(self, request, slug):
-        if not Proyecto.objects.filter(slug=slug).exists():
-            Proyecto.objects.create(
-                    slug = slug,
-                    postulacion = get_object_or_404(Postulacion, slug=slug),
-                    datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
-                    justificacion = get_object_or_404(Justificacion, slug=slug),
-                    ideaProyecto = get_object_or_404(Idea_Proyecto, slug=slug),
-                    beneficiario = get_object_or_404(Beneficiario, slug=slug),
-                    impactoAmbiental = get_object_or_404(Impacto_ambiental, slug=slug),
-                    detallePoa = get_object_or_404(Detalle_POA, slug=slug),
-                    conclusion = get_object_or_404(Conclusion_recomendacion, slug=slug),
-                    declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),
-                    presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
-                    aceptar = False,
+        proyecto_p = get_object_or_404(Postulacion, slug=slug)
+        if proyecto_p.tipo_financiamiento == 1:        
+            if not Proyecto.objects.filter(slug=slug).exists():
+                Proyecto.objects.create(
+                        slug = slug,
+                        postulacion = get_object_or_404(Postulacion, slug=slug),
+                        datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
+                        justificacion = get_object_or_404(Justificacion, slug=slug),
+                        ideaProyecto = get_object_or_404(Idea_Proyecto, slug=slug),
+                        beneficiario = get_object_or_404(Beneficiario, slug=slug),
+                        impactoAmbiental = get_object_or_404(Impacto_ambiental, slug=slug),
+                        detallePoa = get_object_or_404(Detalle_POA, slug=slug),
+                        conclusion = get_object_or_404(Conclusion_recomendacion, slug=slug),
+                        declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),
+                        presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
+                        aceptar = False,
 
-                )
+                    )
+            else:
+                proyecto = Proyecto.objects.get(slug=slug)
+                proyecto.estado = 'CORREGIDO'
+                proyecto.fecha_actualizacion = timezone.now()
+                proyecto.save()
         else:
-            proyecto = Proyecto.objects.get(slug=slug)
-            proyecto.estado = 'CORREGIDO'
-            proyecto.fecha_actualizacion = timezone.now()
-            proyecto.save()
+            if not EDTP.objects.filter(slug=slug).exists():
+                EDTP.objects.create(
+                    slug = slug,
+                    datos_basicos = get_object_or_404(DatosProyectoBase, slug=slug),
+                    objetivo_gen = get_object_or_404(ObjetivoGeneralEjec, slug=slug),
+                    Ubicacion = get_object_or_404(UbicacionGeografica, slug=slug),                    
+                    beneficiario = get_object_or_404(Beneficiario, slug=slug),                    
+                    presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),                    
+                    declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),                    
+                    aceptar = False,
+                    )
+            else:
+                proyecto = EDTP.objects.get(slug=slug)
+                proyecto.estado = 'CORREGIDO'
+                proyecto.fecha_actualizacion = timezone.now()
+                proyecto.save()
             # Agregar un mensaje de éxito
         messages.success(request, "Los datos se enviaron correctamente.")
             # Redirigir a la página de éxito o a otro lugar
@@ -891,12 +938,20 @@ class verDatos(View):
     template_name = 'Proyecto/Vista.html'
 
     def get(self, request, slug):
-        proyecto = get_object_or_404(Proyecto, slug=slug)
+        
         postulacion = get_object_or_404(Postulacion, slug=slug)
-        objetivo_esp = Objetivo_especifico.objects.filter(slug=slug)
-        modelo_acta = Modelo_Acta.objects.filter(slug=slug)
         derecho = Derecho_propietario.objects.filter(slug=slug)
-        riesgo_des = Riesgo_desastre.objects.filter(slug=slug)
+        
+        if postulacion.tipo_financiamiento == 1:            
+            proyecto = get_object_or_404(Proyecto, slug=slug)        
+            objetivo_esp = Objetivo_especifico.objects.filter(slug=slug)
+            modelo_acta = Modelo_Acta.objects.filter(slug=slug)
+            riesgo_des = Riesgo_desastre.objects.filter(slug=slug)
+            
+        else:
+            proyecto = get_object_or_404(EDTP, slug=slug)
+            objetivo_esp = ObjetivoEspecificoEjec.objects.filter(slug=slug)
+            
         total_hombre = int(proyecto.beneficiario.hombre_directo) + int(proyecto.beneficiario.hombre_indirecto)
         total_mujer = int(proyecto.beneficiario.mujer_directo) + int(proyecto.beneficiario.mujer_indirecto)
         total_directo = int(proyecto.beneficiario.hombre_directo) + int(proyecto.beneficiario.mujer_directo)
@@ -908,19 +963,19 @@ class verDatos(View):
         p_mujer_indir = round(((100*proyecto.beneficiario.mujer_indirecto)/total_indirecto), 2)
         p_total_dir = p_hombre_dir + p_mujer_dir
         p_total_indir = p_hombre_indir + p_mujer_indir
+        
         if self.request.user.is_superuser or self.request.user.is_revisor:
             formulario = True
             form = R_Proyecto(instance = proyecto)
         else: 
             formulario = False
             form = None
+            
         context = {
             'proyecto': proyecto,
             'postulacion': postulacion,
             'objetivo': objetivo_esp,
-            'modelo': modelo_acta,
-            'derecho': derecho,
-            'riesgo': riesgo_des,
+            'derecho' : derecho,
             'titulo': 'DATOS ENVIADOS',
             'entity': 'DATOS ENVIADOS',
             'total_hombre': total_hombre,
@@ -937,6 +992,14 @@ class verDatos(View):
             'formulario' : formulario,
             'form' : form,
         }
+        
+        if postulacion.tipo_financiamiento == 1:
+            context.update = {                
+                'modelo': modelo_acta,
+                'derecho': derecho,
+                'riesgo': riesgo_des,
+            }
+            
         return render(self.request, self.template_name, context)
     
     def post(self, request, slug):
@@ -962,10 +1025,23 @@ class Lista_Proyectos(ListView):
     template_name = 'Proyecto/lista.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_Proyectos, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado=True)        
-        context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION'
+        proyectos = self.model.objects.filter(estado=True).filter(tipo_financiamiento=1)     
+        context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION'
+        context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - ITCP'
+        context['object_list'] = proyectos
+                
+        return context
+    
+class Lista_ProyectosEjec(ListView):
+    model = Postulacion
+    template_name = 'Proyecto/lista.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ProyectosEjec, self).get_context_data(**kwargs)
+        proyectos = self.model.objects.filter(estado=True).filter(tipo_financiamiento=2)
+        context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - EDTP'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - EDTP'
         context['object_list'] = proyectos
                 
         return context
@@ -982,13 +1058,41 @@ class Lista_ProyectosDatos(ListView):
         context['object_list'] = Proyecto.objects.all()
                 
         return context
-
+    
+class Lista_ProyectosDatosEjec(ListView):
+    model = EDTP
+    template_name = 'Proyecto/lista_Datos.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ProyectosDatosEjec, self).get_context_data(**kwargs)
+        # Añadimos el título y la entidad
+        context['titulo'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
+        context['object_list'] = EDTP.objects.all()
+                
+        return context
+    
 class Lista_ProyectosSinRevisar(ListView):
     model = Proyecto
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado='SIN REVISAR')
+        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(tipo_financiamiento=1)
+        
+        # Añadimos el título y la entidad
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
+        context['object_list'] = proyectos
+                
+        return context
+    
+class Lista_ProyectosSinRevisarEjec(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_DatosEstado.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
+        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(tipo_financiamiento=2)
         
         # Añadimos el título y la entidad
         context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'

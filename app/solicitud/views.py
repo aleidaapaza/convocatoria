@@ -287,21 +287,43 @@ class ListaSolicitudes(ListView):
     template_name = 'Postulaciones/lista.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titulo'] = 'LISTA DE SOLICITUDES'
+        context['titulo'] = 'LISTA DE SOLICITUDES - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE SOLICITUDES'
-        context['object_list'] = self.model.objects.filter(estado=None)
+        context['entity'] = 'LISTA DE SOLICITUDES - ITCP'
+        context['object_list'] = self.model.objects.filter(estado=None).filter(tipo_financiamiento=1)
         return context
 
+class ListaSolicitudesEJEC(ListView):
+    model = Postulacion
+    template_name = 'Postulaciones/lista.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'LISTA DE SOLICITUDES - EDTP'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE SOLICITUDES - EDTP'
+        context['object_list'] = self.model.objects.filter(estado=None).filter(tipo_financiamiento=2)
+        return context
+    
 class ListaRechazados(ListView):
     model = Postulacion
     template_name = 'Postulaciones/lista.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titulo'] = 'LISTA NO APROBADOS'
+        context['titulo'] = 'LISTA NO APROBADOS - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA NO APROBADOS'
-        context['object_list'] = self.model.objects.filter(estado=False)
+        context['entity'] = 'LISTA NO APROBADOS - ITCP'
+        context['object_list'] = self.model.objects.filter(estado=False).filter(tipo_financiamiento=1)
+        return context
+    
+class ListaRechazadosEJEC(ListView):
+    model = Postulacion
+    template_name = 'Postulaciones/lista.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = 'LISTA NO APROBADOS - EDTP'
+        context['activate'] = True
+        context['entity'] = 'LISTA NO APROBADOS - EDTP'
+        context['object_list'] = self.model.objects.filter(estado=False).filter(tipo_financiamiento=2)
         return context
     
 class fichaSolicitud(UpdateView):

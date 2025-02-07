@@ -1,6 +1,8 @@
 from django.urls import path, include
 
-from proyecto.views import Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos, Lista_ProyectosSinRevisar, Lista_ProyectosObservados, Lista_ProyectosAprobados
+from proyecto.views import (Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos, 
+                            Lista_ProyectosSinRevisar, Lista_ProyectosObservados, Lista_ProyectosAprobados,
+                            Lista_ProyectosEjec, Lista_ProyectosDatosEjec)
 from proyecto.view.itcp0 import DatosPostulacion
 from proyecto.view.itcp1 import RegistroDatosBasicos
 from proyecto.view.itcp2 import Reg_Justificaciones, Act_Justificacion
@@ -36,9 +38,13 @@ urlpatterns = [
     path('eliminar-DerechoPropE/<int:objetivo_id>/', eliminar_DerechoE, name='eliminar_DerechoE'),
     path('Act_DerechoPropietarioER/<slug:slug>', R_DerechoPropietarioER.as_view(), name='agregar_DerechoPropietarioE'),
 
-    #Lista
+    #ListaITCP
     path('lista_aprobados/', Lista_Proyectos.as_view(), name='lista_inicio'),
     path('lista_aprobadosDatos/', Lista_ProyectosDatos.as_view(), name='lista_datos'),
+    #ListaEDTP
+    path('lista_aprobadosEjec/', Lista_ProyectosEjec.as_view(), name='lista_inicioEjec'),
+    path('lista_aprobadosDatosEjec/', Lista_ProyectosDatosEjec.as_view(), name='lista_datosEjec'),
+    
     #Datos Postulacion
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
     #ITCP y EDTP

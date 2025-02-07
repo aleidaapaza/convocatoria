@@ -229,7 +229,7 @@ class R_Declaracion_ITCP(ModelForm):
         model = Declaracion_jurada
         fields = ['itcp']
         labels = {
-            'itcp':'INGRESE EL ARCHIVO ESCANEADO DEL ITCP EN PDF CON LA FIRMA DE LA MAE Y EL TECNICO ETA:'
+            'itcp':'INGRESE EL ARCHIVO PDF GENERADO ESCANEADO CON LA FIRMA DE LA MAE Y EL TECNICO ETA:'
         }
 
 class R_Proyecto(ModelForm):

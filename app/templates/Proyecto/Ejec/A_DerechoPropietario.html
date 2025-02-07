@@ -2,7 +2,8 @@
 {% load static %}
 {% block formulario %}
 <div class="row card card-body">
-    <table class="table">
+    {% if derecho|length > 0 %} 
+     <table class="table">        
         <thead>
             <tr>
                 <th>.</th>
@@ -12,28 +13,68 @@
                 <th>GEOREFERENCIA (SISTEMA DE REFERENCIA WGS-84 PROYECCION UTM) </th>
             </tr>
         </thead>
-        <tbody id="product-rows">
-            {% for producto in derecho %}
+            <tbody id="product-rows">
+                <tr>
+                    <input type="hidden" name="id_0" value="{{ derecho.0.id }}">
+                    <td>
+                    <input type="hidden" name="id_0" value="{{ derecho.0.id }}">
+                    </td>
+                    <td>
+                        <textarea name="descripcion_0" rows="4" 
+                        class="form-control form-control-sm font-weight-bold border border-info">{{ derecho.0.descripcion }}</textarea>
+                    </td>
+                <td>
+                    <input type="file" name="si_registro_0" value="{{ derecho.0.si_registro }}"
+                    class="form-control form-control-sm font-weight-bold border border-info">
+                    {% if derecho.0.si_registro %}
+                        <a href="{% url 'descargar_derechoProp' derecho.0.slug derecho.0.id %}" class="btn btn-primary">
+                            Descargar Archivo
+                        </a>
+                    {% endif %}
+                </td>
+                <td>
+                    <textarea name="no_registro_0" rows="4" 
+                    class="form-control form-control-sm font-weight-bold border border-info">{{ derecho.0.no_registro }} </textarea>
+                </td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <td>ZONA</td>
+                            <td>ESTE (m E)</td>
+                            <td>NORTE (m N)</td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" value="{{ derecho.0.zone }}" name="zone_0" step="1"
+                            class="form-control form-control-sm font-weight-bold border border-info"></td>
+                            <td><input type="number" value="{{ derecho.0.easting }}" name="easting_0" step="0.001"
+                            class="form-control form-control-sm font-weight-bold border border-info"></td>
+                            <td><input type="number" value="{{ derecho.0.northing }}" name="northing_0" step="0.001"
+                            class="form-control form-control-sm font-weight-bold border border-info"></td>
+                        </tr>
+                    </table>
+                </td>
+                </tr>
+            </tbody>
+    </table>
+    {% endif %}
+    {% if derecho|length > 1 %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>.</th>
+                    <th>Descripción</th>
+                    <th>GEOREFERENCIA (SISTEMA DE REFERENCIA WGS-84 PROYECCION UTM) </th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr>
                     <td>
-                        <input type="hidden" name="id_{{ forloop.counter0 }}" value="{{ producto.id }}">
+                        <input type="hidden" name="id_1" value="{{ derecho.1.id }}">
                     </td>
                     <td>
-                        <textarea name="descripcion_{{ forloop.counter0 }}" rows="4" 
-                        class="form-control form-control-sm font-weight-bold border border-info">{{producto.descripcion}}</textarea>
-                    </td>
-                    <td>
-                    <input type="file" name="si_registro_{{ forloop.counter0 }}" value="{{producto.si_registro}}"
-                    class="form-control form-control-sm font-weight-bold border border-info">
-                        {% if producto.si_registro %}
-                            <a href="{% url 'descargar_derechoProp' producto.slug producto.id %}" class="btn btn-primary">
-                                Descargar Archivo
-                            </a>
-                        {% endif %}
-                    </td>
-                    <td><textarea name="no_registro_{{ forloop.counter0 }}" rows="4" 
-                    class="form-control form-control-sm font-weight-bold border border-info">{{producto.no_registro}} </textarea>
-                    </td>
+                        <textarea name="descripcion_1" rows="4" 
+                        class="form-control form-control-sm font-weight-bold border border-info">{{ derecho.1.descripcion }}</textarea>
+                    </td>                    
                     <td>
                         <table class="table">
                             <tr>
@@ -42,25 +83,19 @@
                                 <td>NORTE (m N)</td>
                             </tr>
                             <tr>
-                                <td><input type="number" value="{{producto.zone}}" name="zone_{{ forloop.counter0 }}" step="1"
+                                <td><input type="number" value="{{ derecho.1.zone }}" name="zone_1" step="1"
                                 class="form-control form-control-sm font-weight-bold border border-info"></td>
-                                <td><input type="number" value="{{producto.easting}}" name="easting_{{ forloop.counter0 }}" step="0.001"
+                                <td><input type="number" value="{{ derecho.1.easting }}" name="easting_1" step="0.001"
                                 class="form-control form-control-sm font-weight-bold border border-info"></td>
-                                <td><input type="number" value="{{producto.northing}}" name="northing_{{ forloop.counter0 }}" step="0.001"
+                                <td><input type="number" value="{{ derecho.1.northing }}" name="northing_1" step="0.001"
                                 class="form-control form-control-sm font-weight-bold border border-info"></td>
                             </tr>
                         </table>
                     </td>
-                    <td>
-                        <form method="post" action="{% url 'proyecto:eliminar_DerechoE' producto.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </td>
                 </tr>
-            {% endfor %}            
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    {% endif %}
 </div>
 <div class="row card card-body">
         <div class="mb-3 row">

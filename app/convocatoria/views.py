@@ -19,7 +19,7 @@ from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto,
                              Objetivo_especifico, Beneficiario, Modelo_Acta,
                              Derecho_propietario, Impacto_ambiental, Riesgo_desastre,
                              Detalle_POA, Conclusion_recomendacion, Declaracion_jurada,
-                             PresupuestoReferencial, Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica)
+                             PresupuestoReferencial, Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica, EDTP)
 # Create your views here.
 
 
@@ -185,18 +185,33 @@ class Index(TemplateView):
                     context['ObjetivoGeneral'] = ObjetivoGeneralEjec.objects.filter(slug=user_sl).count()
                     context['ObjetivoEspecifico'] = ObjetivoEspecificoEjec.objects.filter(slug=user_sl).count()
                     context['Ubicacion'] = UbicacionGeografica.objects.filter(slug=user_sl).count()
-                    
-                if Proyecto.objects.filter(slug=user_sl).exists():
-                    print(Proyecto.objects.filter(slug=user_sl).exists())
-                    proyecto = Proyecto.objects.get(slug=user_sl)
+                
+                if postulacion_p.tipo_financiamiento == 1:                    
+                    if Proyecto.objects.filter(slug=user_sl).exists():
+                        print(Proyecto.objects.filter(slug=user_sl).exists())
+                        
+                        proyecto = Proyecto.objects.get(slug=user_sl)
 
-                    if proyecto.estado == "CON OBSERVACION":
-                        context['proyectoDatos'] = proyecto
-                        context['vista'] = False
+                        if proyecto.estado == "CON OBSERVACION":
+                            context['proyectoDatos'] = proyecto
+                            context['vista'] = False
+                        else:
+                            context['vista'] = True
                     else:
-                        context['vista'] = True
+                        context['vista'] = False
                 else:
-                    context['vista'] = False
+                    if EDTP.objects.filter(slug=user_sl).exists():
+                        print(EDTP.objects.filter(slug=user_sl).exists())
+                        
+                        proyecto = EDTP.objects.get(slug=user_sl)
+
+                        if proyecto.estado == "CON OBSERVACION":
+                            context['proyectoDatos'] = proyecto
+                            context['vista'] = False
+                        else:
+                            context['vista'] = True
+                    else:
+                        context['vista'] = False
 
             elif self.request.user.is_revisor:
                 user_sl = self.request.user.revisor_perfil.slug
