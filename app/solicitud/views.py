@@ -404,7 +404,6 @@ class fichaSolicitud(UpdateView):
                         slug = slug,
                         user = user_Pr,
                         nombre = 'NOMBRE DEL PROYECTO',
-                        n_comunidades = '0',
                         comunidades = 'NOMBRE DE LAS COMUNIDADES',
                         tipologia_proy = False,
                         periodo_ejecu = '0'

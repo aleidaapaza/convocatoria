@@ -22,7 +22,6 @@ class Reg_DatosBase(ModelForm):
         exclude = ['slug', 'fecha_registro', 'user']
         labels = {
             'nombre': 'NOMBRE DEL PROYECTO',
-            'n_comunidades': 'N° DE COMUNIDADES BENEFICIARIAS DEL PROYECTO',
             'comunidades': 'COMUNIDADES BENEFICIARIAS DEL PROYECTO',
             'tipologia_proy': '¿EL PROYECTO ES DE TIPOLOGIA III - PROYECTO DE DESARROLLO SOCIAL?',
             'periodo_ejecu': 'PERIODO DE EJECUCION DEL PROYECTO (EN MESES)',

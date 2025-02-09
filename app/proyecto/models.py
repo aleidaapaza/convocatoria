@@ -21,14 +21,13 @@ def set_slug(sender, instance, *args, **kwargs):
 
 class DatosProyectoBase(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)    
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(User, blank=False, null=False, on_delete=models.CASCADE, related_name='username_proyecto')   
     nombre = models.CharField(max_length=255)
-    n_comunidades = models.IntegerField()
     comunidades = models.TextField()
     tipologia_proy = models.BooleanField()
     periodo_ejecu = models.IntegerField(choices=periodo_ejecucion)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug} {self.nombre}'
@@ -40,15 +39,15 @@ class DatosProyectoBase(models.Model):
 
 class Justificacion(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     justificacion1 = models.BooleanField()
     justificacion2 = models.BooleanField()
     justificacion3 = models.BooleanField()
     justificacion4 = models.BooleanField()
     justificacion5 = models.BooleanField()
     justificacion6 = models.BooleanField()
-    justificacion7 = models.BooleanField()
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    justificacion7 = models.BooleanField()    
 
     def __str__(self):
         return f'{self.slug}'
@@ -60,6 +59,8 @@ class Justificacion(models.Model):
     
 class Idea_Proyecto(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     antecedente = models.TextField(null=False, blank=False)
     diagnostico = models.TextField(null=False, blank=False)
     planteamiento_problema = models.TextField(null=False, blank=False)
@@ -70,8 +71,6 @@ class Idea_Proyecto(models.Model):
     justificacion_alter = models.TextField(null=False, blank=False)
     objetivo_general = models.TextField(null=False, blank=False)
     beneficios_alter = models.TextField(null=True, blank=True)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -83,14 +82,14 @@ class Idea_Proyecto(models.Model):
         verbose_name_plural = 'Ideas_Proyectos'
 
 class Objetivo_especifico(models.Model):
-    slug = models.SlugField(null=False, blank=False, unique=False)    
+    slug = models.SlugField(null=False, blank=False, unique=False)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)    
     objetivo = models.TextField(null=False, blank=False)   
     componente = models.TextField(null=False, blank=False)   
     linea_base = models.TextField(null=False, blank=False)   
     indicador = models.TextField(null=False, blank=False)   
     meta = models.TextField(null=False, blank=False)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -102,14 +101,14 @@ class Objetivo_especifico(models.Model):
         verbose_name_plural = 'Objetivos_especificos'
 
 class Beneficiario(models.Model):
-    slug = models.SlugField(null=False, blank=False, unique=True)    
+    slug = models.SlugField(null=False, blank=False, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)    
     hombre_directo = models.IntegerField(null=False, blank=False)
     mujer_directo = models.IntegerField(null=False, blank=False)
     hombre_indirecto = models.IntegerField(null=False, blank=False)
     mujer_indirecto = models.IntegerField(null=False, blank=False)
     familia = models.IntegerField(null=False, blank=False)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug+"beneficiario"}'
@@ -160,12 +159,12 @@ class Beneficiario(models.Model):
         return (self.total_mujeres() / total * 100) if total > 0 else 0
     
 class Modelo_Acta(models.Model):
-    slug = models.SlugField(null=False, blank=False, unique=False)    
+    slug = models.SlugField(null=False, blank=False, unique=False)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)    
     comunidades = models.CharField(null=False, blank=False)
     si_acta = models.FileField(upload_to=docModeloActa,null=True, blank=True)
     no_acta = models.TextField(null=True, blank=True)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -177,15 +176,15 @@ class Modelo_Acta(models.Model):
         verbose_name_plural = 'Modelo_Actas'
 
 class Derecho_propietario(models.Model):
-    slug = models.SlugField(null=False, blank=False, unique=False)    
+    slug = models.SlugField(null=False, blank=False, unique=False)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)    
     descripcion = models.TextField(null=False, blank=False)
     si_registro = models.FileField(upload_to=docDerechoPropietario, null=True, blank = True)
     no_registro = models.TextField(null=True, blank=True)
     zone = models.IntegerField(null=False, blank=False)
     easting = models.FloatField(null=False, blank=False)
     northing = models.FloatField(null=False, blank=False)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -198,6 +197,8 @@ class Derecho_propietario(models.Model):
 
 class Impacto_ambiental(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     bosque_nivel = models.CharField(choices=nivel, max_length=255)
     bosque_tempo = models.CharField(choices=temporalidad, max_length=255)
     suelo_nivel = models.CharField(choices=nivel, max_length=255)
@@ -208,11 +209,10 @@ class Impacto_ambiental(models.Model):
     aire_tempo = models.CharField(choices=temporalidad, max_length=255)
     biodiversidad_nivel = models.CharField(choices=nivel, max_length=255)
     biodiversidad_tempo = models.CharField(choices=temporalidad, max_length=255)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     otro_nombre = models.CharField(max_length=255, blank=True, null=True)
     otro_tempo = models.CharField(choices=temporalidad, max_length=255, blank=True, null=True)
     otro_nivel = models.CharField(choices=nivel, max_length=255, blank=True, null=True)
+    
     def __str__(self):
         return f'{self.slug}'
 
@@ -224,10 +224,10 @@ class Impacto_ambiental(models.Model):
 
 class Riesgo_desastre(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=False)
-    riesgo = models.CharField(choices=riesgos)
-    nivel = models.CharField(choices=nivel)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    riesgo = models.CharField(choices=riesgos)
+    nivel = models.CharField(choices=nivel)
 
     def __str__(self):
         return f'{self.slug}'
@@ -240,9 +240,9 @@ class Riesgo_desastre(models.Model):
 
 class Detalle_POA(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    descripcion = models.TextField(null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    descripcion = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -255,10 +255,10 @@ class Detalle_POA(models.Model):
 
 class Conclusion_recomendacion(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
-    conclusion = models.TextField(null=True, blank=True)
-    recomendacion = models.TextField(null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    conclusion = models.TextField(null=True, blank=True)
+    recomendacion = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.slug}'
@@ -316,6 +316,12 @@ class PresupuestoReferencial(models.Model):
 class Proyecto(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
     fechaenvio = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
+    aceptar = models.BooleanField()
+    estado = models.CharField(choices=estado_proyecto, max_length=50, default='SIN REVISAR')
+    fechaEstado = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    revisor = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    comentarios = models.TextField(null=True, blank=True)
     datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='proyectoDatosBase')
     justificacion = models.ForeignKey(Justificacion, on_delete=models.CASCADE, related_name='proyectoJustificacion')
     ideaProyecto = models.ForeignKey(Idea_Proyecto, on_delete=models.CASCADE, related_name='proyectoIdea')
@@ -325,13 +331,7 @@ class Proyecto(models.Model):
     conclusion = models.ForeignKey(Conclusion_recomendacion, on_delete=models.CASCADE, related_name='proyectoConclusionR')
     declaracionJurada = models.ForeignKey(Declaracion_jurada, on_delete=models.CASCADE, related_name='proyectoDeclaracionJ')
     presupuestoRef = models.ForeignKey(PresupuestoReferencial, on_delete=models.CASCADE, related_name='proyectoPreupuestoRef')
-    aceptar = models.BooleanField()
-    estado = models.CharField(choices=estado_proyecto, max_length=50, default='SIN REVISAR')
-    revisor = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    fecha_actualizacion = models.DateTimeField(auto_now_add=True)
-    comentarios = models.TextField(null=True, blank=True)
-# = models.ForeignKey(, on_delete=models.CASCADE, related_name='proyecto_')
-        
+    
     class Meta:
         verbose_name = _('ProyectoITCP')
         verbose_name_plural = _('ProyectosITCP')
@@ -379,6 +379,7 @@ class EDTP(models.Model):
     fecha_actualizacion = models.DateTimeField(auto_now_add=True)
     aceptar = models.BooleanField()
     estado = models.CharField(choices=estado_proyecto, max_length=50, default='SIN REVISAR')
+    fechaEstado = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     revisor = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     comentarios = models.TextField(null=True, blank=True)
     datos_basicos = models.ForeignKey(DatosProyectoBase, on_delete=models.CASCADE, related_name='EDTPDatosBase')
@@ -387,7 +388,6 @@ class EDTP(models.Model):
     beneficiario = models.ForeignKey(Beneficiario, on_delete=models.CASCADE, related_name='EDTPproyectoBeneficiario')
     presupuestoRef = models.ForeignKey(PresupuestoReferencial, on_delete=models.CASCADE, related_name='EDTPPreupuestoRef')
     declaracionJurada = models.ForeignKey(Declaracion_jurada, on_delete=models.CASCADE, related_name='EDTPDeclaracionJ')
-    fechaEstado = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
     class Meta:
         verbose_name = _('EDTP')

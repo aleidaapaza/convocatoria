@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from proyecto.views import (Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos, 
                             Lista_ProyectosSinRevisar, Lista_ProyectosObservados, Lista_ProyectosAprobados,
-                            Lista_ProyectosEjec, Lista_ProyectosDatosEjec)
+                            Lista_ProyectosEjec, Lista_ProyectosDatosEjec, Lista_ProyectosSinRevisarEjec)
 from proyecto.view.itcp0 import DatosPostulacion
 from proyecto.view.itcp1 import RegistroDatosBasicos
 from proyecto.view.itcp2 import Reg_Justificaciones, Act_Justificacion
@@ -41,10 +41,17 @@ urlpatterns = [
     #ListaITCP
     path('lista_aprobados/', Lista_Proyectos.as_view(), name='lista_inicio'),
     path('lista_aprobadosDatos/', Lista_ProyectosDatos.as_view(), name='lista_datos'),
+      #LISTA ESTADO DE REVISIONES
+    path('lista_SinRevisar/', Lista_ProyectosSinRevisar.as_view(), name='lista_datosSinrevisar'),
+    path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
+    path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),
     #ListaEDTP
     path('lista_aprobadosEjec/', Lista_ProyectosEjec.as_view(), name='lista_inicioEjec'),
     path('lista_aprobadosDatosEjec/', Lista_ProyectosDatosEjec.as_view(), name='lista_datosEjec'),
-    
+      #LISTA ESTADO DE REVISIONES
+    path('lista_SinRevisar/', Lista_ProyectosSinRevisarEjec.as_view(), name='lista_datosSinrevisar'),
+    path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
+    path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),
     #Datos Postulacion
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
     #ITCP y EDTP
@@ -90,8 +97,5 @@ urlpatterns = [
     path('EnviarDatos1/<slug:slug>', enviarDatos2.as_view(), name='enviar_datos2'),
     #VISUALIZAR DATOS ENVIADOS
     path('VerDatos/<slug:slug>', verDatos.as_view(), name='ver_Datos'),    
-    #LISTA ESTADO DE REVISIONES
-    path('lista_SinRevisar/', Lista_ProyectosSinRevisar.as_view(), name='lista_datosSinrevisar'),
-    path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
-    path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),
+    
     ]

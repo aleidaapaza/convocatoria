@@ -28,9 +28,11 @@ class Convocatoria(models.Model):
     tamanoDoc = models.IntegerField(choices=megas, null=False, blank=False, default=2)
     elabEdtp = models.BooleanField(default=False)
     EjecEdtp = models.BooleanField(default=False)
-    documento = models.FileField(upload_to=convocatoria_doc, null=True, blank=True)
-    guia = models.FileField(upload_to=convocatoria_doc, null=True, blank=True)
+    documento = models.FileField(upload_to=convocatoria_doc)
+    guia = models.FileField(upload_to=convocatoria_doc)
+    guiaVideo = models.CharField(max_length=255, null=True, blank=True)
     banner = models.ImageField(upload_to=convocatoria_doc, null=True, blank=True)
+    
     def __str__(self):
         return f' {self.slug} {self.nombre}'
 
