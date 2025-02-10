@@ -11,7 +11,7 @@ from django.contrib import messages
 
 from solicitud.models import Postulacion
 from user.models import Revisor, SuperUser, User
-
+from convocatoria.funciones import obtener_estadisticas_convocatoria
 from convocatoria.models import Convocatoria
 from convocatoria.forms import R_Convocatoria, A_Convocatoria
 
@@ -105,6 +105,17 @@ class Ver_Convocatoria(DetailView):  # Cambiar de UpdateView a DetailView
         context['accion'] = 'Ver Detalles'
         context['accion2'] = 'Volver'
         context['accion2_url'] = reverse('convocatoria:lista_convocatoria')
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+                'c_sol_itcp': stats['c_sol_itcp'],
+                'c_sol_edtp': stats['c_sol_edtp'],
+                'c_itcp_SR': stats['c_itcp_SR'],
+                'c_edtp_SR': stats['c_edtp_SR'],
+                'c_itcp_CO': stats['c_itcp_CO'],
+                'c_edtp_CO': stats['c_edtp_CO'],
+            })
         return context
 
 class ListaConvocatoria(ListView):
@@ -125,6 +136,17 @@ class ListaConvocatoria(ListView):
                 if self.request.user.is_superuser:                            
                     context['entity_registro'] = reverse_lazy('convocatoria:registro_convocatoria')
                     context['entity_registro_nom'] = 'REGISTRAR CONVOCATORIA'
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+                'c_sol_itcp': stats['c_sol_itcp'],
+                'c_sol_edtp': stats['c_sol_edtp'],
+                'c_itcp_SR': stats['c_itcp_SR'],
+                'c_edtp_SR': stats['c_edtp_SR'],
+                'c_itcp_CO': stats['c_itcp_CO'],
+                'c_edtp_CO': stats['c_edtp_CO'],
+            })
         return context
     
 class Index(TemplateView):
@@ -228,8 +250,6 @@ class Index(TemplateView):
                     datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
                     datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
                 )
-                
-                
                 datosEDTP = Convocatoria.objects.annotate(
                     totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__estado=True)),
                     totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__datos_proyecto__user__isnull=False)),
@@ -241,6 +261,7 @@ class Index(TemplateView):
                 context['convocatoria'] = convocatorias
                 context['datosProyect'] = datosITCP
                 context['datosProyectEDTP'] = datosEDTP
+                
                 if self.request.user.is_revisor:
                     user_sl = self.request.user.revisor_perfil.slug
                     postulacion_p = Revisor.objects.get(slug = user_sl)
@@ -250,7 +271,17 @@ class Index(TemplateView):
                     
                 context['slug']=user_sl
                 context['postulacion'] = postulacion_p
-
+                user = self.request.user  # Usamos el usuario actual
+                stats = obtener_estadisticas_convocatoria(user)
+                if stats:
+                    context.update({
+                    'c_sol_itcp': stats['c_sol_itcp'],
+                    'c_sol_edtp': stats['c_sol_edtp'],
+                    'c_itcp_SR': stats['c_itcp_SR'],
+                    'c_edtp_SR': stats['c_edtp_SR'],
+                    'c_itcp_CO': stats['c_itcp_CO'],
+                    'c_edtp_CO': stats['c_edtp_CO'],
+                })
         else:
             estado = Convocatoria.objects.filter(estado=True).count()
             if estado == 1:

@@ -40,8 +40,8 @@ urlpatterns = [
     path('lista_aprobadosDatosEjec/', Lista_ProyectosDatosEjec.as_view(), name='lista_datosEjec'),
       #LISTA ESTADO DE REVISIONES
     path('lista_SinRevisarEjec/', Lista_ProyectosSinRevisarEjec.as_view(), name='lista_datosSinrevisarEjec'),
-    path('lista_ObservadosEjec/', Lista_ProyectosAprobadosEJEC.as_view(), name='lista_datosObservadosEjec'),
-    path('lista_AprobadosEjec/', Lista_ProyectosObservadosEjec.as_view(), name='lista_datosAprobadosEjec'),
+    path('lista_ObservadosEjec/', Lista_ProyectosObservadosEjec.as_view(), name='lista_datosObservadosEjec'),
+    path('lista_AprobadosEjec/', Lista_ProyectosAprobadosEJEC.as_view(), name='lista_datosAprobadosEjec'),
     #Datos Postulacion
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
     #ITCP y EDTP

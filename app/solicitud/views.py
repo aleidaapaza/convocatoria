@@ -4,6 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 
 # Create your views here.
+from convocatoria.funciones import obtener_estadisticas_convocatoria
 
 from django.contrib.auth import logout
 from django.shortcuts import render
@@ -283,6 +284,18 @@ class ListaCompleta(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA COMPLETA'
         context['object_list'] = self.model.objects.all()
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+                'c_sol_itcp': stats['c_sol_itcp'],
+                'c_sol_edtp': stats['c_sol_edtp'],
+                'c_itcp_SR': stats['c_itcp_SR'],
+                'c_edtp_SR': stats['c_edtp_SR'],
+                'c_itcp_CO': stats['c_itcp_CO'],
+                'c_edtp_CO': stats['c_edtp_CO'],
+            })
+        
         return context
 
 class ListaSolicitudes(ListView):
@@ -294,6 +307,17 @@ class ListaSolicitudes(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE SOLICITUDES - ITCP'
         context['object_list'] = self.model.objects.filter(estado=None).filter(tipo_financiamiento=1)
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
 
 class ListaSolicitudesEJEC(ListView):
@@ -305,6 +329,17 @@ class ListaSolicitudesEJEC(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE SOLICITUDES - EDTP'
         context['object_list'] = self.model.objects.filter(estado=None).filter(tipo_financiamiento=2)
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
     
 class ListaRechazados(ListView):
@@ -316,6 +351,17 @@ class ListaRechazados(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA NO APROBADOS - ITCP'
         context['object_list'] = self.model.objects.filter(estado=False).filter(tipo_financiamiento=1)
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
     
 class ListaRechazadosEJEC(ListView):
@@ -327,6 +373,17 @@ class ListaRechazadosEJEC(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA NO APROBADOS - EDTP'
         context['object_list'] = self.model.objects.filter(estado=False).filter(tipo_financiamiento=2)
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
     
 class fichaSolicitud(UpdateView):
@@ -365,6 +422,17 @@ class fichaSolicitud(UpdateView):
         context['entity_url'] = reverse_lazy('solicitud:ListaSolicitud')
         context['activate2'] = True
         context['entity2'] = 'FICHA SOLICITUD'  
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
 
     def post(self, request, *args, **kwargs):

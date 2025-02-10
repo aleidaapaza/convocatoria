@@ -7,6 +7,7 @@ from django.views.generic import CreateView, ListView, UpdateView, View
 from django.utils import timezone
 from django.contrib import messages
 
+from convocatoria.funciones import obtener_estadisticas_convocatoria
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
@@ -1067,7 +1068,17 @@ class Lista_Proyectos(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - ITCP'
         context['object_list'] = proyectos
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
     
 class Lista_ProyectosEjec(ListView):
@@ -1080,7 +1091,17 @@ class Lista_ProyectosEjec(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - EDTP'
         context['object_list'] = proyectos
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })     
         return context
     
 class Lista_ProyectosDatos(ListView):
@@ -1093,7 +1114,17 @@ class Lista_ProyectosDatos(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
         context['object_list'] = Proyecto.objects.all()
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })      
         return context
     
 class Lista_ProyectosDatosEjec(ListView):
@@ -1106,7 +1137,17 @@ class Lista_ProyectosDatosEjec(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
         context['object_list'] = EDTP.objects.all()
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })      
         return context
     
 class Lista_ProyectosSinRevisar(ListView):
@@ -1119,8 +1160,19 @@ class Lista_ProyectosSinRevisar(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - ITCP'
         context['object_list'] = proyectos                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
-    
+
 class Lista_ProyectosSinRevisarEjec(ListView):
     model = EDTP
     template_name = 'Proyecto/lista_DatosEstado.html'
@@ -1133,7 +1185,17 @@ class Lista_ProyectosSinRevisarEjec(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - EDTP'
         context['object_list'] = proyectos
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })       
         return context
     
 class Lista_ProyectosObservados(ListView):
@@ -1156,7 +1218,17 @@ class Lista_ProyectosObservados(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - ITCP'
         context['object_list'] = proyectos
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })       
         return context
 
 class Lista_ProyectosObservadosEjec(ListView):
@@ -1179,7 +1251,17 @@ class Lista_ProyectosObservadosEjec(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - EDTP'
         context['object_list'] = proyectos
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })      
         return context
     
     
@@ -1198,6 +1280,17 @@ class Lista_ProyectosAprobados(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
         context['object_list'] = proyectos                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        }) 
         return context
    
 class Lista_ProyectosAprobadosEJEC(ListView):
@@ -1215,5 +1308,15 @@ class Lista_ProyectosAprobadosEJEC(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - EDTP'
         context['object_list'] = proyectos
-                
+        user = self.request.user  # Usamos el usuario actual
+        stats = obtener_estadisticas_convocatoria(user)
+        if stats:
+            context.update({
+            'c_sol_itcp': stats['c_sol_itcp'],
+            'c_sol_edtp': stats['c_sol_edtp'],
+            'c_itcp_SR': stats['c_itcp_SR'],
+            'c_edtp_SR': stats['c_edtp_SR'],
+            'c_itcp_CO': stats['c_itcp_CO'],
+            'c_edtp_CO': stats['c_edtp_CO'],
+        })       
         return context
