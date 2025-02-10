@@ -1132,12 +1132,36 @@ class Lista_ProyectosObservados(ListView):
                 revisor=revisor
             ).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
         # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON'
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON'
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - ITCP'
         context['object_list'] = proyectos
                 
         return context
+
+class Lista_ProyectosObservadosEjec(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_DatosObservados.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ProyectosObservadosEjec, self).get_context_data(**kwargs)
+        revisor = self.request.user
+        if self.request.user.is_superuser:
+            proyectos = self.model.objects.filter(
+                estado__in=['CON OBSERVACION', 'CORREGIDO']
+            ).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        else:
+            proyectos = self.model.objects.filter(
+                estado__in=['CON OBSERVACION', 'CORREGIDO'],
+                revisor=revisor
+            ).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        # Añadimos el título y la entidad
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - EDTP'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - EDTP'
+        context['object_list'] = proyectos
+                
+        return context
+    
     
 class Lista_ProyectosAprobados(ListView):
     model = Proyecto
@@ -1146,13 +1170,32 @@ class Lista_ProyectosAprobados(ListView):
         context = super(Lista_ProyectosAprobados, self).get_context_data(**kwargs)
         revisor = self.request.user
         if self.request.user.is_superuser:
-            proyectos = self.model.objects.filter(estado='APROBADO')
+            proyectos = self.model.objects.filter(estado='APROBADO').filter(datos_basicos__postulacion__tipo_financiamiento = 1)
         else:
-            proyectos = self.model.objects.filter(estado='APROBADO').filter(revisor=revisor)        
+            proyectos = self.model.objects.filter(estado='APROBADO').filter(revisor=revisor).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
         # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION'
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION'
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
+        context['object_list'] = proyectos
+                
+        return context
+
+   
+class Lista_ProyectosAprobadosEJEC(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_DatosEstado.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ProyectosAprobadosEJEC, self).get_context_data(**kwargs)
+        revisor = self.request.user
+        if self.request.user.is_superuser:
+            proyectos = self.model.objects.filter(estado='APROBADO').filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        else:
+            proyectos = self.model.objects.filter(estado='APROBADO').filter(revisor=revisor).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        # Añadimos el título y la entidad
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - EDTP'
+        context['activate'] = True
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - EDTP'
         context['object_list'] = proyectos
                 
         return context

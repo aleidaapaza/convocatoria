@@ -9,6 +9,12 @@
             </h2>
             <div id="collapsecero" class="accordion-collapse collapse show" aria-labelledby="headingcero" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -78,6 +84,12 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.datos_basicos.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.datos_basicos.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
