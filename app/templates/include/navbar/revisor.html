@@ -98,13 +98,16 @@
                     <a class="nav-link active" href="{% url 'proyecto:lista_datosEjec' %}"><i class="fas fa-database"></i> COMPLETA</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datosSinrevisar' %}"><i class="fas fa-eye-slash"></i> SIN REVISAR</a>
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosSinrevisarEjec' %}"><i class="fas fa-eye-slash"></i> SIN REVISAR</a>
+                </li>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS EN REVISION/APROBADOS</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosObservadosEjec' %}"><i class="fas fa-exclamation-triangle"></i> OBSERVADOS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datosObservados' %}"><i class="fas fa-exclamation-triangle"></i> OBSERVADOS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datosAprobados' %}"><i class="fas fa-check-circle"></i> APROBADOS (SIN OBSERVACIONES)</a>
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosAprobadosEjec' %}"><i class="fas fa-check-circle"></i> APROBADOS (SIN OBSERVACIONES)</a>
                     <hr>
                 </li>
             </ul>

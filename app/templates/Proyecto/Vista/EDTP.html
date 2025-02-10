@@ -86,9 +86,9 @@
                 <div class="accordion-body">
                     <div class="row p-3">
                         <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
-                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.datos_basicos.fecha_registro}} </div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.datos_basicos.fecha_registro}} </div>
                         <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
-                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.datos_basicos.fecha_actualizacion}} </div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.datos_basicos.fecha_actualizacion}} </div>
                     </div>
                     <table class="table table-bordered">
                         <tbody>
@@ -132,6 +132,12 @@
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
                     <b>Objetivo General:</b>
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.objetivo_gen.fechaenvio}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.objetivo_gen.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -167,7 +173,7 @@
                         <thead>
                             <tr class="">
                             <th scope="col">NÚMERO DE HECTAREAS DE FORESTACIÓN Y/O REFORESTACIÓN Y/O MANEJO SUSTENTABLE DE BOSQUE:</th>
-                            <th scope="col">{{proyecto.objetivo_gen.hectareas|linebreaksbr}} {{proyecto.objetivo_gen.tipo_hectareas|linebreaksbr}} </th>
+                            <th scope="col">{{proyecto.objetivo_gen.hectareas|linebreaksbr}} ha {{proyecto.objetivo_gen.tipo_hectareas|linebreaksbr}} </th>
                             </tr>
                         </thead>
                     </table>
@@ -183,6 +189,12 @@
             </h2>
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                 <div class="accordion-body">                    
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.beneficiario.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.beneficiario.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -247,7 +259,13 @@
             </h2>
             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingfour" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    {% if derecho|length > 0 %} 
+                    {% if derecho|length > 0 %}
+                        <div class="row p-3">
+                            <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                            <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{derecho.0.fecha_registro}} </div>
+                            <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                            <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{derecho.0.fecha_actualizacion}} </div>
+                        </div>
                         <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -329,6 +347,12 @@
             </h2>
             <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingfive" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.presupuestoRef.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.presupuestoRef.fecha_actualizacion}} </div>
+                    </div>
                     <b>Ejecucion Estudio de Diseño Tecnico de preinversion - EDTP:</b>
                     <table class="table table-bordered">
                         <thead>
@@ -364,6 +388,12 @@
             </h2>
             <div id="collapsesix" class="accordion-collapse collapse" aria-labelledby="headingsix" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.declaracionJurada.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.declaracionJurada.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">

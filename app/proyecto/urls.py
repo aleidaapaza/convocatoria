@@ -2,7 +2,8 @@ from django.urls import path, include
 
 from proyecto.views import (Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos, 
                             Lista_ProyectosSinRevisar, Lista_ProyectosObservados, Lista_ProyectosAprobados,
-                            Lista_ProyectosEjec, Lista_ProyectosDatosEjec, Lista_ProyectosSinRevisarEjec)
+                            Lista_ProyectosEjec, Lista_ProyectosDatosEjec, Lista_ProyectosSinRevisarEjec,
+                            Lista_ProyectosAprobadosEJEC, Lista_ProyectosObservadosEjec)
 from proyecto.view.itcp0 import DatosPostulacion
 from proyecto.view.itcp1 import RegistroDatosBasicos
 from proyecto.view.itcp2 import Reg_Justificaciones, Act_Justificacion
@@ -38,9 +39,9 @@ urlpatterns = [
     path('lista_aprobadosEjec/', Lista_ProyectosEjec.as_view(), name='lista_inicioEjec'),
     path('lista_aprobadosDatosEjec/', Lista_ProyectosDatosEjec.as_view(), name='lista_datosEjec'),
       #LISTA ESTADO DE REVISIONES
-    path('lista_SinRevisar/', Lista_ProyectosSinRevisarEjec.as_view(), name='lista_datosSinrevisar'),
-    path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
-    path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),
+    path('lista_SinRevisarEjec/', Lista_ProyectosSinRevisarEjec.as_view(), name='lista_datosSinrevisarEjec'),
+    path('lista_ObservadosEjec/', Lista_ProyectosAprobadosEJEC.as_view(), name='lista_datosObservadosEjec'),
+    path('lista_AprobadosEjec/', Lista_ProyectosObservadosEjec.as_view(), name='lista_datosAprobadosEjec'),
     #Datos Postulacion
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
     #ITCP y EDTP

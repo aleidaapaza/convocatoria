@@ -26,7 +26,7 @@ from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Ob
                              Proyecto, ObjetivoGeneralEjec, ObjetivoEspecificoEjec, UbicacionGeografica,
                              EDTP)
 
-from proyecto.forms import R_Declaracion_ITCP, R_Proyecto
+from proyecto.forms import R_Declaracion_ITCP, R_Proyecto, R_ProyectoEDTP
 
    
 def generate_pdf(request, slug):
@@ -1019,23 +1019,43 @@ class verDatos(View):
         return render(self.request, self.template_name, context)
     
     def post(self, request, slug):
-        proyecto = Proyecto.objects.get(slug=slug)
-        form = R_Proyecto(request.POST, instance = proyecto)
-        if form.is_valid():
-            datos = form.save(commit=False)
-            datos.revisor = self.request.user
-            datos.fechaEstado = timezone.now()
-            datos.save()
+        postulacion = Postulacion.objects.get(slug=slug)
+        if postulacion.tipo_financiamiento == 1:            
             proyecto = Proyecto.objects.get(slug=slug)
-            if proyecto.estado == 'APROBADO':
-                proyecto.aceptar = True
-                proyecto.fechaEstado = timezone.now()
-                proyecto.save()
-                messages.success(request, 'Los datos se actualizaron correctamente.')
-            return redirect('proyecto:ver_Datos', slug=slug)
+            form = R_Proyecto(request.POST, instance = proyecto)
+            if form.is_valid():
+                datos = form.save(commit=False)
+                datos.revisor = self.request.user
+                datos.fechaEstado = timezone.now()
+                datos.save()
+                proyecto = Proyecto.objects.get(slug=slug)
+                if proyecto.estado == 'APROBADO':
+                    proyecto.aceptar = True
+                    proyecto.fechaEstado = timezone.now()
+                    proyecto.save()
+                    messages.success(request, 'Los datos se actualizaron correctamente.')
+                return redirect('proyecto:ver_Datos', slug=slug)
+            else:
+                messages.error(request, 'Hubo un error al actualizar los datos.')
+                return self.render_to_response(self.get_context_data(form=form))
         else:
-            messages.error(request, 'Hubo un error al actualizar los datos.')
-            return self.render_to_response(self.get_context_data(form=form))
+            proyecto = EDTP.objects.get(slug=slug)
+            form = R_ProyectoEDTP(request.POST, instance = proyecto)
+            if form.is_valid():
+                datos = form.save(commit=False)
+                datos.revisor = self.request.user
+                datos.fechaEstado = timezone.now()
+                datos.save()
+                proyecto = EDTP.objects.get(slug=slug)
+                if proyecto.estado == 'APROBADO':
+                    proyecto.aceptar = True
+                    proyecto.fechaEstado = timezone.now()
+                    proyecto.save()
+                    messages.success(request, 'Los datos se actualizaron correctamente.')
+                return redirect('proyecto:ver_Datos', slug=slug)
+            else:
+                messages.error(request, 'Hubo un error al actualizar los datos.')
+                return self.render_to_response(self.get_context_data(form=form))
 
 class Lista_Proyectos(ListView):
     model = Postulacion
@@ -1095,23 +1115,23 @@ class Lista_ProyectosSinRevisar(ListView):
     def get_context_data(self, **kwargs):
         context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
         proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__tipo_financiamiento = 1)
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - ITCP'
         context['object_list'] = proyectos                
         return context
     
 class Lista_ProyectosSinRevisarEjec(ListView):
-    model = Proyecto
+    model = EDTP
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
+        context = super(Lista_ProyectosSinRevisarEjec, self).get_context_data(**kwargs)
         proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__tipo_financiamiento = 2)
         
         # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
+        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - EDTP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
+        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - EDTP'
         context['object_list'] = proyectos
                 
         return context
@@ -1140,7 +1160,7 @@ class Lista_ProyectosObservados(ListView):
         return context
 
 class Lista_ProyectosObservadosEjec(ListView):
-    model = Proyecto
+    model = EDTP
     template_name = 'Proyecto/lista_DatosObservados.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_ProyectosObservadosEjec, self).get_context_data(**kwargs)
@@ -1177,13 +1197,11 @@ class Lista_ProyectosAprobados(ListView):
         context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
-        context['object_list'] = proyectos
-                
+        context['object_list'] = proyectos                
         return context
-
    
 class Lista_ProyectosAprobadosEJEC(ListView):
-    model = Proyecto
+    model = EDTP
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_ProyectosAprobadosEJEC, self).get_context_data(**kwargs)
