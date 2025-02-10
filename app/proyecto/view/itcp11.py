@@ -65,18 +65,17 @@ class Reg_DeclaracionJurada(CreateView):
             if declaracion_d and not declaracion_d.name.endswith('.pdf'):
                 messages.error(request, 'El archivo DECLARACION JURADA debe ser en formato PDF.')
             
-            if carta_ejec and carta_ejec.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP no debe superar los 2 MB.')
-            if carta_ejec and not carta_ejec.name.endswith('.pdf'):
-                messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP debe ser en formato PDF.')
-            
             if proyecto_p.tipo_financiamiento == 1:
                 carta_elab = form.cleaned_data.get('carta_elab')
                 if carta_elab and carta_elab.size > 2 * 1024 * 1024:  # 2 MB
                     messages.error(request, 'El CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP no debe superar los 2 MB.')
                 if carta_elab and not carta_elab.name.endswith('.pdf'):
                     messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP debe ser en formato PDF.')
-            
+            else:
+                if carta_ejec and carta_ejec.size > 2 * 1024 * 1024:  # 2 MB
+                    messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP no debe superar los 2 MB.')
+                if carta_ejec and not carta_ejec.name.endswith('.pdf'):
+                    messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP debe ser en formato PDF.')
             # Si hay mensajes de error, retornar la respuesta con el formulario y los mensajes
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
