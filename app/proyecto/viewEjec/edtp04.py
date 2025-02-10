@@ -43,6 +43,13 @@ class R_DerechoPropietarioE(View):
     def post(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug', None)        
         error_messages = []
+        descripcion_list = []
+        si_registro_files = []
+        no_registro_texts = []
+        zone_list = []
+        easting_list = []
+        northing_list = []
+        
         index = 0
         while True:
             descripcion = request.POST.get(f'descripcion_{index}')
@@ -53,23 +60,54 @@ class R_DerechoPropietarioE(View):
             northing = request.POST.get(f'northing_{index}')
             if descripcion is None:
                 break 
-            if si_registro and si_registro.size > 2 * 1024 * 1024:  # 2 MB
-                error_messages.append('El archivo no debe superar los 2 MB.')
-            if descripcion and not error_messages:
-                Derecho_propietario.objects.create(
-                    slug=slug,
-                    descripcion=descripcion,
-                    si_registro=si_registro if si_registro else None,
-                    no_registro=no_registro if not si_registro else no_registro,
-                    zone=zone,
-                    easting=easting,
-                    northing=northing,
-                )
+            descripcion_list.append(descripcion)
+            si_registro_files.append(si_registro)
+            no_registro_texts.append(no_registro)
+            zone_list.append(zone)
+            easting_list.append(easting)
+            northing_list.append(northing)
+            index += 1
+            if si_registro:                
+                if si_registro.size > 2 * 1024 * 1024:  # 2 MB
+                    error_messages.append('El archivo no debe superar los 2 MB.')
+                if not si_registro.name.endswith('.pdf'):
+                    error_messages.append('El archivo debe ser en formato PDF.')
             index += 1
         if error_messages:
-            context = self.render_form(slug)
-            context['error_messages'] = error_messages
-            return context
+            proyecto_p = get_object_or_404(Postulacion, slug=slug)
+            form = self.form(self.request.GET)
+            context = {
+                'proyecto': proyecto_p,
+                'postulacion' : proyecto_p,
+                'form' : form,
+                'titulo': 'UBICACION POSICION GEOGRAFICA',
+                'entity': 'REGISTRO DATOS DEL PROYECTO',
+                'entity2': 'UBICACION POSICION GEOGRAFICA',
+                'accion': 'Registrar',
+                'accion2': 'Cancelar',
+                'accion2_url': reverse_lazy('convocatoria:Index'),
+                'error_messages': error_messages,  # Pasa los mensajes de error
+            }
+            return render(request, self.template_name, context)
+        
+        for i in range(len(descripcion_list)):
+            descripcion_l = descripcion_list[i]
+            si_registro_l = si_registro_files[i]
+            no_registro_l = no_registro_texts[i]
+            zone_l = zone_list[i]
+            easting_l = easting_list[i]
+            northing_l = northing_list[i]
+            if descripcion_l and not error_messages:
+                Derecho_propietario.objects.create(
+                    slug=slug,
+                    descripcion=descripcion_l,
+                    si_registro=si_registro_l if si_registro_l else None,
+                    no_registro=no_registro_l if not si_registro_l else no_registro_l,
+                    zone=zone_l,
+                    easting=easting_l,
+                    northing=northing_l,
+                )
+        
         form = self.form(request.POST)
         if form.is_valid():
             ubicacion = form.save(commit=False)
@@ -174,7 +212,27 @@ class A_DerechoPropietarioE(UpdateView):
         for si_acta in si_registro_files:
             if si_acta and si_acta.size > 2 * 1024 * 1024:  # 2 MB
                 error_messages.append('El archivo no debe superar los 2 MB.')
-
+            if not si_acta.name.endswith('.pdf'):
+                error_messages.append('El archivo debe ser en formato PDF.')
+                
+        if error_messages:
+            proyecto_p = get_object_or_404(Postulacion, slug=slug)
+            objetivos = Derecho_propietario.objects.filter(slug=slug)
+            context = {
+                'proyecto': proyecto_p,
+                'postulacion' : proyecto_p,
+                'derecho': objetivos,
+                'titulo': 'UBICACION POSICION GEOGRAFICA',
+                'entity': 'REGISTRO DATOS DEL PROYECTO',
+                'entity2': 'UBICACION POSICION GEOGRAFICA',
+                'accion': 'Actualizar',
+                'accion2': 'Cancelar',
+                'accion2_url': reverse('convocatoria:Index'),
+                'entity_registro': reverse_lazy('proyecto:agregar_DerechoPropietarioE', args=[slug]),
+                'entity_registro_nom': 'Registrar',
+                'error_messages': error_messages,  # Pasar los mensajes de error al contexto
+            }
+            return render(self.request, self.template_name, context)
         for i in range(len(id_list)):  # Recorrer todas las filas dinámicas
             idn = id_list[i]
             descripcion = descripcion_list[i]
@@ -183,7 +241,6 @@ class A_DerechoPropietarioE(UpdateView):
             zone = zone_list[i]
             easting = easting_list[i]
             northing = northing_list[i]
-
             try:
                 zone = int(zone)
                 easting = float(easting)
@@ -212,31 +269,9 @@ class A_DerechoPropietarioE(UpdateView):
                     northing=northing,
                     fecha_actualizacion=timezone.now(),
                 )
-
-
-        # Si hay mensajes de error, manejarlos
-        if error_messages:
-            proyecto_p = get_object_or_404(Postulacion, slug=slug)
-            objetivos = Derecho_propietario.objects.filter(slug=slug)
-            context = {
-                'proyecto': proyecto_p,
-                'postulacion' : proyecto_p,
-                'derecho': objetivos,
-                'titulo': 'UBICACION POSICION GEOGRAFICA',
-                'entity': 'REGISTRO DATOS DEL PROYECTO',
-                'entity2': 'UBICACION POSICION GEOGRAFICA',
-                'accion': 'Actualizar',
-                'accion2': 'Cancelar',
-                'accion2_url': reverse('convocatoria:Index'),
-                'entity_registro': reverse_lazy('proyecto:agregar_DerechoPropietarioE', args=[slug]),
-                'entity_registro_nom': 'Registrar',
-                'error_messages': error_messages,  # Pasar los mensajes de error al contexto
-            }
-            return render(self.request, self.template_name, context)
-        else:
-            messages.success(self.request, 'UBICACION POSICION GEOGRAFICA - se añadio correctamente.')
-            return redirect('proyecto:registro_PresupuestoRef', slug=slug)
-
+        messages.success(self.request, 'UBICACION POSICION GEOGRAFICA - se añadio correctamente.')
+        return redirect('proyecto:registro_PresupuestoRef', slug=slug)
+        
     def form_invalid(self, form):
         """
         Acción a realizar si el formulario es inválido.

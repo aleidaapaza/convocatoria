@@ -9,6 +9,12 @@
             </h2>
             <div id="collapsecero" class="accordion-collapse collapse show" aria-labelledby="headingcero" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -78,6 +84,12 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.datos_basicos.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.datos_basicos.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
@@ -119,6 +131,12 @@
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.justificacion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.justificacion.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
@@ -163,6 +181,12 @@
             </h2>
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.ideaProyecto.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.ideaProyecto.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -280,6 +304,7 @@
                             <th scope="col">SITUACION ACTUAL / LINEA DE BASE</th>
                             <th scope="col">INDICADOR</th>
                             <th scope="col">META</th>
+                            <th scope="col">FECHA ULTIMA MODIFICACION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -290,11 +315,12 @@
                                 <td> {{objetivos.linea_base|linebreaksbr}} </td>
                                 <td> {{objetivos.indicador|linebreaksbr}} </td>
                                 <td> {{objetivos.meta|linebreaksbr}} </td>
+                                <td> {{objetivos.fecha_actualizacion}} </td>
                             </tr>
                         {% endfor %}                            
                         </tbody>
                     </table>
-                    <b>Beneficiarios del proyecto:</b>
+                    <b>Beneficiarios del proyecto:</b>                    
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -307,6 +333,12 @@
                             </tr>       
                         </tbody>
                     </table>
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.beneficiario.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.beneficiario.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -377,6 +409,7 @@
                             <th scope="col">TIPO Y NOMBRE DE BENEFICIARIO</th>
                             <th scope="col">ACTA</th>
                             <th scope="col">JUSTIFICACION</th>
+                            <th scope="col">FECHA ULTIMA ACTUALIZACION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -392,6 +425,7 @@
                                 {% endif %} 
                                 </td>
                                 <td> {{modelos.no_acta}} </td>
+                                <td> {{modelos.fecha_actualizacion}} </td>
                             </tr>
                         {% endfor %}                            
                         </tbody>
@@ -411,10 +445,11 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
-                            <th scope="col">DESCRIPCION DEL DERECHO PROPIETARIO</th>
-                            <th scope="col">REGISTRO DEL DERECHO PROPIETARIO</th>
-                            <th scope="col">DE NO CONTAR CON DERECHO PROPIETARIO DETERMINAR LAS ACCIONS A REALIZAR Y PLAZO</th>
-                            <th scope="col">GEOREFERENCIACION</th>
+                                <th scope="col">DESCRIPCION DEL DERECHO PROPIETARIO</th>
+                                <th scope="col">REGISTRO DEL DERECHO PROPIETARIO</th>
+                                <th scope="col">DE NO CONTAR CON DERECHO PROPIETARIO DETERMINAR LAS ACCIONS A REALIZAR Y PLAZO</th>
+                                <th scope="col">GEOREFERENCIACION</th>
+                                <th scope="col">FECHA ULTIMA ACTUALIZACION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -431,6 +466,7 @@
                                 </td>
                                 <td> {{derechos.no_registro}} </td>
                                 <td> Z={{derechos.zone}}K {{derechos.easting}}m E {{derechos.northing}}m N </td>
+                                <td> {{derechos.fecha_actualizacion}} </td>
                             </tr>
                         {% endfor %}                            
                         </tbody>
@@ -447,6 +483,12 @@
             </h2>
             <div id="collapsesix" class="accordion-collapse collapse" aria-labelledby="headingsix" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.impactoAmbiental.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.impactoAmbiental.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -488,12 +530,13 @@
                 </button>
             </h2>
             <div id="collapseseven" class="accordion-collapse collapse" aria-labelledby="headingseven" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
+                <div class="accordion-body">                    
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
                             <th scope="col">RIESGOS</th>
                             <th scope="col">NIVEL</th>
+                            <th scope="col">FECHA ULTIMA ACTUALIZACION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -501,6 +544,7 @@
                             <tr>
                                 <td> {{riesgos.riesgo}} </td>
                                 <td> {{riesgos.nivel}} </td>
+                                <td> {{riesgos.fecha_actualizacion}} </td>
                             </tr>
                         {% endfor %}                            
                         </tbody>
@@ -517,6 +561,12 @@
             </h2>
             <div id="collapseeight" class="accordion-collapse collapse" aria-labelledby="headingeight" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.detallePoa.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.detallePoa.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -541,6 +591,12 @@
             </h2>
             <div id="collapsenine" class="accordion-collapse collapse" aria-labelledby="headingnine" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.presupuestoRef.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.presupuestoRef.fecha_actualizacion}} </div>
+                    </div>
                     {% if postulacion.tipo_financiamiento == 1 %}                    
                     <b>Elaboracion Estudio de Diseño Tecnico de preinversion - EDTP:</b>
                     <table class="table table-bordered">
@@ -601,6 +657,12 @@
             </h2>
             <div id="collapseten" class="accordion-collapse collapse" aria-labelledby="headingten" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.conclusion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.conclusion.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">
@@ -637,6 +699,12 @@
             </h2>
             <div id="collapseeleven" class="accordion-collapse collapse" aria-labelledby="headingeleven" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.declaracionJurada.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.declaracionJurada.fecha_actualizacion}} </div>
+                    </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr class="table-info">

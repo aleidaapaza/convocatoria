@@ -2,8 +2,56 @@
 {% load static %}
 {% block contenido %}
     {% if user.is_authenticated %}
+        <div class="card bg-info-subtle rounded-3">
+            <div class="row p-3">
+                <div class="col-3 pt-2 text-end fw-bold">FECHA ENVIO DE DATOS</div>
+                <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.fechaenvio}} </div>
+                <div class="col-3 pt-2 text-end fw-bold">FECHA ENVIO DE CORRECIONES</div>
+                <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.fecha_actualizacion}} </div>
+                <div class="col-3 pt-2 text-end fw-bold">FECHA REVISION/APROBACION</div>
+                <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.fechaEstado}} </div>
+                {% if user.is_superuser or user.is_revisor %}
+                <div class="col-3 pt-2 text-end fw-bold">ENCARGADO DE LA REVISION</div>
+                <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.revisor}} </div>
+                <div class="col-3 pt-2 text-end fw-bold">ESTADO DE LA REVISION</div>
+                <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.estado}} </div>
+                {% endif %}
+            </div>
+        </div>
         {% if user.is_revisor %}
-            {% if formulario and not proyecto.estado == 'APROBADO' and user.username == proyecto.revisor.username %}
+            {% if formulario and proyecto.revisor == None %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="row mt-2">
+                        {% for field in form %}
+                            <div class="mb-3 row">
+                                <div class="col-6 text-end fw-bold">{{ field.label_tag }}</div>
+                                <div class="col-6">
+                                    <div class="">
+                                        {{ field }}
+                                    </div>
+                                        <div class="">
+                                            {% for error in field.errors %}
+                                                <span style="color: red">({{ error }})</span>
+                                            {% endfor %}
+                                        </div>
+                                </div>
+                            </div>
+                        {% endfor %}                   
+                        </div>
+                        <hr>
+                        <div class="row text-center row mt-2">
+                            <div class="col">
+                                <button class="btn btn-success" type="submit">
+                                <i class="fas fa-save"></i>REGISTRAR</button>
+                            </div>
+                            <div class="col">
+                                <a href="{% url 'proyecto:lista_datos' %}" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i>CANCELAR</a>
+                            </div>
+                        </div>
+                    </form>
+            {% elif formulario and not proyecto.estado == 'APROBADO' and user.username == proyecto.revisor.username %}
                 <div class="row">
                     <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -37,18 +85,13 @@
                         </div>
                     </form>
                 </div>
-            {% else %}
-                <div class="mb-3 row">
-                    <div class="col-5 text-end fw-bold">ESTADO DE REVISION DE DATOS DE PROYECTO</div>
-                    <div class="col-6 bg-white font-weight-bold border border-info">{{proyecto.estado}}
-                    </div>
-                </div>
             {% endif %}
-        {% else %}
-            {% if formulario and not proyecto.estado == 'APROBADO' %}
+        {% elif user.is_municipio or user.is_superuser %}
+            <hr>
+            {% if not formulario and not proyecto.estado == 'APROBADO' %}
                 <div class="mb-3 row">
                         <div class="col-5 text-end fw-bold">OBSERVACIONES</div>
-                        <div class="col-6 bg-white font-weight-bold border border-info">{{proyecto.comentarios}}
+                        <div class="col-6 bg-white font-weight-bold border border-info">{{proyecto.comentarios|linebreaks}}
                         </div>
                 </div>
             {% else %}

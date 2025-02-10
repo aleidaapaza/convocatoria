@@ -47,14 +47,11 @@ class Reg_Convocatoria(CreateView):
             guia = form.cleaned_data.get('guia')
             banner = form.cleaned_data.get('banner')
             if documento and documento.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo DOCUMENTO no debe superar los 2 MB.')
-                
+                messages.error(request, 'El archivo DOCUMENTO no debe superar los 2 MB.')                
             if guia and guia.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo GUIA no debe superar los 2 MB.')
-                
+                messages.error(request, 'El archivo GUIA no debe superar los 2 MB.')                
             if banner and banner.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo IMAGEN BANNER no debe superar los 2 MB.')
-            
+                messages.error(request, 'El archivo IMAGEN BANNER no debe superar los 2 MB.')            
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
             form.save()
@@ -213,51 +210,46 @@ class Index(TemplateView):
                     else:
                         context['vista'] = False
 
-            elif self.request.user.is_revisor:
-                user_sl = self.request.user.revisor_perfil.slug
-                context['slug']=user_sl
-                print(user_sl)
-                postulacion_p = Revisor.objects.get(slug = user_sl)
-                print(postulacion_p)
-                context['postulacion'] = postulacion_p
+            elif self.request.user.is_revisor or self.request.user.is_superuser:                
                 convocatorias = Convocatoria.objects.annotate(
                     num_true=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
                     num_false=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=False)),
                     num_none=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=None)),
-                    num_total=Count('postulacionConvocatoria')
+                    num_total=Count('postulacionConvocatoria'),
+                    totalFin1=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1)),
+                    totalFin2=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2)),
+                    
+                )
+                datosITCP = Convocatoria.objects.annotate(
+                    totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__estado=True)),
+                    totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__user__isnull=False)),
+                    totalDatosEnv=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__isnull=False)),
+                    datSRev=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="SIN REVISAR")),
+                    datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
+                    datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=1, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
+                )
+                
+                
+                datosEDTP = Convocatoria.objects.annotate(
+                    totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__estado=True)),
+                    totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__datos_proyecto__user__isnull=False)),
+                    totalDatosEnv=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__isnull=False)),
+                    datSRev=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="SIN REVISAR")),
+                    datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
+                    datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__tipo_financiamiento=2, postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
                 )
                 context['convocatoria'] = convocatorias
-                datosProyect = Convocatoria.objects.annotate(
-                    totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
-                    totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__user__isnull=False)),
-                    totalDatosEnv=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__isnull=False)),
-                    datSRev=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="SIN REVISAR")),
-                    datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
-                    datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
-                )
-                context['datosProyect'] = datosProyect
-
-            elif self.request.user.is_superuser:
-                user_sl = self.request.user.superuser_perfil.slug
+                context['datosProyect'] = datosITCP
+                context['datosProyectEDTP'] = datosEDTP
+                if self.request.user.is_revisor:
+                    user_sl = self.request.user.revisor_perfil.slug
+                    postulacion_p = Revisor.objects.get(slug = user_sl)
+                elif self.request.user.is_superuser:
+                    user_sl = self.request.user.superuser_perfil.slug
+                    postulacion_p = SuperUser.objects.get(slug = user_sl)
+                    
                 context['slug']=user_sl
-                postulacion_p = SuperUser.objects.get(slug = user_sl)
                 context['postulacion'] = postulacion_p
-                convocatorias = Convocatoria.objects.annotate(
-                    num_true=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
-                    num_false=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=False)),
-                    num_none=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=None)),
-                    num_total=Count('postulacionConvocatoria')
-                )
-                context['convocatoria'] = convocatorias
-                datosProyect = Convocatoria.objects.annotate(
-                    totalSesion=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__estado=True)),
-                    totalSesionInic=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__user__isnull=False)),
-                    totalDatosEnv=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__isnull=False)),
-                    datSRev=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="SIN REVISAR")),
-                    datObs=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="CON OBSERVACION")),
-                    datAprob=Count('postulacionConvocatoria', filter=Q(postulacionConvocatoria__datos_proyecto__proyectoDatosBase__estado="APROBADO")),
-                )
-                context['datosProyect'] = datosProyect
 
         else:
             estado = Convocatoria.objects.filter(estado=True).count()

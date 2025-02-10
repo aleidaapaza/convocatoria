@@ -1,6 +1,7 @@
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from datetime import datetime
+from django.utils import timezone
 
 # Create your views here.
 
@@ -166,17 +167,20 @@ class mae_r(CreateView):
             carnet_file = form.cleaned_data.get('carnet')
             asignacion_file = form.cleaned_data.get('asignacion')
             max_size = 2 * 1024 * 1024
-            if carnet_file.size > max_size or asignacion_file.size > max_size:
+            if carnet_file.size > max_size or asignacion_file.size > max_size or not carnet_file.name.endswith('.pdf') or not asignacion_file.name.endswith('.pdf'):
                 if carnet_file.size > max_size:
                     form.add_error('carnet', 'El archivo carnet no debe superar los 2 MB.')
                 if asignacion_file.size > max_size:
                     form.add_error('asignacion', 'El archivo de asignacion no debe superar los 2 MB.')                    
-                return self.render_to_response(self.get_context_data(form=form, form2=form2))            
+                if not carnet_file.name.endswith('.pdf'):
+                    form.add_error('carnet', 'El archivo carnet debe ser en formato PDF.')
+                if not asignacion_file.name.endswith('.pdf'):
+                    form.add_error('asignacion', 'El archivo de asignación debe ser en formato PDF.')           
+                return self.render_to_response(self.get_context_data(form=form, form2=form2))
             municipiobj.estado = 'SOLICITUD'
             municipiobj.save()
             encar_Mae = form.save(commit=False)
             persona_mae = form2.save()
-            print('personaMAE',persona_mae)
             encar_Mae.persona = persona_mae
             encar_Mae.save()
             personaResp = Persona.objects.create(
@@ -199,7 +203,6 @@ class mae_r(CreateView):
                 creador = None,
             )
             id_post = postulacion_f.slug
-            print(id_post,"esto es el id de la postulacion")
             return HttpResponseRedirect(reverse('solicitud:ResponsableProyecto', args=[id_post]))
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
@@ -246,10 +249,10 @@ class ResponsableProy(UpdateView):
         form2 = self.second_form_class(request.POST, instance = persona_resp)
         if form.is_valid() and form2.is_valid():
             form2.save()
-            form.save()          
-            slug_post = postulacion_pr.slug
-            print(slug_post,"esto es el id de la postulacion")
-            return HttpResponseRedirect(reverse('solicitud:Confirmacion_solicitud', args=[slug_post]))
+            form.save()
+            postulacion_pr.fecha_ultimaconexion =  timezone.now()
+            postulacion_pr.save()
+            return HttpResponseRedirect(reverse('solicitud:Confirmacion_solicitud', args=[slug]))
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
 
@@ -377,27 +380,26 @@ class fichaSolicitud(UpdateView):
             carnet_file = form2.cleaned_data.get('carnet')
             asignacion_file = form2.cleaned_data.get('asignacion')
             max_size = 2 * 1024 * 1024
-            if carnet_file.size > max_size or asignacion_file.size > max_size:
+            if carnet_file.size > max_size or asignacion_file.size > max_size or not carnet_file.name.endswith('.pdf') or not asignacion_file.name.endswith('.pdf'):
                 if carnet_file.size > max_size:
                     form2.add_error('carnet', 'El archivo carnet no debe superar los 2 MB.')
                 if asignacion_file.size > max_size:
                     form2.add_error('asignacion', 'El archivo de asignacion no debe superar los 2 MB.')                    
-                return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
+                if not carnet_file.name.endswith('.pdf'):
+                    form2.add_error('carnet', 'El archivo carnet debe ser en formato PDF.')
+                if not asignacion_file.name.endswith('.pdf'):
+                    form2.add_error('asignacion', 'El archivo de asignación debe ser en formato PDF.')           
+                return self.render_to_response(self.get_context_data(form=form, form2=form2))
             form2.save()
             estado_post = form.cleaned_data.get('estado')
-            print('estado', estado_post)
             if estado_post:
-                print(estado_post,'estado')
                 postulacion = form.save(commit=False)
                 postulacion.creador = encargado
                 postulacion.save()
                 if  form3.is_valid():
                     user_Pr = form3.save(commit=False)
-                    print(user_Pr.username, "username")
                     user_Pr.password = '{}{}'.format(user_Pr.username, slug)
-                    print("contraseña", user_Pr.password)
                     user_Pr.set_password(user_Pr.password)
-                    print("contraseña has", user_Pr.password)
                     user_Pr.is_municipio = True
                     user_Pr.save()
                     datos_proyecto = self.four_model.objects.create(
@@ -413,11 +415,13 @@ class fichaSolicitud(UpdateView):
                     municipio_c.estado="APROBADO"
                     municipio_c.p_a=True
                     municipio_c.save()
-                    return HttpResponseRedirect(reverse('proyecto:lista_inicio', args=[]))
+                    if postulacion_c.tipo_financiamiento == 1:
+                        return HttpResponseRedirect(reverse('proyecto:lista_inicio', args=[]))
+                    else:
+                        return HttpResponseRedirect(reverse('proyecto:lista_inicioEjec', args=[]))
                 else:
                     return self.render_to_response(self.get_context_data(form=form, form2=form2 ))
             else:   
-                print(estado_post,'estado')
                 postulacion = form.save(commit=False)
                 postulacion.creador = encargado
                 postulacion.save()
@@ -479,11 +483,19 @@ class Act_Ficha_MAE(UpdateView):
         form3 = self.third_form_class(request.POST, instance=persona_mae)
 
         if form2.is_valid() and form3.is_valid():
-            mae_R = EncargadoMAE.objects.get(id = postulacion_pr.mae.pk)
-            per_mae = Persona.objects.get(id=mae_R.persona.pk)
-            print(mae_R)
-            print(per_mae)
-            print('responsable')            
+            carnet_file = form2.cleaned_data.get('carnet')
+            asignacion_file = form2.cleaned_data.get('asignacion')
+            max_size = 2 * 1024 * 1024
+            if carnet_file.size > max_size or asignacion_file.size > max_size or not carnet_file.name.endswith('.pdf') or not asignacion_file.name.endswith('.pdf'):
+                if carnet_file.size > max_size:
+                    form2.add_error('carnet', 'El archivo carnet no debe superar los 2 MB.')
+                if asignacion_file.size > max_size:
+                    form2.add_error('asignacion', 'El archivo de asignacion no debe superar los 2 MB.')                    
+                if not carnet_file.name.endswith('.pdf'):
+                    form2.add_error('carnet', 'El archivo carnet debe ser en formato PDF.')
+                if not asignacion_file.name.endswith('.pdf'):
+                    form2.add_error('asignacion', 'El archivo de asignación debe ser en formato PDF.')           
+                return self.render_to_response(self.get_context_data(form=form, form2=form2))
             form2.save()
             form3.save()
             postulacion_pr.modificacion = True
@@ -520,8 +532,7 @@ class Act_ficha_Resp(UpdateView):
         context['entity'] = 'ACTUALIZAR DATOS DE LA SOLICITUD'
         context['entity2'] = 'DATOS RESPONSABLE DEL PROYECTO'
         context['entity_url'] = reverse_lazy('convocatoria:Index') 
-        return context 
-    
+        return context    
     
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -532,13 +543,7 @@ class Act_ficha_Resp(UpdateView):
         form = self.form_class(request.POST)
         form2 = self.second_form_class(request.POST, request.FILES, instance=responsable_p)
         form3 = self.third_form_class(request.POST, instance=persona_responsable)
-
         if form2.is_valid() and form3.is_valid():
-            mae_R = EncargadoMAE.objects.get(id = postulacion_pr.responsable.pk)
-            per_mae = Persona.objects.get(id=mae_R.persona.pk)
-            print(mae_R)
-            print(per_mae)
-            print('responsable')
             form2.save()
             form3.save()
             postulacion_pr.modificacion = True

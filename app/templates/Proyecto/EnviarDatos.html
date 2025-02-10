@@ -1,6 +1,24 @@
 {% extends 'base/base.html' %}
 
 {% block contenido %}
+    {% if messages %}
+        <hr>
+        {% for message in messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+        {% endfor %}             
+    {% endif %} 
+    {% if error_messages %}
+            <hr>
+            {% for message in error_messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
     <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
     <div class="card text-bg-danger mb-3">
         <div class="card-header">
@@ -49,42 +67,4 @@
         </div>
     </div>
 
-    <!-- Modal de éxito -->
-    {% if messages %}
-        <div class="modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">
-                            {% if message_title %}
-                                {{ message_title }}
-                            {% else %}
-                                Mensaje
-                            {% endif %}
-                        </h5>
-                    </div>
-                    <div class="modal-body">
-                        {% if message_content %}
-                            <p>{{ message_content }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="modal-footer">
-                        <a href="{{ accion2_url }}" class="btn btn-secondary" type="button">{{ accion2 }}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
-{% endblock %}
-
-{% block funcScript %}
-<script>
-    // Mostrar el modal si hay mensajes
-    {% if messages %}
-        $(document).ready(function(){
-            $('#successModal').modal('show');
-        });
-    {% endif %}
-</script>
 {% endblock %}

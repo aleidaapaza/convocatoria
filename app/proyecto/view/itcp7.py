@@ -22,18 +22,18 @@ class R_RiesgoDesastre(View):
         slug = self.kwargs.get('slug', None)
         if self.model.objects.filter(slug=slug).exists():
             return redirect('proyecto:actualizar_RiesgoDesastre', slug=slug)
-        return self.render_form(slug)
+        return self.render_formA(slug)
 
-    def render_form(self, slug):
+    def render_formA(self, slug):
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
-        form = Rg_RiesgoDesastre()
+        form = Rg_RiesgoDesastre()        
         context = {
             'form': form,
             'postulacion' : proyecto_p,
             'proyecto': proyecto_p,
-            'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
+            'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
-            'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
+            'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES',
             'accion': 'Registrar',
             'accion2': 'Cancelar',
             'accion2_url': reverse_lazy('convocatoria:Index'),
@@ -46,12 +46,17 @@ class R_RiesgoDesastre(View):
         riesgos = request.POST.getlist('riesgo')  # Listado de riesgos seleccionados
         niveles = request.POST.getlist('nivel')  # Listado de niveles seleccionados
         print("riesgo", riesgos)
-        print("nivel", niveles)
-        # Guardamos los datos en la base de datos
+        print("nivel", niveles) 
         for riesgo, nivel in zip(riesgos, niveles):
-            # Crear un nuevo registro Riesgo_desastre por cada fila
-            Riesgo_desastre.objects.create(slug=slug, riesgo=riesgo, nivel=nivel)
-        return HttpResponseRedirect(reverse('proyecto:registro_DetallePOA', args=[slug,]))
+            print("for act")
+            if not Riesgo_desastre.objects.filter(slug=slug).filter(riesgo=riesgo).exists():
+                Riesgo_desastre.objects.create(slug=slug, riesgo=riesgo, nivel=nivel)
+            else:
+                messages.error(request,"Ya existe"+riesgo+"registrado")
+        if Riesgo_desastre.objects.filter(slug=slug).exists():
+           return HttpResponseRedirect(reverse('proyecto:registro_RiesgoDesastre', args=[slug,])) 
+        else:                    
+            return HttpResponseRedirect(reverse('proyecto:registro_DetallePOA', args=[slug,]))
     
 class Act_RiesgoDesastre(View):
     model = Riesgo_desastre
@@ -71,14 +76,14 @@ class Act_RiesgoDesastre(View):
             'form': form,
             'form_data': form_data,  # Pasamos los registros existentes a la plantilla
             'slug': slug,
-            'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
+            'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
-            'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
+            'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES',
             'accion': 'Actualizar',
             'accion2_url': reverse_lazy('convocatoria:Index'),
             'accion2': 'Cancelar',
             'entity_registro': reverse_lazy('proyecto:registro_RiesgoDesastre_R', args=[slug]),
-            'entity_registro_nom': 'Registrar',
+            'entity_registro_nom': 'Registrar Mas Riesgos',
         }
         if messages:
         # Si hay mensajes de éxito, error, etc.
@@ -108,7 +113,7 @@ class Act_RiesgoDesastre(View):
                 obj.nivel = nivel
                 obj.fecha_actualizacion = timezone.now()
                 obj.save()
-        messages.success(request, 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES - se actualizo correctamente.')
+        messages.success(request, 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES - se actualizo correctamente.')
         return redirect('proyecto:registro_DetallePOA', slug=slug)
 
 
@@ -127,24 +132,42 @@ class R_RiesgoDesastre_R(View):
             'form': form,
             'proyecto': proyecto_p,
             'postulacion' : proyecto_p,
-            'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
+            'titulo': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
-            'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS DE DESASTRES',
-            'accion': 'Registrar',
+            'entity2': 'ITCP-IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES',
+            'accion': 'GUARDAR',
             'accion2': 'Cancelar',
             'accion2_url': reverse('proyecto:registro_RiesgoDesastre', args=[slug]),
             'error_messages': []  # Inicializa una lista vacía para los mensajes de error
         }
+        if messages:
+            for message in messages.get_messages(self.request):
+                if message.level_tag == 'success':
+                    context['message_title'] = 'Actualización Exitosa'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'error':
+                    context['message_title'] = 'Error al Actualizar'
+                    context['message_content'] = message.message
+                elif message.level_tag == 'warning':
+                    context['message_title'] = 'Advertencia'
+                    context['message_content'] = message.message
+                else:
+                    context['message_title'] = 'Información'
+                    context['message_content'] = message.message
         return render(self.request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug', None)
-        riesgos = request.POST.getlist('riesgo')
-        niveles = request.POST.getlist('nivel')
-        print("riesgo", riesgos)
-        print("nivel", niveles)
+        riesgos = request.POST.getlist('riesgo')  # Listado de riesgos seleccionados
+        niveles = request.POST.getlist('nivel')  # Listado de niveles seleccionados
+        print("riesgoAS", riesgos)
+        print("nivelAS", niveles) 
         for riesgo, nivel in zip(riesgos, niveles):
-            Riesgo_desastre.objects.create(slug=slug, riesgo=riesgo, nivel=nivel)
+            print("for act")
+            if not Riesgo_desastre.objects.filter(slug=slug).filter(riesgo=riesgo).exists():
+                Riesgo_desastre.objects.create(slug=slug, riesgo=riesgo, nivel=nivel)
+            else:
+                messages.error(request,"Ya existe "+riesgo+" registrado")
         return HttpResponseRedirect(reverse('proyecto:registro_RiesgoDesastre', args=[slug,]))
     
 def eliminar_Riesgos(request, objetivo_id):

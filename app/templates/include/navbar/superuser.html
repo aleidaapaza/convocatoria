@@ -6,7 +6,7 @@
                 <i class="fa fa-align-justify" aria-hidden="true"></i>
             </button>
         </li>
-        <li class="height-100 d-flex align-items-center justify-content-center p-3">
+        <li class="nav-item ms-auto d-flex align-items-center justify-content-center p-3">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a href="" class="nav-link font-weight-bold"><i class="fas fa-user-alt"></i> Bienvenido {{ request.user.username }}</a>
@@ -30,6 +30,13 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'convocatoria:lista_convocatoria' %}"><i class="fas fa-list-alt"></i> LISTA DE CONVOCATORIAS</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:lista_revisor' %}"><i class="fas fa-users-cog"></i> LISTA DE REVISORES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:Registro_Revisor' %}"><i class="fas fa-user-plus"></i> REGISTRO DE REVISORES</a>
                     <hr>
                 </li>
                 <li class="nav-item">
@@ -60,12 +67,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'proyecto:lista_datosAprobados' %}"><i class="fas fa-check-circle"></i> APROBADOS (SIN OBSERVACIONES)</a>
                     <hr>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'user:lista_revisor' %}"><i class="fas fa-users-cog"></i> LISTA DE REVISORES</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'user:Registro_Revisor' %}"><i class="fas fa-user-plus"></i> REGISTRO DE REVISORES</a>
                 </li>
             </ul>
         </div>

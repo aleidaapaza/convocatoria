@@ -210,13 +210,13 @@ class Act_Objetivo_especifico(View):
         # Comprobar si se han agregado nuevos objetivos
         return redirect('proyecto:registro_Beneficios', slug=slug)
 
-def eliminar_objetivo(request, objetivo_id):
+def eliminarObjetivoITCP(request, objetivo_id):
     if request.method == 'POST':
         objeto = Objetivo_especifico.objects.get(id=objetivo_id)
         slug = objeto.slug
         objetivo = get_object_or_404(Objetivo_especifico, id=objetivo_id)
         objetivo.delete()
-        return redirect('proyecto:registro_ObjetivoEspecifico', slug=slug)
+        return redirect('proyecto:actualizar_obj_especifico', slug=slug)
     
 class Reg_Objetivo_especifico01(CreateView):
     model=Objetivo_especifico
@@ -277,7 +277,7 @@ class R_Beneficios(UpdateView):
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
         context['entity2'] = 'ITCP-IDEA DEL PROYECTO'
         context['entity3'] = 'BENEFICIOS ESPERADOS DEL PROYECTO'
-        context['accion'] = 'Registrar'
+        context['accion'] = 'Guardar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
         if messages:

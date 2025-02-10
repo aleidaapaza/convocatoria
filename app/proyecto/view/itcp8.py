@@ -38,9 +38,9 @@ class Reg_DetallePOA(CreateView):
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p
         context['postulacion'] = proyecto_p
-        context['titulo'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
+        context['titulo'] = 'ITCP-OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
+        context['entity2'] = 'ITCP-OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
@@ -71,9 +71,9 @@ class Act_DetallePOA(UpdateView):
         proyecto_p = Postulacion.objects.get(slug=slug)
         context['proyecto'] = proyecto_p  
         context['postulacion'] = proyecto_p
-        context['titulo'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
+        context['titulo'] = 'ITCP-OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
-        context['entity2'] = 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
+        context['entity2'] = 'ITCP-OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO'
         context['accion'] = 'Actualizar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
@@ -104,7 +104,7 @@ class Act_DetallePOA(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            messages.success(request, 'ITCP-DESCRIBA SI EL PROYECTO ESTA INSCRITO EN EL POA DE SU ENTIDAD Y OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO - se actualizo correctamente.')
+            messages.success(request, 'ITCP-OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO - se actualizo correctamente.')
             return redirect('proyecto:registro_PresupuestoRef', slug=slug) 
         else:
             return self.render_to_response(self.get_context_data(form=form))

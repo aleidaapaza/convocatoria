@@ -7,7 +7,7 @@ from django.views.generic import CreateView, View, ListView, UpdateView
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 
-from user.form import UsuarioRev, Reg_Persona_MAE, LoginForm, update_Revisor
+from user.form import UsuarioRev, Reg_Persona_MAE, LoginForm, update_Revisor, Reg_Persona_Rev
 from user.models import Revisor, User, Persona
 
 
@@ -55,7 +55,7 @@ class RegistroRev(CreateView):
     model = Revisor
     template_name = 'login/registerRev.html'
     form_class = UsuarioRev
-    second_form_class = Reg_Persona_MAE
+    second_form_class = Reg_Persona_Rev
     success_url = reverse_lazy('user:lista_revisor')
 
     def get_context_data(self, **kwargs):
@@ -77,10 +77,11 @@ class RegistroRev(CreateView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         form2 = self.second_form_class(request.POST)
-        if form.is_valid() and form2.is_valid():
+        if form.is_valid() and form2.is_valid():        
+            carnet = form2.cleaned_data.get('celular')
             usuario = form.save(commit=False)
             usuario.is_revisor = True
-            usuario.password = '{}{}'.format(usuario.username[:5], 'RV2024')
+            usuario.password = '{}'.format(carnet)
             usuario.set_password(usuario.password)
             usuario.save()
             persona = form2.save()
@@ -99,7 +100,7 @@ class ActualizacionRev(UpdateView):
     template_name = 'perfil/act_revisor.html'
     form_class = update_Revisor
     second_form_class = UsuarioRev
-    third_form_class = Reg_Persona_MAE
+    third_form_class = Reg_Persona_Rev
 
     def get_context_data(self, **kwargs):
         context = super(ActualizacionRev, self).get_context_data(**kwargs)

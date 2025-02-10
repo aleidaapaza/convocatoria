@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from user.models import Persona, EncargadoMAE, ResponsableP, User, Revisor
 
-class Reg_Persona_MAE(ModelForm):
+class Reg_Persona_Rev(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for form in self.visible_fields():
@@ -19,6 +19,26 @@ class Reg_Persona_MAE(ModelForm):
         labels = {
             'nombre': 'Nombre(s)',
             'apellido': 'Apellido(s)',
+            'cargo': 'Cargo',
+            'celular': 'Carnet',
+        }
+        
+class Reg_Persona_MAE(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.visible_fields():
+            form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
+            form.field.widget.attrs['autocomplete'] = 'off'
+        self.fields['nombre'].widget.attrs['style'] = 'text-transform:uppercase'
+        self.fields['apellido'].widget.attrs['style'] = 'text-transform:uppercase'
+        self.fields['cargo'].widget.attrs['style'] = 'text-transform:uppercase'
+    class Meta:
+        model = Persona
+        fields = '__all__'
+        exclude = []
+        labels = {
+            'nombre': 'Nombre(s) de la MAE',
+            'apellido': 'Apellido(s) de la MAE',
             'cargo': 'Cargo',
             'celular': 'N° de Celular',
         }
@@ -38,7 +58,7 @@ class Reg_Persona_Res(ModelForm):
         exclude = []
         labels = {
             'nombre': 'Nombre(s) del Responsable',
-            'apellido': 'Apellido(s)',
+            'apellido': 'Apellido(s) del Responsable',
             'cargo': 'Cargo',
             'celular': 'N° de Celular',
         }

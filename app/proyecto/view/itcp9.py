@@ -142,10 +142,11 @@ class Reg_PresupuestoRef(View):
                 ejec_sol_p=float(ejec_sol_p),
                 ejec_total_p=float(ejec_total_p),
             )
-        
-        # Asegúrate de retornar algo en todos los casos
-        return redirect('proyecto:registro_ConclRec', slug=slug)
-        
+        if proyecto_p.tipo_financiamiento == 1:
+            return redirect('proyecto:registro_ConclRec', slug=slug)
+        else:
+            return redirect('proyecto:registro_DeclaracionJurada', slug=slug)
+            
 
 class Act_PresupuestoRef(View):
     model = PresupuestoReferencial

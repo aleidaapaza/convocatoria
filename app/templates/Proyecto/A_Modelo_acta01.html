@@ -5,7 +5,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>COMUNIDADES BENEFICIARIAS</th>
+                    <th>.</th>
+                    <th>TIPO Y NOMBRE DEL BENEFICIARIO</th>
                     <th>SUBIR ACTA</th>
                     <th>EN EL CASO DE NO TENER, JUSTIFICAR</th>
                 </tr>
@@ -14,9 +15,11 @@
                 {% for acta in modelo_acta %}
                     <tr>
                         <td>
-                            <input type="hidden" name="comunidades_{{ forloop.counter0 }}" value="{{ acta.comunidades }}">
-                            <input type="text" value="{{ acta.comunidades }}" 
-                                   class="form-control form-control-sm font-weight-bold border border-info" disabled>
+                            <input type="hidden" name="idn_{{ forloop.counter0 }}" value="{{ acta.id }}">
+                        </td>  
+                        <td>
+                            <input type="text" value="{{ acta.comunidades }}" name="comunidades_{{ forloop.counter0 }}"
+                                   class="form-control form-control-sm font-weight-bold border border-info">
                         </td>      
                         
                          <td><input type="file" name="si_acta_{{ forloop.counter0 }}" 

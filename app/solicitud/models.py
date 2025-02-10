@@ -31,15 +31,15 @@ class Postulacion(models.Model):
     slug = models.SlugField(null=False, blank=False, unique=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     fecha_ultimaconexion = models.DateTimeField(null=True, blank=True)
-    estado = models.BooleanField()
-    modificacion = models.BooleanField()
+    estado = models.BooleanField(null=True, blank=True)
+    modificacion = models.BooleanField(null=True, blank=True)
     convocatoria = models.ForeignKey(Convocatoria, on_delete=models.CASCADE, related_name='postulacionConvocatoria')
     tipo_financiamiento = models.IntegerField()
     municipio = models.ForeignKey(Municipios, related_name='Datos_base_proyecto', on_delete=models.CASCADE)
     mae = models.ForeignKey(EncargadoMAE, related_name='encargado_mae_p', on_delete=models.CASCADE)
     responsable = models.ForeignKey(ResponsableP, related_name='responsable_p', on_delete=models.CASCADE)
     datos_proyecto = models.OneToOneField(DatosProyectoBase, null=True, blank=True, on_delete=models.CASCADE, related_name='postulacion', to_field='slug')
-    creador = models.OneToOneField(User, on_delete=models.CASCADE)
+    creador = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f' {self.municipio} {self.fecha_registro}'

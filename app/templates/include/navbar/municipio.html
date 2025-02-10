@@ -70,13 +70,14 @@
                         </a>
                     </li>
                     {% endif %}                                
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}">
-                            <i class="fas fa-lightbulb"></i>
+                    <li class="nav-item">                        
                         {% if postulacion.tipo_financiamiento == 1 %}
-                        03. ITCP-IDEA DEL PROYECTO
+                        <a class="nav-link active" href="{% url 'proyecto:registro_Idea_proyecto' proyecto.slug %}">
+                            <i class="fas fa-lightbulb"></i>03. ITCP-IDEA DEL PROYECTO
                         {% else %}
-                        02. OBJETIVO GENERAL DEL PROYECTO
+                        <a class="nav-link active" href="{% url 'proyecto:registro_ObjetivoGeneral' proyecto.slug %}">
+                            <i class="fas fa-lightbulb"></i>
+                            02. OBJETIVO GENERAL DEL PROYECTO
                         {% endif %}   
                         </a>
                     </li>
@@ -89,7 +90,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link active" href="">
+                            <a class="nav-link active" href="{% url 'proyecto:registro_ObjetivoEspecifico' proyecto.slug %}">
                                 <i class="fas fa-bullseye"></i>
                                 02.01. OBJETIVO ESPECIFICOS, COMPONENTENTES Y METAS.
                             </a>
@@ -179,7 +180,12 @@
                     {% endif %}             
                         <li class="nav-item">
                             <a class="nav-link active" href="{% url 'proyecto:registro_DeclaracionJurada' proyecto.slug %}">
-                                <i class="fas fa-clipboard-check"></i> 11.ITCP-DECLARACION JURADA
+                                <i class="fas fa-clipboard-check"></i> 
+                                {% if postulacion.tipo_financiamiento == 1 %}
+                            11.ITCP-DECLARACION JURADA
+                            {% else %}
+                            06. DECLARACION JURADA
+                            {% endif %} 
                             </a>
                         </li>
 

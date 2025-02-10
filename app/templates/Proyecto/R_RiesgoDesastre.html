@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block contenido %}
+        {% if messages %}
+            <hr>
+            {% for message in messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}             
+        {% endif %} 
     <form method="POST" action="{% url 'proyecto:registro_RiesgoDesastre' proyecto.slug %}" id="riesgosForm">
         {% csrf_token %}
         <table class="table" id="dynamicTable">

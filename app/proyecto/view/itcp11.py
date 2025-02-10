@@ -62,14 +62,21 @@ class Reg_DeclaracionJurada(CreateView):
 
             if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
                 messages.error(request, 'El archivo DECLARACION JURADA no debe superar los 2 MB.')            
+            if declaracion_d and not declaracion_d.name.endswith('.pdf'):
+                messages.error(request, 'El archivo DECLARACION JURADA debe ser en formato PDF.')
+            
             if carta_ejec and carta_ejec.size > 2 * 1024 * 1024:  # 2 MB
                 messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP no debe superar los 2 MB.')
-
+            if carta_ejec and not carta_ejec.name.endswith('.pdf'):
+                messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP debe ser en formato PDF.')
+            
             if proyecto_p.tipo_financiamiento == 1:
                 carta_elab = form.cleaned_data.get('carta_elab')
                 if carta_elab and carta_elab.size > 2 * 1024 * 1024:  # 2 MB
                     messages.error(request, 'El CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP no debe superar los 2 MB.')
-
+                if carta_elab and not carta_elab.name.endswith('.pdf'):
+                    messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP debe ser en formato PDF.')
+            
             # Si hay mensajes de error, retornar la respuesta con el formulario y los mensajes
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
@@ -100,6 +107,7 @@ class Act_DeclaracionJurada(UpdateView):
         else:
             titulo = "DECLARACION JURADA"
         context['postulacion'] = proyecto_p
+        context['proyecto'] = proyecto_p
         context['objeto'] = objeto  
         context['titulo'] = titulo
         context['entity'] = 'REGISTRO DATOS DEL PROYECTO'
@@ -120,18 +128,31 @@ class Act_DeclaracionJurada(UpdateView):
             itcp_d = form.cleaned_data.get('itcp')
             carta_ejec = form.cleaned_data.get('carta_ejec')
             if declaracion_d and declaracion_d.size > 2 * 1024 * 1024:  # 2 MB
-                messages.error(request, 'El archivo DECLARACION JURADA no debe superar los 2 MB.')            
+                messages.error(request, 'El archivo DECLARACION JURADA no debe superar los 2 MB.')
+            if declaracion_d and not declaracion_d.name.endswith('.pdf'):
+                messages.error(request, 'El archivo DECLARACION JURADA debe ser en formato PDF.')
+                
             tamano_maximo = int(proyecto_p.convocatoria.tamanoDoc)
+            
             if itcp_d and itcp_d.size > tamano_maximo * 1024 * 1024:  # Tamaño máximo en MB
-                messages.error(request, 'El archivo ITCP no debe superar los ' + str(proyecto_p.convocatoria.tamanoDoc) + ' MB')
-
+                messages.error(request, 'El archivo GENERADO no debe superar los ' + str(proyecto_p.convocatoria.tamanoDoc) + ' MB')
+            
+            if itcp_d and not itcp_d.name.endswith('.pdf'):
+                messages.error(request, 'El archivo GENERADO debe ser en formato PDF.')
+                
             if carta_ejec and carta_ejec.size > 2 * 1024 * 1024:  # 2 MB
                 messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP no debe superar los 2 MB.')
             
+            if carta_ejec and not carta_ejec.name.endswith('.pdf'):
+                messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA EJECUCION DEL EDTP debe ser en formato PDF.')
+            
             if proyecto_p.tipo_financiamiento == 1:
                 carta_elab = form.cleaned_data.get('carta_elab')
+                
                 if carta_elab and carta_elab.size > 2 * 1024 * 1024:  # 2 MB
                     messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP no debe superar los 2 MB.')
+                if carta_elab and not carta_elab.name.endswith('.pdf'):
+                    messages.error(request, 'El archivo CARTA DE SOLICITUD PARA LA ELABORACION DEL EDTP debe ser en formato PDF.')
             
             if messages.get_messages(request):
                 return self.render_to_response(self.get_context_data(form=form))
@@ -141,10 +162,10 @@ class Act_DeclaracionJurada(UpdateView):
             datos.save()
             if proyecto_p.tipo_financiamiento == 1:
                 messages.success(request, 'ITCP-DECLARACION JURADA - se actualizo correctamente.')
-                return redirect('convocatoria:Index', slug=slug)
+                return redirect('convocatoria:Index')
             else:
                 messages.success(request, 'DECLARACION JURADA - se actualizo correctamente.')
-                return redirect('convocatoria:Index', slug=slug)   
+                return redirect('convocatoria:Index')   
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
             return self.render_to_response(self.get_context_data(form=form))

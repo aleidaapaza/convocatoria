@@ -20,7 +20,6 @@ class R_Modelo_Acta(View):
     def get(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug', None)
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
-
         if self.model.objects.filter(slug=slug).exists():
             print('redireccionando')
             return redirect('proyecto:actualizar_ModeloActa', slug=slug)
@@ -53,27 +52,20 @@ class R_Modelo_Acta(View):
             no_acta = request.POST.get(f'no_acta_{index}')
             
             if comunidad is None:
-                break  # Salir del bucle si no hay más comunidades
-            
+                break
             comunidades_list.append(comunidad)
             si_acta_files.append(si_acta)
-            no_acta_texts.append(no_acta)
-            
+            no_acta_texts.append(no_acta)            
             index += 1
-
-        print("Comunidades:", comunidades_list)
-        print("Actas:", si_acta_files)
-        print("No Actas:", no_acta_texts)
-
-        # Iterar a través de las comunidades
-
+            
         for si_acta in si_acta_files:
-            if si_acta and si_acta.size > 2 * 1024 * 1024:  # 2 MB
-                print(si_acta.size, 'tamaño dia')
-                error_messages.append('El archivo no debe superar los 2 MB.')
-
+            if si_acta:
+                if si_acta.size > 2 * 1024 * 1024:
+                    error_messages.append('El archivo no debe superar los 2 MB.')
+                if not si_acta.name.endswith('.pdf'):
+                    error_messages.append('El archivo debe ser en formato PDF.')
+                
         if error_messages:
-            # Renderiza de nuevo con los mensajes de error
             context = {
                 'proyecto': get_object_or_404(Postulacion, slug=slug),
                 'postulacion' : get_object_or_404(Postulacion, slug=slug),
@@ -83,7 +75,7 @@ class R_Modelo_Acta(View):
                 'accion': 'Actualizar',
                 'accion2': 'Cancelar',
                 'accion2_url': reverse_lazy('convocatoria:Index'),
-                'error_messages': error_messages,  # Pasa los mensajes de error
+                'error_messages': error_messages,
             }
             return render(request, self.template_name, context)
 
@@ -91,17 +83,13 @@ class R_Modelo_Acta(View):
             comunidad = comunidades_list[i]
             si_acta = si_acta_files[i]
             no_acta = no_acta_texts[i]
-            print('Ingreso al for para la comunidad:', comunidad)
             if comunidad:
-                print('Creando objeto para:', comunidad)
-                # Crear el objeto en la base de datos
                 Modelo_Acta.objects.create(
                     slug=slug,
                     comunidades=comunidad,
                     si_acta=si_acta if si_acta else None,
                     no_acta=no_acta if not si_acta else no_acta
                 )
-        print('Finalizado')
         return HttpResponseRedirect(reverse('proyecto:registro_DerechoPropietario', args=[slug]))
     
 class A_Modelo_Acta(View):
@@ -143,68 +131,72 @@ class A_Modelo_Acta(View):
         return render(request, self.template_name, context)
      
     def post(self, request, slug):
-        print('ingreso de post')
+        id_list = []
         comunidades_list = []
         si_acta_files = []
         no_acta_texts = []
         error_messages = []
-        index = 0
-        while True:
+        index = 0        
+        while True:            
+            idn = self.request.POST.get(f'idn_{index}')
             comunidad = request.POST.get(f'comunidades_{index}')
             si_acta = request.FILES.get(f'si_acta_{index}')
             no_acta = request.POST.get(f'no_acta_{index}')
             if comunidad is None:
                 break
+            id_list.append(idn)
             comunidades_list.append(comunidad)
             si_acta_files.append(si_acta)
-            no_acta_texts.append(no_acta)
+            no_acta_texts.append(no_acta)        
             index += 1
-            print("Comunidades:", comunidades_list)
-            print("Actas:", si_acta_files)
-            print("No Actas:", no_acta_texts)
-        for si_acta in si_acta_files:
-            if si_acta and si_acta.size > 2 * 1024 * 1024:  # 2 MB
-                print(si_acta.size, 'tamaño dia')
-                error_messages.append('El archivo no debe superar los 2 MB.')
-            if error_messages:
-                proyecto_p = get_object_or_404(Postulacion, slug=slug)
-                objetivos = Modelo_Acta.objects.filter(slug=slug)
-                context = {
-                        'proyecto': proyecto_p,
-                        'postulacion' : proyecto_p,
-                        'modelo_acta': objetivos,
-                        'titulo': 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
-                        'entity': 'REGISTRO DATOS DEL PROYECTO',
-                        'entity2': 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
-                        'accion': 'Actualizar',
-                        'accion2': 'Cancelar',
-                        'accion2_url': reverse('convocatoria:Index'),
-                        'entity_registro': reverse_lazy('proyecto:registro_ModeloActa01', args=[slug]),
-                        'entity_registro_nom': 'Registrar',
-                        'error_messages': error_messages,  # Pasa los mensajes de error
-                    }
-                return render(request, self.template_name, context)
-        for i in range(len(comunidades_list)):
+            if si_acta:
+                if si_acta.size > 2 * 1024 * 1024:  # 2 MB
+                    error_messages.append('El archivo no debe superar los 2 MB.')
+                if not si_acta.name.endswith('.pdf'):
+                    error_messages.append('El archivo debe ser en formato PDF.')
+            else:
+                continue
+        
+        if error_messages:
+            proyecto_p = get_object_or_404(Postulacion, slug=slug)
+            objetivos = Modelo_Acta.objects.filter(slug=slug)
+            context = {
+                'proyecto': proyecto_p,
+                'postulacion' : proyecto_p,
+                'modelo_acta': objetivos,
+                'titulo': 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
+                'entity': 'REGISTRO DATOS DEL PROYECTO',
+                'entity2': 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
+                'accion': 'Actualizar',
+                'accion2': 'Cancelar',
+                'accion2_url': reverse('convocatoria:Index'),
+                'entity_registro': reverse_lazy('proyecto:registro_ModeloActa01', args=[slug]),
+                'entity_registro_nom': 'Registrar',
+                'error_messages': error_messages,  # Pasa los mensajes de error
+            }
+            return render(request, self.template_name, context)
+        
+        for i in range(len(id_list)):            
+            idn = id_list[i]
             comunidad = comunidades_list[i]
             si_acta = si_acta_files[i]
             no_acta = no_acta_texts[i]
-
-            if comunidad:
-                acta_instance, created = Modelo_Acta.objects.get_or_create(
-                    slug=slug,
-                    comunidades=comunidad,
-                    defaults={'si_acta': si_acta, 'no_acta': no_acta, 'fecha_actualizacion': timezone.now()}
+            if Modelo_Acta.objects.filter(id=idn).exists():
+                acta = Modelo_Acta.objects.get(id=idn)
+                acta.comunidades = comunidad
+                acta.si_acta = si_acta if si_acta else acta.si_acta
+                acta.no_acta = no_acta if no_acta else acta.no_acta
+                acta.fecha_actualizacion = timezone.now()
+                acta.save()
+            else:
+                Modelo_Acta.objects.create(
+                    slug = slug,
+                    fecha_registro = timezone.now(),
+                    fecha_actualizacion = timezone.now(),
+                    comunidades = comunidad,
+                    si_acta = si_acta,
+                    no_acta = no_acta,
                 )
-                if not created:
-                    if si_acta:
-                        if acta_instance.si_acta:
-                            file_path = os.path.join(settings.MEDIA_ROOT, str(acta_instance.si_acta))
-                            if os.path.isfile(file_path):
-                                os.remove(file_path)  # Eliminar el archivo
-                        acta_instance.si_acta = si_acta  # Asignar el nuevo archivo
-                    if no_acta is not None:  # Permitir actualizar no_acta incluso si está vacío
-                        acta_instance.no_acta = no_acta
-                acta_instance.save()
         messages.success(request, 'TCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO - se actualizo correctamente.')
         return redirect('proyecto:registro_DerechoPropietario', slug=slug)                
     
@@ -234,9 +226,9 @@ class R_Modelo_Acta_R(View):
             'titulo': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
             'entity': 'REGISTRO DATOS DEL PROYECTO',
             'entity2': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
-            'accion': 'Registrar',
+            'accion': 'Añadir',
             'accion2': 'Cancelar',
-            'accion2_url': reverse_lazy('convocatoria:Index'),
+            'accion2_url': reverse('proyecto:actualizar_ModeloActa', args=[slug]),
             'error_messages': []  # Inicializa una lista vacía para los mensajes de error
         }
         return render(request, self.template_name, context)
@@ -258,12 +250,13 @@ class R_Modelo_Acta_R(View):
             si_acta_files.append(si_acta)
             no_acta_texts.append(no_acta)
             index += 1
-        print("Comunidades:", comunidades_list)
-        print("Actas:", si_acta_files)
-        print("No Actas:", no_acta_texts)
-        for si_acta in si_acta_files:
-            if si_acta and si_acta.size > 2 * 1024 * 1024:  # 2 MB
-                error_messages.append('El archivo no debe superar los 2 MB.')
+            if si_acta:
+                if si_acta.size > 2 * 1024 * 1024:  # 2 MB
+                    error_messages.append('El archivo no debe superar los 2 MB.')
+                if not si_acta.name.endswith('.pdf'):
+                    error_messages.append('El archivo debe ser en formato PDF.')
+            else:
+                continue
         if error_messages:
             context = {
                 'proyecto': get_object_or_404(Postulacion, slug=slug),
@@ -273,7 +266,7 @@ class R_Modelo_Acta_R(View):
                 'entity2': 'ITCP-MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACIÓN DEL PROYECTO',
                 'accion': 'Registrar',
                 'accion2': 'Cancelar',
-                'accion2_url': reverse_lazy('convocatoria:Index'),
+                'accion2_url': reverse_lazy('convocatoria:actualizar_ModeloActa', args=[slug]),
                 'error_messages': error_messages,  # Pasa los mensajes de error
             }
             return render(request, self.template_name, context)
@@ -282,14 +275,11 @@ class R_Modelo_Acta_R(View):
             comunidad = comunidades_list[i]
             si_acta = si_acta_files[i]
             no_acta = no_acta_texts[i]
-            print('Ingreso al for para la comunidad:', comunidad)
             if comunidad:
-                print('Creando objeto para:', comunidad)
                 Modelo_Acta.objects.create(
                     slug=slug,
                     comunidades=comunidad,
                     si_acta=si_acta if si_acta else None,
                     no_acta=no_acta if not si_acta else no_acta
                 )
-        print('Finalizado')
         return HttpResponseRedirect(reverse('proyecto:actualizar_ModeloActa', args=[slug]))

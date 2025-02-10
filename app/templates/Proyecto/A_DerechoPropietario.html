@@ -5,6 +5,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>.</th>
                 <th>DESCRIPCION DEL DERECHO PROPIETARIO DEL PREDIO / TITULO EJECUTORIAL </th>
                 <th>ADJUNTAR REGISTRO DE DERECHOS REALES</th>
                 <th>DE NO CONTAR CON UN DERECHO PROPIETARIO DETERMINAR LAS ACCIONES A REALIZAR</th>
@@ -15,9 +16,11 @@
             {% for producto in derecho %}
                 <tr>
                     <td>
-                        <input type="hidden" name="descripcion_{{ forloop.counter0 }}" value="{{ producto.descripcion }}">
+                        <input type="hidden" name="id_{{ forloop.counter0 }}" value="{{ producto.id }}">
+                    </td>
+                    <td>
                         <textarea name="descripcion_{{ forloop.counter0 }}" rows="4" 
-                        class="form-control form-control-sm font-weight-bold border border-info" disabled>{{producto.descripcion}}</textarea>
+                        class="form-control form-control-sm font-weight-bold border border-info">{{producto.descripcion}}</textarea>
                     </td>
                     <td>
                     <input type="file" name="si_registro_{{ forloop.counter0 }}" value="{{producto.si_registro}}"

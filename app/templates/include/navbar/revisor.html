@@ -5,7 +5,7 @@
             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
             <i class="fa fa-align-justify" aria-hidden="true"></i></button>
         </li>
-        <li class="height-100 d-flex align-items-center justify-content-center p-3">
+        <li class="nav-item ms-auto d-flex align-items-center justify-content-center p-3">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a href="" class="nav-link font-weight-bold text-white">
@@ -36,42 +36,51 @@
                     <hr>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaCompleta' %}"><i class="fas fa-th-list"></i> LISTA COMPLETA</a>
-                </li>
-                
+                    <a class="nav-link active" href="{% url 'solicitud:ListaCompleta' %}"><i class="fas fa-th-list"></i> LISTA COMPLETA ITCP Y EDTP</a>
+                    <hr>
+                </li>                
                 <li class="nav-item bg-info">
                     <p class="text-center fw-bold">ITCP</p>
                 </li>                
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">SOLICITUDES</p>
+                </div>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' %}"><i class="fas fa-file-alt"></i> LISTA DE SOLICITUDES</a>
+                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' %}"><i class="fas fa-file-alt"></i> LISTA DE SOLICITUDES - SIN REVISAR</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaRechazados' %}"><i class="fas fa-times-circle"></i> LISTA DE NO APROBADOS</a>
+                    <a class="nav-link active" href="{% url 'solicitud:ListaRechazados' %}"><i class="fas fa-times-circle"></i> LISTA DE SOLICITUDES - NO APROBADOS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fas fa-sign-in-alt"></i> LISTA DE APROBADOS CON INICIO DE SESION</a>
+                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fas fa-sign-in-alt"></i> LISTA DE SOLICITUDES - APROBADOS CON INICIO DE SESION</a>
                 </li>
                 <hr>
                 <div class="offcanvas-header">
-                    <p class="offcanvas-title" id="offcanvasWithBothOptionsLabel">LISTA DE APROBADOS QUE ENVIARON DATOS</p>
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS APROBADOS CON INICIO DE SESION</p>
                 </div>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datos' %}"><i class="fas fa-database"></i> COMPLETA</a>
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datos' %}"><i class="fas fa-database"></i> LISTA COMPLETA</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datosSinrevisar' %}"><i class="fas fa-eye-slash"></i> SIN REVISAR</a>
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosSinrevisar' %}"><i class="fas fa-eye-slash"></i> LISTA - SIN REVISAR</a>
+                </li>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS EN REVISION/APROBADOS</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosObservados' %}"><i class="fas fa-exclamation-triangle"></i> LISTA - OBSERVADOS/CORREGIDOS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datosObservados' %}"><i class="fas fa-exclamation-triangle"></i> OBSERVADOS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_datosAprobados' %}"><i class="fas fa-check-circle"></i> APROBADOS (SIN OBSERVACIONES)</a>
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosAprobados' %}"><i class="fas fa-check-circle"></i> LISTA - APROBADOS (SIN OBSERVACIONES)</a>
                     <hr>
                 </li>
 
                 <li class="nav-item bg-info">
                     <p class="text-center fw-bold">EDTP</p>
                 </li>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">SOLICITUDES</p>
+                </div>
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'solicitud:ListaSolicitudEj' %}"><i class="fas fa-file-alt"></i> LISTA DE SOLICITUDES</a>
                 </li>
@@ -83,7 +92,7 @@
                 </li>
                 <hr>
                 <div class="offcanvas-header">
-                    <p class="offcanvas-title" id="offcanvasWithBothOptionsLabel">LISTA DE APROBADOS QUE ENVIARON DATOS</p>
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS APROBADOS CON INICIO DE SESION</p>
                 </div>
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'proyecto:lista_datosEjec' %}"><i class="fas fa-database"></i> COMPLETA</a>

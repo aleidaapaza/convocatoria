@@ -809,6 +809,7 @@ def generate_pdf(request, slug):
 class EnviarDatos(View):
     model = Proyecto
     template_name = 'Proyecto/EnviarDatos.html'
+    
     def get(self, request, slug):
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         declaracion = get_object_or_404(Declaracion_jurada, slug=slug)
@@ -819,6 +820,7 @@ class EnviarDatos(View):
             'accion': 'ENVIAR',
             'accion2': 'Cancelar',
             'accion2_url': reverse('convocatoria:Index'),
+            'error_messages':[]
         }
         
         # Solo agregar el formulario si 'itcp' es None
@@ -828,15 +830,36 @@ class EnviarDatos(View):
         return render(request, self.template_name, context)
     
     def post(self, request, slug):
+        error_messages = []
         proyecto_p = get_object_or_404(Postulacion, slug=slug)
         declaracion = get_object_or_404(Declaracion_jurada, slug=slug)
-
-        # Verificar si el formulario se envió correctamente
         form = R_Declaracion_ITCP(request.POST, request.FILES)  # Recibe los datos POST del formulario
-
-        if form.is_valid():  # Si el formulario es válido
-            # Guardar el formulario o hacer alguna acción con los datos
-            declaracion.itcp = form.cleaned_data['itcp']  # Ejemplo de guardar el campo 'itcp'
+        if form.is_valid():
+            itcp_d = form.cleaned_data['itcp']
+            tamano_maximo = int(proyecto_p.convocatoria.tamanoDoc)
+            if itcp_d:
+                if itcp_d.size > tamano_maximo * 1024 * 1024:  # Tamaño máximo en MB
+                    error_messages.append('El archivo GENERADO no debe superar los ' + str(proyecto_p.convocatoria.tamanoDoc) + ' MB')
+                if not itcp_d.name.endswith('.pdf'):
+                    error_messages.append('El archivo GENERADO debe ser en formato PDF.')
+            if error_messages:
+                proyecto_p = get_object_or_404(Postulacion, slug=slug)
+                declaracion = get_object_or_404(Declaracion_jurada, slug=slug)
+                context = {
+                    'proyecto': proyecto_p,
+                    'titulo': 'ENVIAR DATOS',
+                    'entity': 'ENVIAR DATOS',
+                    'accion': 'ENVIAR',
+                    'accion2': 'Cancelar',
+                    'accion2_url': reverse('convocatoria:Index'),
+                    'error_messages':error_messages,
+                }
+                if not declaracion.itcp:
+                    form = R_Declaracion_ITCP()
+                    context['form'] = form
+                return render(request, self.template_name, context)
+            
+            declaracion.itcp = itcp_d            
             declaracion.save()
             if proyecto_p.tipo_financiamiento == 1:                
                 Proyecto.objects.create(
@@ -863,15 +886,9 @@ class EnviarDatos(View):
                     declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),                    
                     aceptar = False,
                 )
-            
-            # Agregar un mensaje de éxito
             messages.success(request, "Los datos se enviaron correctamente.")
-
-            # Redirigir a la página de éxito o a otro lugar
-            return redirect('convocatoria:Index')  # Redirige a la página principal o a la página deseada
+            return redirect('convocatoria:Index')
         else:
-            # Si el formulario no es válido, mostrar los errores
-            print('ERROR')
             messages.error(request, "Hubo un error al enviar los datos.")
             return render(request, self.template_name, {
                 'proyecto': proyecto_p,
@@ -937,8 +954,7 @@ class verDatos(View):
     model = Proyecto
     template_name = 'Proyecto/Vista.html'
 
-    def get(self, request, slug):
-        
+    def get(self, request, slug):        
         postulacion = get_object_or_404(Postulacion, slug=slug)
         derecho = Derecho_propietario.objects.filter(slug=slug)
         
@@ -994,11 +1010,11 @@ class verDatos(View):
         }
         
         if postulacion.tipo_financiamiento == 1:
-            context.update = {                
+            context.update({                
                 'modelo': modelo_acta,
                 'derecho': derecho,
                 'riesgo': riesgo_des,
-            }
+            })
             
         return render(self.request, self.template_name, context)
     
@@ -1006,13 +1022,14 @@ class verDatos(View):
         proyecto = Proyecto.objects.get(slug=slug)
         form = R_Proyecto(request.POST, instance = proyecto)
         if form.is_valid():
-            print("valido")
             datos = form.save(commit=False)
             datos.revisor = self.request.user
+            datos.fechaEstado = timezone.now()
             datos.save()
             proyecto = Proyecto.objects.get(slug=slug)
             if proyecto.estado == 'APROBADO':
                 proyecto.aceptar = True
+                proyecto.fechaEstado = timezone.now()
                 proyecto.save()
                 messages.success(request, 'Los datos se actualizaron correctamente.')
             return redirect('proyecto:ver_Datos', slug=slug)
@@ -1077,14 +1094,11 @@ class Lista_ProyectosSinRevisar(ListView):
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(tipo_financiamiento=1)
-        
-        # Añadimos el título y la entidad
+        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__tipo_financiamiento = 1)
         context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
         context['activate'] = True
         context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
-        context['object_list'] = proyectos
-                
+        context['object_list'] = proyectos                
         return context
     
 class Lista_ProyectosSinRevisarEjec(ListView):
@@ -1092,7 +1106,7 @@ class Lista_ProyectosSinRevisarEjec(ListView):
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
         context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(tipo_financiamiento=2)
+        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__tipo_financiamiento = 2)
         
         # Añadimos el título y la entidad
         context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR'
@@ -1111,12 +1125,12 @@ class Lista_ProyectosObservados(ListView):
         if self.request.user.is_superuser:
             proyectos = self.model.objects.filter(
                 estado__in=['CON OBSERVACION', 'CORREGIDO']
-            )
+            ).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
         else:
             proyectos = self.model.objects.filter(
                 estado__in=['CON OBSERVACION', 'CORREGIDO'],
                 revisor=revisor
-            )                    
+            ).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
         # Añadimos el título y la entidad
         context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON'
         context['activate'] = True

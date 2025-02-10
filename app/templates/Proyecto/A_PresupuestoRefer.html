@@ -118,6 +118,8 @@
 
     $(document).ready(function() {
         function calcular() {
+            var tipo_fin = parseInt({{proyecto.tipo_financiamiento}});
+
             if (tipo_fin == 1) {
                 var elabSolicBs = parseFloat($('#elabSolicBs').val()) || 0;
                 var elaboracionEdtpF = parseFloat({{proyecto.convocatoria.montoElabEDTP}}).toFixed(2);
@@ -138,16 +140,27 @@
                 var elabFonaPor = (elabTotalBs === 0 || isNaN(parseFloat(elabFonaBs)) || isNaN(elabTotalBs)) ? "-" : ((parseFloat(elabFonaBs) * 100 / parseFloat(elabTotalBs)).toFixed(2));
                 var elabSolicPor = (elabTotalBs === 0 || isNaN(parseFloat(elabSolicBs)) || isNaN(elabTotalBs)) ? "-" : ((parseFloat(elabSolicBs) * 100 / parseFloat(elabTotalBs)).toFixed(2));
                 var elabTotalPor = (parseFloat(elabFonaPor) + parseFloat(elabSolicPor)).toFixed(2);
-
-                }
                 
-                var ejecFonaBs = parseFloat($('#ejecFonaBs').val()) || 0;
-                var ejecucionEdtp = parseFloat({{proyecto.convocatoria.montoEjecEDTP}}).toFixed(2);
-                var ejecucionEdtp_aux = ejecucionEdtp;
-                var tipo_fin = parseInt({{proyecto.tipo_financiamiento}});
-                if (tipo_fin == 1) {
-                    var montoejec = ejecucionEdtp_aux - elaboracionEdtpF;
-                    ejecucionEdtp = parseFloat(montoejec);
+            }
+               $('#elabFonaBs').text(elabFonaBs);
+                $('#elabTotalBs').text(elabTotalBs);
+                $('#elabFonaPor').text(elabFonaPor + '%');
+                $('#elabSolicPor').text(elabSolicPor + '%');
+                $('#elabTotalPor').text(elabTotalPor + '%');
+                    
+                $('#elabFonaBsHidden').val(elabFonaBs);
+                $('#elabTotalBsHidden').val(elabTotalBs);
+                $('#elabFonaPorHidden').val(elabFonaPor);
+                $('#elabSolicPorHidden').val(elabSolicPor);
+                $('#elabTotalPorHidden').val(elabTotalPor); 
+            var ejecFonaBs = parseFloat($('#ejecFonaBs').val()) || 0;
+            var ejecucionEdtp = parseFloat({{proyecto.convocatoria.montoEjecEDTP}}).toFixed(2);
+            var ejecucionEdtp_aux = ejecucionEdtp;
+            var tipo_fin = parseInt({{proyecto.tipo_financiamiento}});
+            
+            if (tipo_fin == 1) {
+                var montoejec = ejecucionEdtp_aux - elaboracionEdtpF;
+                ejecucionEdtp = parseFloat(montoejec);
             }
 
             if (ejecFonaBs > ejecucionEdtp) {
@@ -163,17 +176,7 @@
             var ejecFonaPor = (ejecTotalBs === 0 || isNaN(parseFloat(ejecFonaBs)) || isNaN(ejecTotalBs)) ? "-" : ((parseFloat(ejecFonaBs) * 100 / parseFloat(ejecTotalBs)).toFixed(2));
             var ejecSolicPor = (ejecTotalBs === 0 || isNaN(parseFloat(ejecSolicBs)) || isNaN(ejecTotalBs)) ? "-" : ((parseFloat(ejecSolicBs) * 100 / parseFloat(ejecTotalBs)).toFixed(2));
             var ejecTotalPor = (parseFloat(ejecFonaPor) + parseFloat(ejecSolicPor)).toFixed(2);
-
-            $('#elabFonaBs').text(elabFonaBs);
-            $('#elabTotalBs').text(elabTotalBs);
-            $('#elabFonaPor').text(elabFonaPor + '%');
-            $('#elabSolicPor').text(elabSolicPor + '%');
-            $('#elabTotalPor').text(elabTotalPor + '%');
-            $('#ejecTotalBs').text(ejecTotalBs);
-            $('#ejecFonaPor').text(ejecFonaPor + '%');
-            $('#ejecSolicPor').text(ejecSolicPor + '%');
-            $('#ejecTotalPor').text(ejecTotalPor + '%');
-
+            
             if (tipo_fin == 1) {
                 if (ejecFonaPor > 70.00 && ejecSolicPor < 30.00) {
                     $('#mensajeejecFPor').text("El %Fonabosque% supera el 70%");
@@ -189,12 +192,10 @@
                         $('#mensajeejecSPor').text("");
                     }        
                 }
-
-            $('#elabFonaBsHidden').val(elabFonaBs);
-            $('#elabTotalBsHidden').val(elabTotalBs);
-            $('#elabFonaPorHidden').val(elabFonaPor);
-            $('#elabSolicPorHidden').val(elabSolicPor);
-            $('#elabTotalPorHidden').val(elabTotalPor);
+            $('#ejecTotalBs').text(ejecTotalBs);
+            $('#ejecFonaPor').text(ejecFonaPor + '%');
+            $('#ejecSolicPor').text(ejecSolicPor + '%');
+            $('#ejecTotalPor').text(ejecTotalPor + '%');
             $('#ejecTotalBsHidden').val(ejecTotalBs);
             $('#ejecFonaPorHidden').val(ejecFonaPor);
             $('#ejecSolicPorHidden').val(ejecSolicPor);
@@ -203,9 +204,8 @@
             // Revisar si los mensajes de error existen
             checkErrorMessages();
         }
-
-        // Ejecutar la función calcular cuando haya cambios en los campos
         $('#elabSolicBs, #ejecFonaBs, #ejecSolicBs').on('input', calcular);
+        // Ejecutar la función calcular cuando haya cambios en los campos
 
         // Función para verificar si algún mensaje de error existe
         function checkErrorMessages() {
