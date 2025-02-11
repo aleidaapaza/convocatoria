@@ -49,10 +49,10 @@ class R_DerechoPropietarioE(View):
         zone_list = []
         easting_list = []
         northing_list = []
-        
         index = 0
         while True:
             descripcion = request.POST.get(f'descripcion_{index}')
+            print(descripcion)
             si_registro = request.FILES.get(f'si_registro_{index}')
             no_registro = request.POST.get(f'no_registro_{index}')
             zone = request.POST.get(f'zone_{index}')
@@ -65,14 +65,14 @@ class R_DerechoPropietarioE(View):
             no_registro_texts.append(no_registro)
             zone_list.append(zone)
             easting_list.append(easting)
-            northing_list.append(northing)
-            index += 1
+            northing_list.append(northing)            
             if si_registro:                
                 if si_registro.size > 2 * 1024 * 1024:  # 2 MB
                     error_messages.append('El archivo no debe superar los 2 MB.')
                 if not si_registro.name.endswith('.pdf'):
                     error_messages.append('El archivo debe ser en formato PDF.')
             index += 1
+            
         if error_messages:
             proyecto_p = get_object_or_404(Postulacion, slug=slug)
             form = self.form(self.request.GET)
@@ -97,6 +97,7 @@ class R_DerechoPropietarioE(View):
             zone_l = zone_list[i]
             easting_l = easting_list[i]
             northing_l = northing_list[i]
+            
             if descripcion_l and not error_messages:
                 Derecho_propietario.objects.create(
                     slug=slug,
@@ -129,7 +130,7 @@ class A_DerechoPropietarioE(UpdateView):
         context = super().get_context_data(**kwargs)
         proyecto_p = get_object_or_404(Postulacion, slug=self.kwargs['slug'])
         objetivos = Derecho_propietario.objects.filter(slug=self.kwargs['slug'])
-
+        form = R_Ubicacion(instance=self.get_object(), data=self.request.POST or None)
         for objetivo in objetivos:
             if objetivo.easting is not None:
                 objetivo.easting = f"{objetivo.easting:.3f}"  # Formato con 3 decimales
@@ -137,6 +138,7 @@ class A_DerechoPropietarioE(UpdateView):
                 objetivo.northing = f"{objetivo.northing:.3f}"  # Formato con 3 decimales
 
         context.update({
+            'form' : form,
             'proyecto': proyecto_p,
             'postulacion': proyecto_p,
             'derecho': objetivos,
@@ -209,16 +211,18 @@ class A_DerechoPropietarioE(UpdateView):
 
             index += 1
 
-        for si_acta in si_registro_files:
-            if si_acta and si_acta.size > 2 * 1024 * 1024:  # 2 MB
-                error_messages.append('El archivo no debe superar los 2 MB.')
-            if not si_acta.name.endswith('.pdf'):
-                error_messages.append('El archivo debe ser en formato PDF.')
+            if si_registro:
+                if si_registro.size > 2 * 1024 * 1024:  # 2 MB
+                    error_messages.append('El archivo no debe superar los 2 MB.')
+                if not si_registro.name.endswith('.pdf'):
+                    error_messages.append('El archivo debe ser en formato PDF.')
                 
         if error_messages:
             proyecto_p = get_object_or_404(Postulacion, slug=slug)
             objetivos = Derecho_propietario.objects.filter(slug=slug)
+            ubicacion = self.model.objects.get(slug=slug)
             context = {
+                'form' : form,
                 'proyecto': proyecto_p,
                 'postulacion' : proyecto_p,
                 'derecho': objetivos,
@@ -233,6 +237,7 @@ class A_DerechoPropietarioE(UpdateView):
                 'error_messages': error_messages,  # Pasar los mensajes de error al contexto
             }
             return render(self.request, self.template_name, context)
+        
         for i in range(len(id_list)):  # Recorrer todas las filas dinámicas
             idn = id_list[i]
             descripcion = descripcion_list[i]
