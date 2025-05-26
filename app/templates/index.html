@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    {% if user.is_authenticated %}
+        {% if user.is_municipio %}
+            {% include "index/municipio.html" %}
+        {% elif user.is_revisor%}
+            {% include "index/revisor.html" %}
+        {% elif user.is_superuser %}
+            {% include "index/superuser.html" %}
+        {% endif %}
+    {% else %}
+            {% include "homepage/TipoDeConvocatoria.html" %}
+    {% endif %}
+{% endblock %}

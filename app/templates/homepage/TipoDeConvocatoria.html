@@ -1,0 +1,190 @@
+{% load static%}
+{% block contenido %}
+    <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">        
+        <div class="modal-dialog">
+            <div class="modal-content px-2">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="miModalLabel">Bienvenido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {% if message_content %}
+                    <p class="text-primary p-2">{{ message_content }}</p>
+                {% endif %}                
+                {% if activo %}
+                    {% if fechaActivo %}
+                    <div class="modal-body px-1">
+                        <b> PASOS PARA EL LLENADO DE LA PLATAFORMA</b>
+                        <p><b>PRIMER PASO: </b>INGRESAR LOS DATOS DE CUMPLIMIENTO DE CRITERIOS.</p>
+                        <p>Para registrar la solicitud se debe de completar <i class="text-info">todos los pasos </i> hasta que le 
+                        <i class="text-black">APAREZCA LA CONFIRMACION DEL REGISTRO</i></p>
+                        <p><b>SEGUNDO PASO: </b>REVISION DE LA VERICIDAD DE LA INFORMACION ENVIADA EN LA SOLICITUD.</p>
+                        <p><b>TERCER PASO: </b>ASIGNACION DE USUARIO Y CONTRASEÑA PARA EL LLENADO DE LA INFORMACION REQUERIDA.</p>
+                        <p>Se enviara al Responsable del Proyecto el link de ingreso a la plataforma con el Usuario y Contraseña para el llenado de toda la informacion completa</p>
+                        <p><b>CUARTO PASO: </b>INGRESO A LA PLATAFORMA PARA EL LLENADO DE LA INFORMACION.</p>
+                        <p><b>QUINTO PASO: </b>LLENADO Y ENVIO DE LA INFORMACION.</p>
+                        <hr>
+                        Estas son unas <b>RECOMENDACIONES</b> para el <b>LLENADO</b> del formulario:
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Los archivos que se <b>suban/cargen</b> a la plataforma<i class="text-danger"> <b> no deben de exeder los 2MB de peso</b></i></li>
+                            <li class="list-group-item">Los archivos que se <b>suban/cargen</b> a la plataforma<i class="text-danger"> <b> deben ser LEGIBLES</b></i></li>
+                            <li class="list-group-item">Toda informacion que se proporciona en la plataforma<i class="text-danger"> <b> debe ser LEGIBLE y ENTENDIBLE</b></i></li>
+                            <li class="list-group-item"><b>Evitar</b> presentar informacion con indicios de <i class="text-danger"> <b> plagio, falsedad material o ideologica</b></i></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <div class="px-2">
+                        {{message_fecha}}
+                    </div>                        
+                    {% endif %}                    
+                {% else %}
+                    <div class="modal-body px-2">
+                        {{message}}
+                    </div>
+                {% endif %}       
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if activo %}
+        {% if fechaActivo %}
+            <div class="row">
+                <div class="card py-2">
+                    <img src="{{convocatoria.banner.url}}" class="card-img-top" height="150px">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">{{convocatoria.nombre}}</h1>
+                        {% if convocatoria.extra %}
+                            <p class="card-text text-center"> {{convocatoria.extra}} </p>
+                        {% endif %}
+                    </div>
+                    <div class="text-center bg-info-subtle">
+                        <h4 class="card-body">CUENTA REGRESIVA PARA EL CIERRE DE LA CONVOCATORIA <p class="contador" id="tiempoAct"></p></h4>
+                        <h4 class="card-text">FECHA DE CIERRE CONVOCATORIA: {{fecha_expiracion}}> 
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <h5 class="text-center">MATERIAL DE APOYO</h5>
+                    <div class="col-6 text-center px-3">
+                        <a href="{{convocatoria.documento.url}}">
+                            <div class="py-2 rounded-4 bg-success text-white"><h1><i class="fa fa-file-text text-lg-center" aria-hidden="true"></i></h1>DOCUMENTO DE LA CONVOCATORIA</div>
+                        </a>
+                    </div>
+                    <div class="col-6 text-center px-3">
+                        <a href="{{convocatoria.guia.url}}">
+                            <div class="py-2 rounded-4 bg-success text-white"><h1><i class="fa fa-book text-lg-center" aria-hidden="true"></i></h1>GUIA PARA EL LLENADO DE LA CONVOCATORIA</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class"row ">
+                <div class="mb-3 row">
+                    <div class="col-md-8 col-sm-8 fw-bold col-form-label text-end">INGRESA EL CODIGO PARA MODIFICAR TU SOLICITUD</div>
+                    <div class="col-md-4 col-sm-4 align-items-center ">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                            <input type="text" id="campo" class='form-control form-control-sm font-weight-bold border border-info' placeholder="Escribe aquí el codigo">
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                            <button onclick="redirigirConDato()" class="btn btn-primary ">Enviar</button>
+                            </div>
+                        </div>
+                        
+                    </div>                            
+                </div>
+            </div>
+            <hr>
+            <h1 class="text-center">FORMULARIO DE SOLICITUD</h1>
+            <hr>
+            <div class="text-center py-3">
+                <div class="row">
+                    <div class="col steps">
+                        <div class="step-circle bg-success text-white">1</div>
+                        <div class="step-circle">2</div>
+                        <div class="step-circle">3</div>
+                        <div class="step-circle">4</div>
+                        <div class="step-circle">5</div>
+                        <div class="step-circle">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4 class="text-center text-bg-success ">SELECCIONE EL TIPO DEL FINANCIAMIENTO</h4>                        
+                    <div class="row align-items-start justify-content-center p-5">
+                    {% if convocatoria.elabEdtp and convocatoria.EjecEdtp %}
+                        <div class="col-sm-6 col-md-6 pt-3">
+                            <a href="{% url 'solicitud:Departamento' '1' %}" style="text-decoration: none; color: inherit;">
+                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA LA ELABORACION DEL EDTP</h3>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-6 pt-3">
+                            <a href="{% url 'solicitud:Departamento' '2' %}" style="text-decoration: none; color: inherit;">
+                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA EJECUCION DEL EDTP</h3>
+                            </a>
+                        </div>
+                    {% elif convocatoria.elabEdtp %}
+                        <div class="col-sm-6 col-md-6 pt-3">
+                            <a href="{% url 'solicitud:Departamento' '1' %}" style="text-decoration: none; color: inherit;">
+                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA ELABORACION DEL EDTP</h3>
+                            </a>
+                        </div>
+                    {% elif convocatoria.EjecEdtp %}
+                        <div class="col-sm-6 col-md-6 pt-3">
+                            <a href="{% url 'solicitud:Departamento' '2' %}" style="text-decoration: none; color: inherit;">
+                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA EJECUCION DEL EDTP</h3>
+                            </a>
+                        </div>
+                    {% endif %}                        
+                    </div>
+                </div>
+            
+            </div>
+        {% else %}
+            <h3 class="text-center bg-success rounded-3 text-white"> {{message_fecha}}</h3>
+            <h3 class="text-center rounded-3 text-black fw-bold"> {{convocatoria.nombre}}</h3>
+            <h3 class="text-center rounded-3 text-black fw-bold"> FECHA DE {{estadotemporal}}: {{fecha_expiracion}}</h3>
+            <div class="contador">
+                <p id="tiempo"></p>
+            </div>
+            <div class="card text-center" style="background: transparent;">
+                <img src="{% static 'img/fondo/cierre.png' %}" class="card-img-top" alt="...">
+            </div>
+        {% endif %}      
+    {% elif conteo > 1 %}
+        <div class="col-md-3 mt-2">
+            <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
+        </div>
+        <div class="card text-center" style="background: transparent;">
+            <img src="{{imagen}}" class="card-img-top" alt="...">
+        </div>
+    {% else %}
+        <div class="col-md-3 mt-2">
+            <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
+        </div>
+        <div class="card text-center" style="background: transparent;">                                             
+            <img src="{% static 'img/fondo/esperando.png' %}" class="card-img-top" alt="...">                        
+        </div>
+    {% endif %}    
+{% endblock contenido %}
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('miModal'));
+        myModal.show();
+    });
+</script>
+<script>
+        function redirigirConDato() {
+            const campoDatos = document.getElementById('campo').value;  // Obtiene el valor del campo
+            const urlBase = "{% url 'solicitud:Actualizar_Ficha' 0 %}";  // Usa un valor placeholder
+
+            // Construye la URL con el valor del campo
+            const urlCompleta = urlBase.replace('0', encodeURIComponent(campoDatos));
+            window.location.href = urlCompleta;  // Redirige a la nueva URL
+        }
+</script>
+{% endblock js %}

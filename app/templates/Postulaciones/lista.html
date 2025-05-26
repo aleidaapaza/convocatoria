@@ -1,0 +1,47 @@
+{% extends 'base/baseListasDatos.html' %}
+{% load static %}
+{% block thead %}
+    <tr>
+        <th scope="col">CONVOCATORIA</th>
+        <th scope="col">DEPARTAMENTO</th>
+        <th scope="col">ENTIDAD TERRITORIAL</th>
+        <th scope="col">MUNICIPIO</th>
+        <th scope="col">NOMBRE DE LA MAE</th>
+        <th scope="col">FECHA Y HORA REGISTRO</th>
+        <th scope="col">Estado</th>
+        <th scope="col">VER/EDITAR</th>
+    </tr>
+
+{% endblock %}
+{% block tbody %}
+    {% for postulacion in object_list %}
+        <tr>
+            <td> {{ postulacion.convocatoria.nombre }}</td>
+            <td> {{ postulacion.municipio.departamento }}</td>
+            <td> {{ postulacion.municipio.entidad_territorial }} </td>
+            <td> {{ postulacion.municipio.nombre_municipio }}</td>
+            <td> {{ postulacion.mae.persona.nombrecompleto }}</td>
+            <td> {{ postulacion.fecha_registro }}</td>
+            
+            <td>
+            {% if postulacion.municipio.estado == 'SOLICITUD' %}
+                SOLICITUD
+            {% elif postulacion.estado %}
+                APROBADO
+            {% elif not postulacion.estado %}
+                RECHAZADO
+            {% endif %}</td>
+            <td>
+                <a href=" {% url 'solicitud:Ficha_solicitud' postulacion.slug %} " type="button"
+                   class="btn btn-primary btn-xs">
+                   {% if postulacion.municipio.estado == 'SOLICITUD' %}
+                   <i class="fas fa-edit"></i>
+                   {% else %}
+                   <i class="fa fa-eye"></i>
+                   {% endif %}
+                   
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
+        {% if entity_registro %}
+            <div class="col-md-3 mt-2">
+                <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
+            </div>
+        {% endif %} 
+        {% block errores %}
+
+        {% endblock %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>BENEFICIARIOS</th>
+                        <th>N° HOMBRES</th>
+                        <th>N° MUJERES</th>
+                        <th>HOMBRES %</th>
+                        <th>MUJERES %</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="product-rows">
+                    <tr>
+                        <td>DIRECTOS</td>
+                        <td><input type="number" id="hombresDirecto" name="hombresDirecto" value="0" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                        <td><input type="number" id="mujeresDirecto" name="mujeresDirecto" value="0" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                        <td id="porcentaje_hombresDirecto">0%</td>
+                        <td id="porcentaje_mujeresDirecto">0%</td>
+                        <td id="totalDirecto">0</td>
+                    </tr>
+                    <tr>
+                        <td>INDIRECTOS</td>
+                        <td><input type="number" id="hombresIndirecto" name="hombresIndirecto" value="0" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                        <td><input type="number" id="mujeresIndirecto" name="mujeresIndirecto" value="0" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                        <td id="porcentaje_hombresIndirecto">0%</td>
+                        <td id="porcentaje_mujeresIndirecto">0%</td>
+                        <td id="totalIndirecto">0</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL</td>
+                        <td id="totalHombre">0</td>
+                        <td id="totalMujeres">0</td>
+                        <td id="porcentaje_hombresTotal">0%</td>
+                        <td id="porcentaje_mujeresTotal">0%</td>
+                        <td id="total">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>BENEFICIARIOS</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="product-rows">
+                    <tr>
+                        <td>N°FAMILIAS</td>
+                        <td><input type="number" id="familia" name="familia" value="0" class="form-control form-control-sm font-weight-bold border border-info"></td>                    
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+        <div class="row text-center row mt-2">
+            <div class="col">
+                <button class="btn btn-success" type="submit">
+                    <i class="fas fa-save"></i>GUARDAR</button>
+            </div>
+            <div class="col">
+                <a href="{{ accion2_url }}" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i>{{ accion2 }}</a>
+            </div>
+        </div>
+    </form>
+{% endblock contenido %}
+
+{% block funcScript %}
+<script>
+        $(document).ready(function() {
+            function calcular() {
+                
+                var hombresDirecto = parseInt($('#hombresDirecto').val()) || 0;
+                var mujeresDirecto = parseInt($('#mujeresDirecto').val()) || 0;                
+                var totalDirecto = hombresDirecto + mujeresDirecto;
+                var porcentajehombresDirecto = totalDirecto > 0 ? (hombresDirecto / totalDirecto * 100).toFixed(2) : 0;
+                var porcentajemujeresDirecto = totalDirecto > 0 ? (mujeresDirecto / totalDirecto * 100).toFixed(2) : 0;
+
+                var hombresIndirecto = parseInt($('#hombresIndirecto').val()) || 0;
+                var mujeresIndirecto = parseInt($('#mujeresIndirecto').val()) || 0;
+                var totalIndirecto = hombresIndirecto + mujeresIndirecto;
+                var porcentajehombresIndirecto = totalIndirecto > 0 ? (hombresIndirecto / totalIndirecto * 100).toFixed(2) : 0;
+                var porcentajemujeresIndirecto = totalIndirecto > 0 ? (mujeresIndirecto / totalIndirecto * 100).toFixed(2) : 0;
+
+                var totalHombre = hombresDirecto + hombresIndirecto
+                var totalMujeres = mujeresDirecto + mujeresIndirecto
+                var total = totalHombre + totalMujeres;
+                var porcentajetotalHombre = total > 0 ? (totalHombre / total * 100).toFixed(2) : 0;
+                var porcentajetotalMujeres = total > 0 ? (totalMujeres / total * 100).toFixed(2) : 0;
+
+                $('#totalHombre').text(totalHombre);
+                $('#totalMujeres').text(totalMujeres);
+                $('#total').text(total);
+                $('#porcentaje_hombresTotal').text(porcentajetotalHombre + '%');
+                $('#porcentaje_mujeresTotal').text(porcentajetotalMujeres + '%');
+
+                $('#totalDirecto').text(totalDirecto);
+                $('#porcentaje_hombresDirecto').text(porcentajehombresDirecto + '%');
+                $('#porcentaje_mujeresDirecto').text(porcentajemujeresDirecto + '%');
+
+                $('#totalIndirecto').text(totalIndirecto);
+                $('#porcentaje_hombresIndirecto').text(porcentajehombresIndirecto + '%');
+                $('#porcentaje_mujeresIndirecto').text(porcentajemujeresIndirecto + '%');
+            }
+
+            $('#hombresDirecto, #mujeresDirecto, #hombresIndirecto, #mujeresIndirecto').on('input', calcular);
+        });
+    </script>
+{% endblock funcScript %}

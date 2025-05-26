@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    {% if not user.is_authenticated%}
+        <div class="text-center py-3">
+                <div class="row justify-content-md-center">
+                    <div class="col steps">
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle bg-success text-white">5</div>
+                        <div class="step-circle">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_financiamiento }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_departamento }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_entidad }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE LA ENTIDAD EJECUTORIA</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ aux_municipio }}</div>                            
+                </div>
+                <div class="row">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h3 class="text-center text-bg-primary">{{ titulo }}</h3>
+                        <div class="row mt-2">
+                            <div class="col-md-6 card card-body">
+                                {% for field2 in form2 %}
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 col-form-label text-end">{{ field2.label_tag }}</div>
+                                        <div class="col-sm-8">
+                                            <div class="">
+                                                {{ field2 }}
+                                            </div>
+                                            <div class="">
+                                                {% for error in field2.errors %}
+                                                    <span style="color: red">({{ error }})</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% for field in form %}
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                        <div class="col-sm-8">
+                                            <div class="">
+                                                {{ field }}
+                                            </div>
+                                            <div class="">
+                                                {% for error in field.errors %}
+                                                    <span style="color: red">({{ error }})</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}                          
+                            </div>
+                        </div>
+                        <div class="row text-center row mt-2">
+                            <div class="col">
+                                <button class="btn btn-success" type="submit"><i class="fas fa-save"></i>
+                                    {{ accion }}</button>
+                            </div>
+                            <div class="col">
+                                <a href="{{ accion2_url }}" class="btn btn-danger">
+                                    {% if accion2 == 'Limpiar' %}<i class="fas fa-trash-alt"></i> {% else %}
+                                        <i class="fas fa-undo-alt"></i>{% endif %}{{ accion2 }}</a>
+                            </div>
+                        </div>                        
+                    </form>
+                          
+                </div>                
+            </div>
+        </div>
+    {% endif %}
+{% endblock contenido %}

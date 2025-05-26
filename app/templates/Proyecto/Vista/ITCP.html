@@ -1,0 +1,790 @@
+
+<div class="accordion" id="accordionExample">
+        <!-- cero ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingcero">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsecero" aria-expanded="true" aria-controls="collapsecero">
+                    0. DATOS DE CONTACTO DEL PROYECTO
+                </button>
+            </h2>
+            <div id="collapsecero" class="accordion-collapse collapse show" aria-labelledby="headingcero" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{postulacion.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">CODIGO PROYECTO</th>
+                            <th scope="col">DEPARTAMENTO</th>
+                            <th scope="col">ETA</th>
+                            <th scope="col">MUNICIPIO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{postulacion.slug}} </td>
+                                <td> {{postulacion.municipio.departamento}} </td>
+                                <td> {{postulacion.municipio.entidad_territorial}} </td>
+                                <td> {{postulacion.municipio.nombre_municipio}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">NOMBRE DE MAE</th>
+                            <th scope="col">CARG MAE</th>
+                            <th scope="col">CELULAR MAE</th>
+                            <th scope="col">CORREO DOMICILIO LEGAL PARA NOTIFICACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{postulacion.mae.persona.nombrecompleto}} </td>
+                                <td> {{postulacion.mae.persona.cargo}} </td>
+                                <td> {{postulacion.mae.persona.celular}} </td>
+                                <td> {{postulacion.mae.correo}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">NOMBRE RESPONSABLE</th>
+                            <th scope="col">CARGO RESPONSABLE</th>
+                            <th scope="col">CELULAR RESPONSABLE</th>
+                            <th scope="col">CORREO ELECTRONICO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{postulacion.responsable.persona.nombrecompleto}} </td>
+                                <td> {{postulacion.responsable.persona.cargo}} </td>
+                                <td> {{postulacion.responsable.persona.celular}} </td>
+                                <td> {{postulacion.responsable.correo}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segundo ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    1. DATOS PRINCIPALES DEL PROYECTO
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.datos_basicos.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.datos_basicos.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td><b>BENEFICIARIOS</b> </td>
+                                <td> {{proyecto.datos_basicos.comunidades}} </td>
+                            </tr>
+                            <tr>
+                                <td><b>NOMBRE DEL PROYECTO</b></td>
+                                <td> {{proyecto.datos_basicos.nombre}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td> <b>TIPOLOGIA DEL PROYECTO</b> </td>
+                                <td> 
+                                {% if proyecto.datos_basicos.tipologia_proy %}
+                                Proyecto de Desarrollo Social
+                                {% else %}
+                                {% endif %}
+                                </td>
+                                <td><b>PERIODO DE EJECUCION</b> </td>
+                                <td> {{proyecto.datos_basicos.periodo_ejecu}} </td>                                
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tercer ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    2. JUSTIFICACION DE LA INICIATIVA DEL PROYECTO
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.justificacion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.justificacion.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>El proyecto esta acorde a los principios y derechos establecidos en Constitución Política del Estado ?</td>
+                                <td> {{proyecto.justificacion.justificacion1}} </td>                                
+                            </tr>
+                            <tr>
+                                <td>El proyecto esta acorde a Los lineamientos de la Agenda Patriótica 2025 y la Ley N° 300 Marco de la Madre Tierra y Desarrollo Integral para Vivir Bien ?</td>
+                                <td> {{proyecto.justificacion.justificacion2}} </td>                                
+                            </tr>
+                            <tr>
+                                <td>El Proyecto esta acorde a la normativa del Plan Sectorial de Desarrollo Integral del Ministerio de Medio Ambiente y Agua ?</td>
+                                <td> {{proyecto.justificacion.justificacion3}} </td>                                
+                            </tr>
+                            <tr>
+                                <td>El Proyecto esta acorde a la normativa de la Ley de Autonomías y Descentralización 'ANDRES IBAÑEZ' ?</td>
+                                <td> {{proyecto.justificacion.justificacion4}} </td>                                
+                            </tr>
+                            <tr>
+                                <td>El Proyecto esta acorde a la normativa de la Ley Forestal ?</td>
+                                <td> {{proyecto.justificacion.justificacion5}} </td>                                
+                            </tr>
+                            <tr>
+                                <td>El Proyecto esta acorde al Plan Territorial de Desarrollo Integral (PTDI) ?</td>
+                                <td> {{proyecto.justificacion.justificacion6}} </td>                                
+                            </tr>
+                            <tr>
+                                <td>El Proyecto está dentro de la normativa de los Planes de Gestión Territorial Comunitaria (PGTC)?</td>
+                                <td> {{proyecto.justificacion.justificacion7}} </td>                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- tres ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    3. IDEA DEL PROYECTO
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.ideaProyecto.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.ideaProyecto.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">ANTECEDENTES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.antecedente|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">DIAGNOSTICO DEL PROYECTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.diagnostico|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">PLANTEAMIENTO DEL PROBLEMA / NECESIDAD A RESOLVER CON EL PROYECTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.planteamiento_problema|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">ACTORES INVOLUCRADOS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.actores_involucrados|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">ALTERNATIVA DE SOLUCION 1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.alternativa_1|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">ALTERNATIVA DE SOLUCION 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.alternativa_2|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">ALTERNATIVA ELEGIDA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.elige_alternativa}} </td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">JUSTIFICACION DE LA ALTERNATIVA ELEGIDA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.justificacion_alter|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">OBJETIVO GENERAL DEL PROYECTO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.objetivo_general|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <b>Objetivos especificos:</b>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">OBJETIVO ESPECIFICO</th>
+                            <th scope="col">COMPONENTE</th>
+                            <th scope="col">SITUACION ACTUAL / LINEA DE BASE</th>
+                            <th scope="col">INDICADOR</th>
+                            <th scope="col">META</th>
+                            <th scope="col">FECHA ULTIMA MODIFICACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for objetivos in objetivo %}
+                            <tr>
+                                <td> {{objetivos.objetivo|linebreaksbr}} </td>
+                                <td> {{objetivos.componente|linebreaksbr}} </td>
+                                <td> {{objetivos.linea_base|linebreaksbr}} </td>
+                                <td> {{objetivos.indicador|linebreaksbr}} </td>
+                                <td> {{objetivos.meta|linebreaksbr}} </td>
+                                <td> {{objetivos.fecha_actualizacion}} </td>
+                            </tr>
+                        {% endfor %}                            
+                        </tbody>
+                    </table>
+                    <b>Beneficiarios del proyecto:</b>                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">BENEFICIOS ESPERADOS DEL PROYECTO (AMBIENTAL, SOCIAL Y ECONOMICO)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.ideaProyecto.beneficios_alter}} </td>
+                            </tr>       
+                        </tbody>
+                    </table>
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.beneficiario.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.beneficiario.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">BENEFICIARIOS</th>
+                            <th scope="col">HOMBRES</th>
+                            <th scope="col">MUJERES</th>
+                            <th scope="col">TOTAL</th>
+                            <th scope="col">%HOMBRES</th>
+                            <th scope="col">%MUJERES</th>
+                            <th scope="col">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> DIRECTOS </td>
+                                <td> {{proyecto.beneficiario.hombre_directo}} </td>
+                                <td> {{proyecto.beneficiario.mujer_directo}} </td>
+                                <td> {{total_directo}} </td>
+                                <td> {{p_hombre_dir}}% </td>
+                                <td> {{p_mujer_dir}}% </td>
+                                <td> {{p_total_dir}}% </td>
+                            </tr>
+                            <tr>
+                                <td> INDIRECTOS </td>
+                                <td> {{proyecto.beneficiario.hombre_indirecto}} </td>
+                                <td> {{proyecto.beneficiario.mujer_indirecto}} </td>
+                                <td> {{total_indirecto}} </td>
+                                <td> {{p_hombre_indir}}% </td>
+                                <td> {{p_mujer_indir}}%</td>
+                                <td> {{p_total_indir}}% </td>
+                            </tr>
+                            <tr>
+                                <td> TOTAL </td>
+                                <td> {{total_hombre}} </td>
+                                <td> {{total_mujer}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">BENEFICIARIOS</th>
+                            <th scope="col">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> NRO FAMILIAS </td>
+                                <td> {{proyecto.beneficiario.familia}} </td>
+                            </tr>       
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- CUATRO ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingfour">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    4. ITCP - MODELO DE ACTA DE CONOCIMIENTO Y ACEPTACION DEL PROYECTO
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingfour" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">TIPO Y NOMBRE DE BENEFICIARIO</th>
+                            <th scope="col">ACTA</th>
+                            <th scope="col">JUSTIFICACION</th>
+                            <th scope="col">FECHA ULTIMA ACTUALIZACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for modelos in modelo %}
+                            <tr>
+                                <td> {{modelos.comunidades}} </td>
+                                <td> {{modelos.si_acta}} 
+                                {% if modelos.si_acta %}
+                                <a href="{% url 'descargar_modeloacta' proyecto.slug modelos.id %}" class="btn btn-primary">
+                                    Descargar Archivo
+                                </a>
+                                {% else %}
+                                {% endif %} 
+                                </td>
+                                <td> {{modelos.no_acta}} </td>
+                                <td> {{modelos.fecha_actualizacion}} </td>
+                            </tr>
+                        {% endfor %}                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- cinco ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingfive">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    5. ESTADO DE SITUACION LEGAL DEL DERECHO PROPIETARIO DE LOS PREDIOS EN LOS QUE SE IMPLEMENTARA EL PROYECTO 
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingfive" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                                <th scope="col">DESCRIPCION DEL DERECHO PROPIETARIO</th>
+                                <th scope="col">REGISTRO DEL DERECHO PROPIETARIO</th>
+                                <th scope="col">DE NO CONTAR CON DERECHO PROPIETARIO DETERMINAR LAS ACCIONS A REALIZAR Y PLAZO</th>
+                                <th scope="col">GEOREFERENCIACION</th>
+                                <th scope="col">FECHA ULTIMA ACTUALIZACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for derechos in derecho %}
+                            <tr>
+                                <td> {{derechos.descripcion|linebreaksbr}} </td>
+                                <td> {{derechos.si_registro}} 
+                                {% if derechos.si_registro %}
+                                    <a href="{% url 'descargar_derechoProp' proyecto.slug derechos.id %}" class="btn btn-primary">
+                                        Descargar Archivo
+                                    </a>
+                                {% else %}
+                                {% endif %}
+                                </td>
+                                <td> {{derechos.no_registro}} </td>
+                                <td> Z={{derechos.zone}}K {{derechos.easting}}m E {{derechos.northing}}m N </td>
+                                <td> {{derechos.fecha_actualizacion}} </td>
+                            </tr>
+                        {% endfor %}                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- seis ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingsix">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesix" aria-expanded="false" aria-controls="collapsesix">
+                    6. IDENTIFICACION DE POSIBLES IMPACTOS AMBIENTALES
+                </button>
+            </h2>
+            <div id="collapsesix" class="accordion-collapse collapse" aria-labelledby="headingsix" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.impactoAmbiental.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.impactoAmbiental.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">COMPONENTE AMBIENTAL</th>
+                            <th scope="col">BOSQUE</th>
+                            <th scope="col">SUELO</th>
+                            <th scope="col">AGUA</th>
+                            <th scope="col">AIRE</th>
+                            <th scope="col">BIODIVERSIDAD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> NIVEL </td>
+                                <td> {{proyecto.impactoAmbiental.bosque_nivel}} </td>
+                                <td> {{proyecto.impactoAmbiental.suelo_nivel}} </td>
+                                <td> {{proyecto.impactoAmbiental.agua_nivel}} </td>
+                                <td> {{proyecto.impactoAmbiental.aire_nivel}} </td>
+                                <td> {{proyecto.impactoAmbiental.biodiversidad_nivel}} </td>
+                            </tr>
+                            <tr>
+                                <td> TEMPORALIDAD </td>
+                                <td> {{proyecto.impactoAmbiental.bosque_tempo}} </td>
+                                <td> {{proyecto.impactoAmbiental.suelo_tempo}} </td>
+                                <td> {{proyecto.impactoAmbiental.agua_tempo}} </td>
+                                <td> {{proyecto.impactoAmbiental.aire_tempo}} </td>
+                                <td> {{proyecto.impactoAmbiental.biodiversidad_tempo}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- siete ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingseven">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseseven" aria-expanded="false" aria-controls="collapseseven">
+                    7. IDENTIFICACION DE POSIBLES RIESGOS AMBIENTALES
+                </button>
+            </h2>
+            <div id="collapseseven" class="accordion-collapse collapse" aria-labelledby="headingseven" data-bs-parent="#accordionExample">
+                <div class="accordion-body">                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">RIESGOS</th>
+                            <th scope="col">NIVEL</th>
+                            <th scope="col">FECHA ULTIMA ACTUALIZACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for riesgos in riesgo %}
+                            <tr>
+                                <td> {{riesgos.riesgo}} </td>
+                                <td> {{riesgos.nivel}} </td>
+                                <td> {{riesgos.fecha_actualizacion}} </td>
+                            </tr>
+                        {% endfor %}                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- ocho ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingeight">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseeight" aria-expanded="false" aria-controls="collapseeight">
+                    8. OTROS ASPECTOS QUE SE CONSIDEREN NECESARIOS, DE ACUERDO A LAS CARACTERISTICAS Y COMPLEJIDAD DEL PROYECTO
+                </button>
+            </h2>
+            <div id="collapseeight" class="accordion-collapse collapse" aria-labelledby="headingeight" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.detallePoa.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.detallePoa.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">DETALLE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.detallePoa.descripcion|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- nueve ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingnine">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsenine" aria-expanded="false" aria-controls="collapsenine">
+                    9. PRESUPUESTO REFERENCIAL
+                </button>
+            </h2>
+            <div id="collapsenine" class="accordion-collapse collapse" aria-labelledby="headingnine" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.presupuestoRef.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.presupuestoRef.fecha_actualizacion}} </div>
+                    </div>
+                    {% if postulacion.tipo_financiamiento == 1 %}                    
+                    <b>Elaboracion Estudio de Diseño Tecnico de preinversion - EDTP:</b>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">FONABOSQUE (Bs.)</th>
+                            <th scope="col">SOLICITANTE (Bs.)</th>
+                            <th scope="col">TOTAL (Bs.)</th>
+                            <th scope="col">FONABOSQUE %</th>
+                            <th scope="col">SOLICITANTE %</th>
+                            <th scope="col">% TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.presupuestoRef.elab_fona}} </td>
+                                <td> {{proyecto.presupuestoRef.elab_sol}} </td>
+                                <td> {{proyecto.presupuestoRef.elab_total}} </td>
+                                <td> {{proyecto.presupuestoRef.elab_fona_p}}% </td>
+                                <td> {{proyecto.presupuestoRef.elab_sol_p}}%</td>
+                                <td> {{proyecto.presupuestoRef.elab_total_p}}%</td>
+                            </tr>       
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    <b>Ejecucion Estudio de Diseño Tecnico de preinversion - EDTP:</b>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">FONABOSQUE (Bs.)</th>
+                            <th scope="col">SOLICITANTE (Bs.)</th>
+                            <th scope="col">TOTAL (Bs.)</th>
+                            <th scope="col">FONABOSQUE %</th>
+                            <th scope="col">SOLICITANTE %</th>
+                            <th scope="col">% TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.presupuestoRef.ejec_fona}} </td>
+                                <td> {{proyecto.presupuestoRef.ejec_sol}} </td>
+                                <td> {{proyecto.presupuestoRef.ejec_total}} </td>
+                                <td> {{proyecto.presupuestoRef.ejec_fona_p}}% </td>
+                                <td> {{proyecto.presupuestoRef.ejec_sol_p}}%</td>
+                                <td> {{proyecto.presupuestoRef.ejec_total_p}}%</td>
+                            </tr>       
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- diez ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingten">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseten" aria-expanded="false" aria-controls="collapseten">
+                    10. CONCLUSIONES Y RECOMENDACIONES
+                </button>
+            </h2>
+            <div id="collapseten" class="accordion-collapse collapse" aria-labelledby="headingten" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.conclusion.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.conclusion.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">CONCLUSIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.conclusion.conclusion|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">RECOMENDACIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.conclusion.recomendacion|linebreaksbr}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- once ítem del menú -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingeleven">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseeleven" aria-expanded="false" aria-controls="collapseeleven">
+                    11. DECLARACION JURADA
+                </button>
+            </h2>
+            <div id="collapseeleven" class="accordion-collapse collapse" aria-labelledby="headingeleven" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row p-3">
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA DATOS ENVIADOS</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.declaracionJurada.fecha_registro}} </div>
+                        <div class="col-3 pt-2 text-end fw-bold">FECHA ULTIMA ACTUALIZACION</div>
+                        <div class="col-3 pt-2 fw-bold bg-white font-weight-bold border border-info"> {{proyecto.declaracionJurada.fecha_actualizacion}} </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">DECLARACION JURADA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.declaracionJurada.declaracion}} 
+                                {% if proyecto.declaracionJurada.declaracion %}
+                                    <a href="{% url 'descargar_docDeclaracion' proyecto.slug '1' %}" class="btn btn-info">
+                                        Descargar Archivos
+                                    </a>
+                                {% else %}
+                                {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% if postulacion.tipo_financiamiento == 1 %}
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="table-info">
+                                <th scope="col">CARTA DE SOLICITUD DE FINANCIAMIENTO PARA ELABORACION DE EDTP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td> {{proyecto.declaracionJurada.carta_elab}}
+                                    {% if proyecto.declaracionJurada.carta_elab %}
+                                        <a href="{% url 'descargar_docDeclaracion' proyecto.slug '3' %}" class="btn btn-info">
+                                            Descargar Archivos
+                                        </a>
+                                    {% else %}
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">CARTA DE SOLICITUD DE FINANCIAMIENTO PARA EJECUCION DE EDTPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.declaracionJurada.carta_ejec}}
+                                {% if proyecto.declaracionJurada.carta_ejec %}
+                                    <a href="{% url 'descargar_docDeclaracion' proyecto.slug '4' %}" class="btn btn-info">
+                                        Descargar Archivos
+                                    </a>
+                                {% else %}
+                                {% endif %}
+                                 </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="table-info">
+                            <th scope="col">ITCP FOLIADO Y RUBRICADO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> {{proyecto.declaracionJurada.itcp}}
+                                {% if proyecto.declaracionJurada.itcp %}
+                                    <a href="{% url 'descargar_docDeclaracion' proyecto.slug '2' %}" class="btn btn-info">
+                                        Descargar Archivos
+                                    </a>
+                                {% else %}
+                                {% endif %}
+                                 </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>

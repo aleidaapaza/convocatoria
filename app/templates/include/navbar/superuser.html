@@ -1,0 +1,98 @@
+{% load static %}
+<div style="background-color: #4da358">
+    <ul class="nav nav-tabs d-flex justify-content-between w-100">
+        <li class="nav-item d-flex align-items-center">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                <i class="fa fa-align-justify" aria-hidden="true"></i>
+            </button>
+        </li>
+        <li class="nav-item ms-auto d-flex align-items-center justify-content-center p-3">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" class="nav-link font-weight-bold"><i class="fas fa-user-alt"></i> Bienvenido {{ request.user.username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'user:Logout' %}" class="nav-link font-weight-bold"><i class="fas fa-sign-in-alt"></i> Cerrar sesión</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}"><i class="fas fa-home"></i> INICIO</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'convocatoria:lista_convocatoria' %}"><i class="fas fa-list-alt"></i> LISTA DE CONVOCATORIAS</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:lista_revisor' %}"><i class="fas fa-users-cog"></i> LISTA DE REVISORES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:Registro_Revisor' %}"><i class="fas fa-user-plus"></i> REGISTRO DE REVISORES</a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaCompleta' %}"><i class="fas fa-th-list"></i> LISTA COMPLETA ITCP Y EDTP</a>
+                    <hr>
+                </li>                
+                <li class="nav-item bg-info">
+                    <p class="text-center fw-bold">ITCP</p>
+                </li>  
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">SOLICITUDES</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' %}"><i class="fas fa-file-alt"></i> LISTA DE SOLICITUDES - SIN REVISAR</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaRechazados' %}"><i class="fas fa-times-circle"></i> LISTA DE SOLICITUDES - NO APROBADOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fas fa-sign-in-alt"></i> LISTA DE SOLICITUDES - APROBADOS CON INICIO DE SESION</a>
+                </li>
+                <hr>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS APROBADOS CON INICIO DE SESION</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datos' %}"><i class="fas fa-database"></i> LISTA COMPLETA</a>
+                </li>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS EN REVISION/APROBADOS</p>
+                </div>
+
+                <li class="nav-item bg-info">
+                    <p class="text-center fw-bold">EDTP</p>
+                </li>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">SOLICITUDES</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitudEj' %}"><i class="fas fa-file-alt"></i> LISTA DE SOLICITUDES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'solicitud:ListaRechazadosEj' %}"><i class="fas fa-times-circle"></i> LISTA DE NO APROBADOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_inicioEjec' %}"><i class="fas fa-sign-in-alt"></i> LISTA DE APROBADOS CON INICIO DE SESION</a>
+                </li>
+                <hr>
+                <div class="offcanvas-header">
+                    <p class="offcanvas-title fw-bold" id="offcanvasWithBothOptionsLabel">PROYECTOS APROBADOS CON INICIO DE SESION</p>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:lista_datosEjec' %}"><i class="fas fa-database"></i> COMPLETA</a>
+                </li>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+<div class="row card card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>.</th>
+                <th>DESCRIPCION DEL DERECHO PROPIETARIO DEL PREDIO / TITULO EJECUTORIAL </th>
+                <th>ADJUNTAR REGISTRO DE DERECHOS REALES</th>
+                <th>DE NO CONTAR CON UN DERECHO PROPIETARIO DETERMINAR LAS ACCIONES A REALIZAR</th>
+                <th>GEOREFERENCIA (COORDENADAS UTM) </th>
+            </tr>
+        </thead>
+        <tbody id="product-rows">
+            {% for producto in derecho %}
+                <tr>
+                    <td>
+                        <input type="hidden" name="id_{{ forloop.counter0 }}" value="{{ producto.id }}">
+                    </td>
+                    <td>
+                        <textarea name="descripcion_{{ forloop.counter0 }}" rows="4" 
+                        class="form-control form-control-sm font-weight-bold border border-info">{{producto.descripcion}}</textarea>
+                    </td>
+                    <td>
+                    <input type="file" name="si_registro_{{ forloop.counter0 }}" value="{{producto.si_registro}}"
+                    class="form-control form-control-sm font-weight-bold border border-info">
+                        {% if producto.si_registro %}
+                            <a href="{% url 'descargar_derechoProp' producto.slug producto.id %}" class="btn btn-primary">
+                                Descargar Archivo
+                            </a>
+                        {% else %}
+                        {% endif %}
+                    </td>
+                    <td><textarea name="no_registro_{{ forloop.counter0 }}" rows="4" 
+                    class="form-control form-control-sm font-weight-bold border border-info">{{producto.no_registro}} </textarea></td>
+                    <td>
+                        <table class="table">
+                            <tr>
+                                <td>ZONA</td>
+                                <td>ESTE (m E)</td>
+                                <td>NORTE (m N)</td>
+                            </tr>
+                            <tr>
+                                <td><input type="number" value="{{producto.zone}}" name="zone_{{ forloop.counter0 }}" step="1"
+                                class="form-control form-control-sm font-weight-bold border border-info"></td>
+                                <td><input type="number" value="{{producto.easting}}" name="easting_{{ forloop.counter0 }}" step="0.001"
+                                class="form-control form-control-sm font-weight-bold border border-info"></td>
+                                <td><input type="number" value="{{producto.northing}}" name="northing_{{ forloop.counter0 }}" step="0.001"
+                                class="form-control form-control-sm font-weight-bold border border-info"></td>
+                            </tr>
+                        </table>
+                    </td>
+                     <td>
+                        <form method="post" action="{% url 'proyecto:eliminar_Derecho' producto.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                </tr>
+            {% endfor %}            
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block funcScript %}
+<script>
+    // Asegúrate de que el valor del campo 'northing' o 'easting' tenga un punto como separador decimal
+    document.addEventListener('DOMContentLoaded', function() {
+        let inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => {
+            input.value = input.value.replace(',', '.');
+        });
+    });
+</script>
+{% endblock %}

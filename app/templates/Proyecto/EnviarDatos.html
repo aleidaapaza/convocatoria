@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+
+{% block contenido %}
+    {% if messages %}
+        <hr>
+        {% for message in messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+        {% endfor %}             
+    {% endif %} 
+    {% if error_messages %}
+            <hr>
+            {% for message in error_messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
+    <div class="card text-bg-danger mb-3">
+        <div class="card-header">
+            Advertencia
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Para completar el envio de los datos tiene que hacer click en el boton ENVIAR</li>
+            <li class="list-group-item">Una vez enviado todos los datos ya no se podra modificar ningun dato</li>
+            <li class="list-group-item">Asegurese de haber cargado bien los documentos</li>
+            <li class="list-group-item">Si se equivoco en algun documento puede reemplazarlo</li>
+            <li class="list-group-item">Verifique que el PDF GENERADO este cargado correctamente</li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">          
+            {% if form %}
+                <form method="post"  enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="row text-center row mt-2">
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">
+                            <i class="fas fa-save"></i> ENVIAR DATOS</button>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'convocatoria:Index' %}" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i>NO ENVIAR POR AHORA</a>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'proyecto:enviar_datos2' slug=proyecto.slug %}">
+                    {% csrf_token %}
+                    <div class="row text-center row mt-2">
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">
+                            <i class="fas fa-save"></i> ENVIAR DATOS</button>
+                        </div>
+                        <div class="col">
+                            <a href="{% url 'convocatoria:Index' %}" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i>NO ENVIAR POR AHORA</a>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

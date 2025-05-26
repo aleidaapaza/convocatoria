@@ -1,0 +1,79 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+<div class="row card card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DESCRIPCION</th>
+                <th>ADJUNTAR DERECHO PROPIETARIO</th>
+                <th>DE NO CONTAR CON UN DERECHO PROPIETARIO DETERMINAR LAS ACCIONES A REALIZAR</th>
+                <th>GEOREFERENCIA (SISTEMA DE REFERENCIA WGS-84 PROYECCION UTM) </th>
+            </tr>
+        </thead>
+        <tbody id="product-rows">
+            <tr>
+                <td><textarea name="descripcion_0" rows="4" class="form-control form-control-sm font-weight-bold border border-info"></textarea></td>
+                <td><input type="file" name="si_registro_0" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                <td><textarea name="no_registro_0" rows="4" class="form-control form-control-sm font-weight-bold border border-info"></textarea></td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <td>ZONA</td>
+                            <td>ESTE (m E)</td>
+                            <td>NORTE (m N)</td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" step="1" value='0' name="zone_0" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                            <td><input type="number" step="0.001" value='0.0' name="easting_0" ste class="form-control form-control-sm font-weight-bold border border-info" oninput="removeComma(this)"></td>
+                            <td><input type="number" step="0.001" value='0.0' name="northing_0" class="form-control form-control-sm font-weight-bold border border-info" oninput="removeComma(this)"></td>
+                        </tr>
+                    </table>
+                </td>
+                <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" id="add-row">Añadir Fila</button>
+{% endblock %}
+
+{% block funcScript %}
+<script>
+    let rowIndex = 1; // Para seguir el índice de las filas
+
+    document.getElementById('add-row').addEventListener('click', function() {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td><textarea name="descripcion_${rowIndex}" rows="4" class="form-control form-control-sm font-weight-bold border border-info"></textarea></td>
+            <td><input type="file" name="si_registro_${rowIndex}" class="form-control form-control-sm font-weight-bold border border-info"></td>
+            <td><textarea name="no_registro_${rowIndex}" rows="4" class="form-control form-control-sm font-weight-bold border border-info"></textarea></td>
+            <td>
+                <table class="table">
+                    <tr>
+                        <td>ZONA</td>
+                        <td>ESTE (m E)</td>
+                        <td>NORTE (m N)</td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" step="1" value='0' name="zone_${rowIndex}" class="form-control form-control-sm font-weight-bold border border-info"></td>
+                        <td><input type="number" step="0.001" value='0.0' name="easting_${rowIndex}" ste class="form-control form-control-sm font-weight-bold border border-info" oninput="removeComma(this)"></td>
+                        <td><input type="number" step="0.001" value='0.0' name="northing_${rowIndex}" class="form-control form-control-sm font-weight-bold border border-info" oninput="removeComma(this)"></td>
+                    </tr>
+                </table>
+            </td>
+            <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Eliminar</button></td>
+        `;
+        document.getElementById('product-rows').appendChild(newRow);
+        rowIndex++; // Incrementar el índice
+    });
+
+    function removeRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    function removeComma(input) {
+        input.value = input.value.replace(/,/g, '.');
+    }
+</script>
+{% endblock %}

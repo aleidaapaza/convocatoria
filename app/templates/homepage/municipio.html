@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    {% if not user.is_authenticated%}
+        <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="miModalLabel">ATENCION</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        En el caso de que no encuentre el nombre de su municipio:
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Verificar que se haya seleccionado correctamente <i class="text-danger">Departamento y la entidad territorial</i></li>
+                            <li class="list-group-item">Si el municipio ya cuenta con un proyecto<i class="text-info">No aparecera en la lista </i></li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center py-3">
+                <div class="row justify-content-md-center">
+                    <div class="col steps">
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle bg-success text-white">4</div>
+                        <div class="step-circle">5</div>
+                        <div class="step-circle">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ fin }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ dep }}</div>                
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENTIDAD TERRITORIAL AUTONOMA</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ ent }}</div>                
+                </div>
+                <div class="row">
+                    <h3 class="text-center text-bg-primary">SELECCIONE EL NOMBRE DE LA ENTIDAD EJECUTORIA</h3>
+                    {% if object_list != 0 %}
+                        {% for municipios in object_list %}                            
+                            <div class="col-sm-6 col-md-3 p-3">
+                                <a href="{% url 'solicitud:MAE' municipios.pk n_ent n_fin %}" style="text-decoration: none; color: inherit;">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">{{municipios.nombre_municipio}}</h5>
+                                        </div>
+                                    </div>
+                                </a>       
+                            </div>                                                         
+                        {% endfor %}
+                    {% else %}
+                        NO SE ENCONTRARON MUNICIPIOS
+                    {% endif %}
+                    
+                </div>                
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock contenido %}
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('miModal'));
+        myModal.show();
+    });
+</script>
+{% endblock js %}

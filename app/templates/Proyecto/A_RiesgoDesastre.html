@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+
+{% block contenido %}
+    <div class="modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageModalLabel">{{ message_title }}</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ message_content }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if messages %}
+            <hr>
+            {% for message in messages %}
+                <div class="alert {% if message.level_tag == "error" %} alert-danger {% else %} alert-{{message.level_tag}} {% endif %} alert-dismissible fade show" role="alert">
+                    <p class="px-2">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}             
+        {% endif %} 
+    <h3 class="text-center bg-success rounded-3 text-white"> {{ titulo }} </h3>
+        {% if entity_registro %}
+            <div class="col-md-3 mt-2">
+                <a href="{{ entity_registro }}" class="btn btn-success btn-block">{{ entity_registro_nom }}</a>
+            </div>
+        {% endif %} 
+    <hr>
+    <form method="POST" action="{% url 'proyecto:actualizar_RiesgoDesastre' proyecto.slug %}" id="riesgosForm">
+        {% csrf_token %}
+        
+        <table class="table" id="dynamicTable">
+            <thead>
+                <tr>
+                    <th>Riesgo</th>
+                    <th>Nivel</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in form_data %}
+                <tr>
+                    <td>
+                        <select name="riesgo" class="form-select" disabled>
+                            {% for riesgo in form.fields.riesgo.choices %}
+                                <option value="{{ riesgo.0 }}" {% if riesgo.0 == row.riesgo %} selected {% endif %}>{{ riesgo.1 }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" name="riesgo" value="{{ row.riesgo }}" />
+                    </td>
+                    <td>
+                        <select name="nivel" class="form-select">
+                            {% for nivel in form.fields.nivel.choices %}
+                                <option value="{{ nivel.0 }}" {% if nivel.0 == row.nivel %} selected {% endif %}>{{ nivel.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'proyecto:eliminar_Riesgo' row.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Campo slug oculto -->
+        <input type="hidden" name="slug" value="{{ slug }}" />
+
+        <div class="row text-center row mt-2">
+            <div class="col">
+                <button class="btn btn-success" type="submit">
+                <i class="fas fa-save"></i>{{accion}}</button>
+            </div>
+            <div class="col">
+                <a href="{{ accion2_url }}" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i>{{ accion2 }}</a>
+            </div>
+        </div>
+    </form>
+{% endblock contenido %}
+{% block funcScript %}
+<script>
+    // Verificar si hay un mensaje
+    {% if message_content %}
+        $(document).ready(function() {
+            // Mostrar el modal
+            $('#messageModal').modal('show');
+        });
+    {% endif %}
+</script>
+{% endblock funcScript %}

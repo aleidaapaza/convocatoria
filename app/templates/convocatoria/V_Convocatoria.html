@@ -1,0 +1,115 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block contenido %}
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>FECHA DE REGISTRO:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.fechaRegistro }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>NOMBRE DE LA CONVOCATORIA:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.nombre }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>FECHA DE LANZAMIENTO:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.fechaLanzamiento }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>HORA DE LANZAMIENTO:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.horaLanzamiento }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>FECHA DE CIERRE:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.fechaCierre }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>HORA DE CIERRE:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.horaCierre}}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA ELABORACION DEL EDTP:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.montoElabEDTP }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA EJECUCION DEL EDTP:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.montoEjecEDTP }}
+            </div>            
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>TAMAÑO PERMITIDO POR DOCUMENTO PARA EL ITCP-DECLARACION JURADA:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {{ convocatoria.tamañoDoc }}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-sm-12 col-md-5">
+            <strong>ESTADO DE LA CONVOCATORIA:</strong>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class='form-control form-control-sm font-weight-bold border border-info'>
+            {% if convocatoria.estado %}
+                ACTIVO
+            {% else %}
+                INACTIVO
+            {% endif %}
+            </div>            
+        </div>
+    </div>
+    <div class="row text-center row mt-2">
+        <div class="col">
+            <a href="{{accion2_url}}" class="btn btn-danger">
+                <i class="fas fa-undo-alt"></i>
+            {{accion2}}</a>
+        </div>
+    </div>
+{% endblock %}

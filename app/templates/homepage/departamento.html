@@ -1,0 +1,140 @@
+{% extends 'base/base.html' %}
+{% load static%}
+{% block contenido %}
+            <div class="text-center py-3">
+                <div class="row justify-content-md-center">
+                    <div class="col steps">
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle bg-success text-white">2</div>
+                        <div class="step-circle">3</div>
+                        <div class="step-circle">4</div>
+                        <div class="step-circle">5</div>
+                        <div class="step-circle">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ fin_d }}</div>             
+                </div>
+                    <h4 class="text-center text-bg-success ">SELECCIONE SU DEPARTAMENTO</h4>
+                    <div class="row align-items-start justify-content-center p-5">
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '1' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">LA PAZ</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/laPaz.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '2' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">BENI</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/beni.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '5' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">ORURO</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/oruro.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div> 
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '6' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">PANDO</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/pando.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                 
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '9' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">TARIJA</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/tarija.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                  
+                        <div class="col-sm-6 col-md-2 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '7' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">POTOSI</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/potosi.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                  
+                        <div class="col-sm-6 col-md-3 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '3' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">CHUQUISACA</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/chuquisaca.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                                  
+                        <div class="col-sm-6 col-md-3 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '4' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">COCHABAMBA</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/cochabamba.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>                                  
+                        <div class="col-sm-6 col-md-3 pt-3">
+                            <a href="{% url 'solicitud:Entidad_Territorial'  fin '8' %}" style="text-decoration: none; color: inherit;">
+                            <h3 class="text-center border border-primary-subtle">SANTA CRUZ</h3> 
+                            <div class="card text-center">                                               
+                                    <img src="{% static 'img/departamento/santaCruz.jpg' %}" class="card-img-top" alt="...">                        
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>           
+            </div>
+           
+      
+{% endblock contenido %}
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('miModal'));
+        myModal.show();
+    });
+</script>
+<script>
+        // Obtener la fecha y hora de cierre desde Django (pasada como string en formato ISO)
+        const fechaHoraCierre = new Date("{{ fecha_expiracion }}").getTime();
+
+        // Actualizar la cuenta regresiva cada 1 segundo
+        const intervalo = setInterval(function() {
+
+            // Obtener la fecha y hora actuales
+            const ahora = new Date().getTime();
+
+            // Calcular la diferencia entre la fecha y hora de cierre y la fecha y hora actuales
+            const distancia = fechaHoraCierre - ahora;
+
+            // Calcular los días, horas, minutos y segundos restantes
+            const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+            // Mostrar la cuenta regresiva en el HTML
+            document.getElementById("tiempo").innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
+            // Si la cuenta regresiva ha llegado a cero, mostrar un mensaje
+            if (distancia < 0) {
+                clearInterval(intervalo);
+                document.getElementById("tiempo").innerHTML = "¡Se cerro la convocatoria!";
+            }
+
+        }, 1000); // Actualiza cada 1 segundo
+    </script>
+{% endblock js %}

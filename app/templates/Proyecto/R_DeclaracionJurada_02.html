@@ -1,0 +1,79 @@
+{% extends 'base/form1col.html' %}
+{% load static %}
+{% block formulario %}
+<div class="row card card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>NOMBRE</th>
+                <th>DOCUMENTO MODELO</th>
+                <th>SUBIR ARCHIVO</th>
+            </tr>
+        </thead>
+        <tbody id="product-rows">
+            <tr>
+                <td><p>DECLARACION JURADA</p></td>
+                <td>
+                    <a href="{% static 'doc/modelo_declaracion_jurada.docx' %}" class="btn btn-primary">Modelo de Declaración Jurada
+                    </a>
+                </td>
+                <td><p> {{form.declaracion}} </p>
+                    {% if objeto.declaracion %}
+                            <a href="{% url 'descargar_docDeclaracion' objeto.slug '1' %}" class="btn btn-info">
+                                Descargar Archivos
+                            </a>
+                        {% else %}
+                        {% endif %}
+                </td>
+            </tr>
+            {% if proyecto.tipo_financiamiento == 1 %}
+                <tr>
+                    <td>
+                        CARTA DE SOLICITUD DE <br> FINANCIAMIENTO PARA ELABORACION DE EDTP                    
+                    </td>
+                    <td>
+                        <a href=" {% static 'doc/cartas_de_elaboracion_edtp.docx' %} " class="btn btn-primary">Cartas de Solicitud de <br> Financiamiento para <br> Elaboración EDTP
+                        </a>
+                    </td>
+                    <td><p> {{form.carta_elab}} </p>
+                    {% if objeto.carta_elab %}
+                        <a href="{% url 'descargar_docDeclaracion' objeto.slug '3' %}" class="btn btn-info">
+                            Descargar Archivos
+                        </a>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endif %}            
+            <tr>
+                <td>
+                    CARTA DE SOLICITUD DE <br> FINANCIAMIENTO PARA EJECUCION DE EDTP                   
+                </td>
+                <td>
+                    <a href=" {% static 'doc/cartas_de_ejecucion_edtp.docx' %} " class="btn btn-primary">Cartas de Solicitud de <br> Financiamiento para <br> Ejecución EDTP
+                    </a>
+                </td>
+                <td><p> {{form.carta_ejec}} </p>
+                {% if objeto.carta_ejec %}
+                    <a href="{% url 'descargar_docDeclaracion' objeto.slug '4' %}" class="btn btn-info">
+                        Descargar Archivos
+                    </a>
+                {% endif %}
+                </td>
+            </tr>            
+            <tr>    
+                <td><p>ITCP ESCANEADO EN PDF CON FIRMA DE LA MAE Y TECNICO DE LA ETA</p></td>
+                <td>
+                    <a class="btn btn-primary" type="button" href="{% url 'convocatoria:generar_pdf' proyecto.slug %}">GenerarPdf</a>
+                </td>
+                <td><p> {{form.itcp}} </p>
+                {% if objeto.itcp %}
+                    <a href="{% url 'descargar_docDeclaracion' objeto.slug '2' %}" class="btn btn-info">
+                        Descargar Archivos
+                    </a>
+                {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

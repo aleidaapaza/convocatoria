@@ -1,0 +1,75 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block librerias %}
+    <style>
+        .card {
+            height: 100%;
+        }
+    </style>
+{% endblock  %}
+{% block contenido %}
+    {% if not user.is_authenticated%}
+        <div class="text-center py-3">
+                <div class="row justify-content-md-center">
+                    <div class="col steps">
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                        <div class="step-circle bg-success text-white">3</div>
+                        <div class="step-circle">4</div>
+                        <div class="step-circle">5</div>
+                        <div class="step-circle">6</div>
+                        <div class="step-circle">FIN</div>
+                    </div>
+                </div>
+            </div>
+        <div class="row">            
+            <div class="col">
+                <div class="mb-3 row">
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ fin_d }}</div>
+                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ dep_d }}</div>                
+                </div>
+                <div class="row">
+                    <h3 class="text-center text-bg-primary">SELECCIONE ENTIDAD TERRITORIAL AUTONOMA</h3>
+                    <div class="col-sm-12 col-md-12 p-4">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' fin dep '1' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO DEPARTAMENTAL</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 p-4">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' fin dep '2' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO MUNICIPAL</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 p-4">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' fin dep '3' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO REGIONAL</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 p-4">
+                        <div class="card">
+                            <a href="{% url 'solicitud:Municipio' fin dep '4' %}" style="text-decoration: none; color: inherit;">
+                                <div class="card-body">
+                                    <h5 class="card-title">GOBIERNO AUTÓNOMO INDIGENA ORIGINARIO CAMPESINO</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
