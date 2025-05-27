@@ -337,6 +337,7 @@ class Detalle_convocatoria(TemplateView):
             fin1_observar_c = fin1_observar.count()
             fin1_aprobado = fin1_env.filter(estado='APROBADO')
             fin1_aprobado_c = fin1_aprobado.count()
+            context['fin1_env']=fin1_env
             context['fin1_env_c']=fin1_env_c
             context['fin1_sin_enviar']=totalFin1 - fin1_env_c
             context['fin1_srevisar_c']=fin1_srevisar_c
