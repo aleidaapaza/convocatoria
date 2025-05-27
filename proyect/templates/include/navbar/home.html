@@ -1,0 +1,74 @@
+{% load static %}
+
+<div style="background-color: #4da358;">
+    <ul class="nav nav-tabs">
+        <li class="nav-item d-flex align-items-center justify-content-center">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" 
+                    data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                <i class="fa fa-align-justify" aria-hidden="true"></i>
+            </button>
+        </li>
+        <li class="height-100 d-flex align-items-center justify-content-center p-3">            
+                <p id="tiempo"></p>
+        </li>
+    </ul>
+
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" 
+         id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+                REGISTRO DE CONVOCATORIAS
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}">
+                        REGISTRO DE SOLICITUD
+                    </a>
+                    <hr>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:login' %}">
+                        INICIO DE SESION
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% block js %}
+<script>
+        // Obtener la fecha y hora de cierre desde Django (pasada como string en formato ISO)
+        const fechaHoraCierre = new Date("{{ fecha_expiracion }}").getTime();
+
+        // Actualizar la cuenta regresiva cada 1 segundo
+        const intervalo = setInterval(function() {
+
+            // Obtener la fecha y hora actuales
+            const ahora = new Date().getTime();
+
+            // Calcular la diferencia entre la fecha y hora de cierre y la fecha y hora actuales
+            const distancia = fechaHoraCierre - ahora;
+
+            // Calcular los días, horas, minutos y segundos restantes
+            const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+            // Mostrar la cuenta regresiva en el HTML
+            document.getElementById("tiempo").innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+
+            // Si la cuenta regresiva ha llegado a cero, mostrar un mensaje
+            if (distancia < 0) {
+                clearInterval(intervalo);
+                document.getElementById("tiempo").innerHTML = "¡Se cerro la convocatoria!";
+            }
+
+        }, 1000); // Actualiza cada 1 segundo
+</script>
+{% endblock js %}
