@@ -876,6 +876,9 @@ class EnviarDatos(View):
                     presupuestoRef = get_object_or_404(PresupuestoReferencial, slug=slug),
                     aceptar = False,
                 )
+                datos_proy = DatosProyectoBase.objects.get(slug=proyecto_p.slug)
+                proyecto_p.datos_proyecto=datos_proy
+                proyecto_p.save()
             else:
                 EDTP.objects.create(
                     slug = slug,
@@ -887,6 +890,9 @@ class EnviarDatos(View):
                     declaracionJurada = get_object_or_404(Declaracion_jurada, slug=slug),                    
                     aceptar = False,
                 )
+                datos_proy = DatosProyectoBase.objects.get(slug=proyecto_p.slug)
+                proyecto_p.datos_proyecto=datos_proy
+                proyecto_p.save()
             messages.success(request, "Los datos se enviaron correctamente.")
             return redirect('convocatoria:Index')
         else:

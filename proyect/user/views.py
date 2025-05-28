@@ -44,6 +44,7 @@ class ListaRevisores(ListView):
     template_name = 'perfil/listaRevisores.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['superuser']=True
         context['titulo'] = 'LISTA DE REVISORES'
         context['entity'] = 'LISTA DE REVISORES'
         context['object_list'] = self.model.objects.all()
@@ -65,6 +66,7 @@ class RegistroRev(CreateView):
         if 'form2' not in context:
             context['form2'] = self.second_form_class(self.request.GET)
 
+        context['superuser']=True
         context['form'] = self.form_class(self.request.GET)
         context['form2'] = self.second_form_class(self.request.GET)      
         context['titulo'] = 'REGISTRO DE REVISORES'

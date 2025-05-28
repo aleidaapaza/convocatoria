@@ -473,8 +473,8 @@ class fichaSolicitud(UpdateView):
                     datos_proyecto = self.four_model.objects.create(
                         slug = slug,
                         user = user_Pr,
-                        nombre = 'NOMBRE DEL PROYECTO',
-                        comunidades = 'NOMBRE DE LAS COMUNIDADES',
+                        nombre = '',
+                        comunidades = '',
                         tipologia_proy = False,
                         periodo_ejecu = '0'
                     )

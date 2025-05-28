@@ -22,32 +22,16 @@
             <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">MENU</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        {% if superuser %}
         <div class="offcanvas-body">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'convocatoria:Index' %}"><i class="fas fa-home"></i> INICIO</a>
                     <hr>
-                </li>
+                </li>                
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:lista_convocatoria' %}"><i class="fas fa-list-alt"></i> LISTA DE CONVOCATORIAS</a>
+                    <a class="nav-link active" href="{% url 'solicitud:ListaCompleta' %}"><i class="fas fa-th-list"></i> LISTA COMPLETA ITCP Y EDTP</a>
                     <hr>
-                </li><li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:lista_municipios' %}"><i class="fas fa-list-alt"></i> LISTA DE MUNICIPIOS</a>
-                    <hr>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'user:lista_revisor' %}"><i class="fas fa-users-cog"></i> LISTA DE REVISORES</a>
-                </li>
-            </ul>
-        </div>
-        {% else %}
-        <div class="offcanvas-body">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}"><i class="fas fa-home"></i> INICIO</a>
-                    <hr>
-                </li>
+                </li>                
                 <li class="nav-item bg-info">
                     <p class="text-center fw-bold">ITCP</p>
                 </li>  
@@ -96,9 +80,8 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'proyecto:lista_datosEjec' %}"><i class="fas fa-database"></i> COMPLETA</a>
                 </li>
+                </li>
             </ul>
         </div>
-        {% endif %}
-        
     </div>
 </div>

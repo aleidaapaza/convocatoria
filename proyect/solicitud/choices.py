@@ -22,7 +22,7 @@ estado_proyecto = {
     ('SOLICITUD', 'SOLICITUD'),
     ('RECHAZADO', 'RECHAZADO'),
     ('APROBADO', 'APROBADO'),
-    ('EN PROCESO', 'EN PROCESO'),
+    ('EN EJECUCION', 'EN EJECUCION'),
     ('FINALIZADO', 'FINALIZADO'),
 }
 

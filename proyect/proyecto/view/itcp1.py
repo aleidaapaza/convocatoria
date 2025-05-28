@@ -57,8 +57,6 @@ class RegistroDatosBasicos(UpdateView):
             datos = form.save(commit=False)
             datos.fecha_actualizacion = timezone.now()
             datos.save()
-            postulacion_pr.datos_proyecto = datos_proy
-            postulacion_pr.save()
             messages.success(request, 'DATOS PRINCIPALES DEL PROYECTO - se actualizo correctamente.')
             if postulacion_pr.tipo_financiamiento == 1:
                 return redirect('proyecto:registro_justificacion', slug=slug)

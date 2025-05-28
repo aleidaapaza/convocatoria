@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages
 
-from solicitud.models import Postulacion
+from solicitud.models import Postulacion, Municipios
 from user.models import Revisor, SuperUser, User
 from convocatoria.funciones import obtener_estadisticas_convocatoria
 from convocatoria.models import Convocatoria
@@ -123,6 +123,7 @@ class ListaConvocatoria(ListView):
     template_name = 'convocatoria/lista.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['superuser']=True
         context['titulo'] = 'LISTA DE CONVOCATORIA'
         context['activate'] = True
         context['entity'] = 'LISTA DE CONVOCATORIA'
@@ -182,7 +183,6 @@ class Index(TemplateView):
                 context['beneficiario'] = Beneficiario.objects.filter(slug=user_sl).count()
                 context['declaracion'] = Declaracion_jurada.objects.filter(slug=user_sl).count()
                 context['Presupuesto'] = PresupuestoReferencial.objects.filter(slug=user_sl).count()
-                
                 if postulacion_p.tipo_financiamiento == 1:
                     context['justificacion'] = Justificacion.objects.filter(slug=user_sl).count()
                     context['ideaProyecto'] = Idea_Proyecto.objects.filter(slug=user_sl).count()
@@ -203,14 +203,11 @@ class Index(TemplateView):
                 else:
                     context['ObjetivoGeneral'] = ObjetivoGeneralEjec.objects.filter(slug=user_sl).count()
                     context['ObjetivoEspecifico'] = ObjetivoEspecificoEjec.objects.filter(slug=user_sl).count()
-                    context['Ubicacion'] = UbicacionGeografica.objects.filter(slug=user_sl).count()
-                
+                    context['Ubicacion'] = UbicacionGeografica.objects.filter(slug=user_sl).count()                
                 if postulacion_p.tipo_financiamiento == 1:                    
                     if Proyecto.objects.filter(slug=user_sl).exists():
-                        print(Proyecto.objects.filter(slug=user_sl).exists())
-                        
+                        print(Proyecto.objects.filter(slug=user_sl).exists())                        
                         proyecto = Proyecto.objects.get(slug=user_sl)
-
                         if proyecto.estado == "CON OBSERVACION":
                             context['proyectoDatos'] = proyecto
                             context['vista'] = False
@@ -220,10 +217,8 @@ class Index(TemplateView):
                         context['vista'] = False
                 else:
                     if EDTP.objects.filter(slug=user_sl).exists():
-                        print(EDTP.objects.filter(slug=user_sl).exists())
-                        
+                        print(EDTP.objects.filter(slug=user_sl).exists())                        
                         proyecto = EDTP.objects.get(slug=user_sl)
-
                         if proyecto.estado == "CON OBSERVACION":
                             context['proyectoDatos'] = proyecto
                             context['vista'] = False
@@ -231,7 +226,6 @@ class Index(TemplateView):
                             context['vista'] = True
                     else:
                         context['vista'] = False
-
             elif self.request.user.is_revisor or self.request.user.is_superuser:                
                 if self.request.user.is_revisor:
                     user_sl = self.request.user.revisor_perfil.slug
@@ -239,13 +233,12 @@ class Index(TemplateView):
                 elif self.request.user.is_superuser:
                     user_sl = self.request.user.superuser_perfil.slug
                     postulacion_p = SuperUser.objects.get(slug = user_sl)
-                    
                 context['slug']=user_sl
+                context['superuser']=True
                 context['postulacion'] = postulacion_p
-                user = self.request.user  # Usamos el usuario actual
+                user = self.request.user
                 convocatoria = Convocatoria.objects.all().order_by('-id')
-                context['convocatoria'] = convocatoria
-                
+                context['convocatoria'] = convocatoria                
         else:
             estado = Convocatoria.objects.filter(estado=True).count()
             if estado == 1:
@@ -315,21 +308,22 @@ class Detalle_convocatoria(TemplateView):
     template_name='index/Convocatoria/descripcion.html'
     def get_context_data(self, **kwargs):
         context = super(Detalle_convocatoria, self).get_context_data(**kwargs)
-        id_conv = self.kwargs.get('id', None)
-        convocatoria = Convocatoria.objects.get(id=id_conv)
-        postulaciones = Postulacion.objects.filter(convocatoria=id_conv)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        postulaciones = Postulacion.objects.filter(convocatoria__slug=convocatoria.slug)
         num_total = postulaciones.count()
         totalFin1 = postulaciones.filter(tipo_financiamiento=1).count()
         totalFin2 = postulaciones.filter(tipo_financiamiento=2).count()
-        num_none = postulaciones.exclude(datos_proyecto=None).count()
+        total_SR = postulaciones.filter(estado=False).count()
         context['convocatoria']=convocatoria
         context['postulaciones']=postulaciones
         context['num_total']=num_total
         context['totalFin1']=totalFin1
         context['totalFin2']=totalFin2
-        context['num_none']=num_none
+        context['total_SR']=total_SR
         if convocatoria.elabEdtp:
-            fin1_env=Proyecto.objects.filter(datos_basicos__postulacion__convocatoria__id=convocatoria.id)
+            fin1_env=Proyecto.objects.filter(datos_basicos__postulacion__convocatoria__slug=convocatoria.slug)
+            fin1_no_env = Postulacion.objects.filter(convocatoria__slug=convocatoria.slug).filter(tipo_financiamiento=1).filter(datos_proyecto=None)
             fin1_env_c=fin1_env.count()
             fin1_srevisar = fin1_env.filter(estado='SIN REVISAR')
             fin1_srevisar_c = fin1_srevisar.count()
@@ -338,10 +332,52 @@ class Detalle_convocatoria(TemplateView):
             fin1_aprobado = fin1_env.filter(estado='APROBADO')
             fin1_aprobado_c = fin1_aprobado.count()
             context['fin1_env']=fin1_env
+            context['fin1_no_env']=fin1_no_env
             context['fin1_env_c']=fin1_env_c
             context['fin1_sin_enviar']=totalFin1 - fin1_env_c
             context['fin1_srevisar_c']=fin1_srevisar_c
             context['fin1_observar_c']=fin1_observar_c
             context['fin1_aprobado_c']=fin1_aprobado_c
-
+        if convocatoria.EjecEdtp:
+            fin2_env=EDTP.objects.filter(datos_basicos__postulacion__convocatoria__slug=convocatoria.slug)
+            fin2_no_env = Postulacion.objects.filter(convocatoria__slug=convocatoria.slug).filter(tipo_financiamiento=2).filter(datos_proyecto=None)
+            fin2_env_c=fin2_env.count()
+            fin2_srevisar = fin2_env.filter(estado='SIN REVISAR')
+            fin2_srevisar_c = fin2_srevisar.count()
+            fin2_observar = fin2_env.filter(estado='CON OBSERVACION')
+            fin2_observar_c = fin2_observar.count()
+            fin2_aprobado = fin2_env.filter(estado='APROBADO')
+            fin2_aprobado_c = fin2_aprobado.count()
+            context['fin2_env']=fin2_env
+            context['fin2_no_env']=fin2_no_env
+            context['fin2_env_c']=fin2_env_c
+            context['fin2_sin_enviar']=totalFin2 - fin2_env_c
+            context['fin2_srevisar_c']=fin2_srevisar_c
+            context['fin2_observar_c']=fin2_observar_c
+            context['fin2_aprobado_c']=fin2_aprobado_c
+        return context
+    
+class ListaMunicipios(TemplateView):
+    template_name='index/Convocatoria/municipios.html'
+    def get_context_data(self, **kwargs):
+        context = super(ListaMunicipios, self).get_context_data(**kwargs)
+        municipio = Municipios.objects.all()
+        context['municipio'] = municipio
+        context['superuser']=True
+        return context
+    
+class DetalleMuncipios(TemplateView):
+    template_name='index/Convocatoria/municipiosDetalle.html'
+    def get_context_data(self, **kwargs):
+        context = super(DetalleMuncipios, self).get_context_data(**kwargs)
+        id_mun = self.kwargs.get('id', None)
+        municipio = Municipios.objects.get(id=id_mun)
+        postulaciones = Postulacion.objects.filter(municipio__id=municipio.id)
+        edtp_env = EDTP.objects.filter(datos_basicos__postulacion__municipio__id=municipio.id)
+        itcp_env = Proyecto.objects.filter(datos_basicos__postulacion__municipio__id=municipio.id)
+        context['superuser']=True
+        context['municipio'] = municipio
+        context['postulaciones'] = postulaciones
+        context['edtp_env'] = edtp_env
+        context['itcp_env'] = itcp_env
         return context
