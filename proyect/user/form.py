@@ -99,12 +99,24 @@ class UsuarioRev(ModelForm):
         for form in self.visible_fields():
             form.field.widget.attrs['class'] = 'form-control form-control-sm font-weight-bold border border-info'
             form.field.widget.attrs['autocomplete'] = 'off'
+        self.fields['is_active'].widget.attrs['class'] = 'form-check-input'
+        self.fields['vl_revisores'].widget.attrs['class'] = 'form-check-input'
+        self.fields['vl_convocatoria'].widget.attrs['class'] = 'form-check-input'
+        self.fields['v_registrarMun'].widget.attrs['class'] = 'form-check-input'
+        self.fields['v_habilitarMun'].widget.attrs['class'] = 'form-check-input'
+        self.fields['v_revSolicitud'].widget.attrs['class'] = 'form-check-input'
 
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username','is_active','vl_revisores', 'vl_convocatoria', 'v_registrarMun', 'v_habilitarMun', 'v_revSolicitud']
         labels = {
             'username': 'Nombre de Usuario',
+            'is_active': 'Usuario Activo',
+            'vl_revisores': 'Ver lista de revisores',
+            'vl_convocatoria': 'Ver informacion de las convocatorias',
+            'v_registrarMun': 'Registrar usuario/contraseña a municipios',
+            'v_habilitarMun': 'Habilitar el acceso a municipio(s)',
+            'v_revSolicitud': 'Revision de las solicitudes de postulacion',
         }
 
 class LoginForm(forms.Form):

@@ -65,13 +65,13 @@ class RegistroRev(CreateView):
             context['form'] = self.form_class(self.request.GET)
         if 'form2' not in context:
             context['form2'] = self.second_form_class(self.request.GET)
-
         context['superuser']=True
         context['form'] = self.form_class(self.request.GET)
         context['form2'] = self.second_form_class(self.request.GET)      
         context['titulo'] = 'REGISTRO DE REVISORES'
-        context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        context['accion'] = 'GUARDAR'
+        context['accion2'] = 'CANCELAR'
+        context['accion2_url'] = reverse_lazy('user:lista_revisor')
         context['activate'] = True
         context['entity'] = 'REGISTRO DE REVISORES'
         return context
@@ -114,15 +114,15 @@ class ActualizacionRev(UpdateView):
             context['form2'] = self.second_form_class(instance=user_p)
         if 'form3' not in context:
             context['form3'] = self.third_form_class(instance=persona_p)
-
+        context['superuser']=True
         context['rol'] = revisor_p
         context['titulo'] = 'ACTUALIZAR DATOS DEL REVISOR'
         context['activate'] = False
         context['entity'] = 'ACTUALIZAR DATOS DEL REVISOR'
         context['accion2'] = 'Cancelar'
-        context['accion2_url'] = reverse_lazy('convocatoria:Index')
+        context['accion2_url'] = reverse_lazy('user:lista_revisor')
         context['entity'] = 'REGISTRO DE REVISORES'
-        context['entity_url'] = reverse_lazy('convocatoria:Index') 
+        context['entity_url'] = reverse_lazy('user:lista_revisor') 
         return context 
 
     def post(self, request, *args, **kwargs):
@@ -134,7 +134,6 @@ class ActualizacionRev(UpdateView):
         form = self.form_class(request.POST)
         form2 = self.second_form_class(request.POST, request.FILES, instance=user_p)
         form3 = self.third_form_class(request.POST, instance=persona_p)
-
         if form2.is_valid() and form3.is_valid():          
             form2.save()
             form3.save()

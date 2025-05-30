@@ -51,3 +51,12 @@ def obtener_estadisticas_convocatoria(user):
             'c_edtp_CO': c_edtp_CO
         }
     return None
+
+def contar_por_convocatoria(user, id_conv):
+    postulaciones = Postulacion.objects.filter(convocatoria__slug=id_conv)
+    sin_revisar_sol_1 = postulaciones.filter(estado=None).filter(tipo_financiamiento=1).count()
+    sin_revisar_sol_2 = postulaciones.filter(estado=None).filter(tipo_financiamiento=2).count()
+    return {
+        'sin_revisar_sol_1' : sin_revisar_sol_1,
+        'sin_revisar_sol_2' : sin_revisar_sol_2,
+    }

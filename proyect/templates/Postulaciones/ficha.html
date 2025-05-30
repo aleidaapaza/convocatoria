@@ -4,7 +4,7 @@
     {% if user.is_authenticated%}
         <div class="row p-4">
             <div class="col">
-                <a href="{% url 'solicitud:ListaCompleta'%}" class="btn btn-danger">
+                <a href="{% url 'solicitud:ListaCompleta' convocatoria.slug %}" class="btn btn-danger">
                     <i class="fas fa-undo-alt"></i> REGRESAR A LA LISTA
                 </a>
             </div>
@@ -15,7 +15,7 @@
         <hr>
         <div class="row">
             <div class="pe-3">
-                {% if postulacion.municipio.estado == 'SOLICITUD' %}
+                {% if postulacion.estado == null %}
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
@@ -92,7 +92,7 @@
                         <div class="col-md-4 col-sm-12 fw-bold col-form-label">ESTADO DE LA POSTULACION:</div>
                         <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">
                         {% if postulacion.estado %}
-                            APROBADO
+                            CON INICIO DE SESION
                         {% else %}
                             RECHAZADO
                         {% endif %}
@@ -101,12 +101,14 @@
                     <div class="mb-3 row">
                         {% if userMun %}
                             <div class="col-md-4 col-sm-12 fw-bold col-form-label">NOMBRE DE USUARIO PARA EL MUNICIPIO:</div>
-                            <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{userMun.username}}</div>
+                            <div class="col-md-3 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{userMun.username}}</div>
+                            <div class="col-md-2 col-sm-12 fw-bold col-form-label">FECHA DE CREACION:</div>
+                            <div class="col-md-3 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{userMun.fecha_registro}}</div>
                         {% endif %}
                     </div>
                     <div class="mb-3 row">
                         {% if postulacion.creador %}
-                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENCARGADO DE LA REVISION:</div>
+                            <div class="col-md-4 col-sm-12 fw-bold col-form-label">ENCARGADO DE LA ASIGNACION DE USUARIO:</div>
                             <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{postulacion.creador}}</div>
                         {% endif %}
                     </div>

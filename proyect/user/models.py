@@ -176,6 +176,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_municipio = models.BooleanField(_('Estado municipio'), default=False)    
     is_revisor = models.BooleanField(_('Estado revisor'), default=False)
     is_superuser = models.BooleanField(_('Estado superuser'), default=False)
+    vl_revisores = models.BooleanField(default=False)
+    vl_convocatoria = models.BooleanField(default=False)
+    v_registrarMun = models.BooleanField(default=False)
+    v_habilitarMun = models.BooleanField(default=False)
+    v_revSolicitud = models.BooleanField(default=False)
 
     objects = AccountManager()
 
