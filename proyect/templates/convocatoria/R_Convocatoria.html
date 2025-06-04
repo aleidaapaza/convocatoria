@@ -10,42 +10,209 @@
                 </ul>
             </div>            
         {% endif %}
+<h3 class="text-center text-bg-primary">{{ titulo }}</h3>
+<hr>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     <div class="row">
-            <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-                <div class="row mt-2">
-                    <h3 class="text-center text-bg-primary">{{ titulo }}</h3>
-                    <hr>
-                    {% for field in form %}
-                        <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag|safe }}</div>
-                                <div class="col-sm-8">
-                                    <div class="">
-                                        {{ field }}
-                                    </div>
-                                <div class="">
-                                    {% for error in field.errors %}
-                                        <span style="color: red">({{ error }})</span>
-                                    {% endfor %}
-                                    {% if field.help_text %}
-                                        <small class="form-text text-muted">{% autoescape off %}{{ field.help_text|safe }}{% endautoescape %}</small>
-                                    {% endif %}
-                                </div>
-                            </div>
+        <div class="col-md-8 pe-5">
+            <div class="row mt-2">
+                <div class="col-sm-6 text-end">{{ form.estado.label|safe }}</div>
+                <div class="col-sm-6">
+                    {{ form.estado }}
+                    {% for error in form.estado.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.estado.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.estado.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>       
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-4 text-end">{{ form.nombre.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.nombre }}
+                    {% for error in form.nombre.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.nombre.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.nombre.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end">{{ form.descripcion.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.descripcion }}
+                    {% for error in form.descripcion.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end">{{ form.tamanoDoc.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.tamanoDoc }}
+                    {% for error in form.tamanoDoc.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.tamanoDoc.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.tamanoDoc.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end">{{ form.banner.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.banner }}
+                    {% for error in form.banner.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.banner.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.tamanoDoc.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">APERTURA</h5>
+                    <div class="row">
+                        <div class="col-sm-8 text-end">{{ form.fechaLanzamiento.label|safe }}</div>
+                        <div class="col-sm-4">
+                            {{ form.fechaLanzamiento }}
+                            {% for error in form.fechaLanzamiento.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                            {% if form.fechaLanzamiento.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.fechaLanzamiento.help_text|safe }}{% endautoescape %}</small>{% endif %}
                         </div>
-                    {% endfor %}
-                    <hr>
-                <div class="row text-center row mt-2">
-                    <div class="col">
+                        <div class="col-sm-8 text-end">{{ form.horaLanzamiento.label|safe }}</div>
+                        <div class="col-sm-4">
+                            {{ form.horaLanzamiento }}
+                            {% for error in form.horaLanzamiento.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                            {% if form.horaLanzamiento.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.horaLanzamiento.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">CIERRE</h5>
+                    <div class="row">
+                        <div class="col-sm-6 text-end">{{ form.fechaCierre.label|safe }}</div>
+                        <div class="col-sm-6">
+                            {{ form.fechaCierre }}
+                            {% for error in form.fechaCierre.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                            {% if form.fechaCierre.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.fechaCierre.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                        </div>
+                        <div class="col-sm-6 text-end">{{ form.horaCierre.label|safe }}</div>
+                        <div class="col-sm-6">
+                            {{ form.horaCierre }}
+                            {% for error in form.horaCierre.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                            {% if form.horaCierre.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.horaCierre.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                        </div>
+                    </div>  
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">ITCP</h5>
+                    <div class="row">
+                        <div class="col-sm-8 text-end">{{ form.elabEdtp.label|safe }}</div>
+                        <div class="col-sm-4">
+                            {{ form.elabEdtp }}
+                            {% for error in form.elabEdtp.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                            {% if form.elabEdtp.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.elabEdtp.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                        </div>
+                        <div class="col-sm-8 text-end">{{ form.montoElabEDTP.label|safe }}</div>
+                        <div class="col-sm-4">
+                            {{ form.montoElabEDTP }}
+                            {% for error in form.montoElabEDTP.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                        </div>
+                            {% if form.montoElabEDTP.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.montoElabEDTP.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">EDTP</h5>
+                    <div class="row">
+                        <div class="col-sm-6 text-end">{{ form.EjecEdtp.label|safe }}</div>
+                        <div class="col-sm-6">
+                            {{ form.EjecEdtp }}
+                            {% for error in form.EjecEdtp.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                            {% if form.EjecEdtp.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.EjecEdtp|safe }}{% endautoescape %}</small>{% endif %}
+                        </div>
+                        <div class="col-sm-6 text-end">{{ form.montoEjecEDTP.label|safe }}</div>
+                        <div class="col-sm-6">
+                            {{ form.montoEjecEDTP }}
+                            {% for error in form.montoEjecEDTP.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                        </div>
+                            {% if form.montoEjecEDTP.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.montoEjecEDTP.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <h5 class="text-center text-bg-primary">MATERIAL DE APOYO</h5>
+                <div class="col-sm-4 text-end">{{ form.documento.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.documento }}
+                    {% for error in form.documento.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.documento.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.documento.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end">{{ form.guia.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.guia }}
+                    {% for error in form.guia.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.guia.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.guia.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end">{{ form.guiaVideo.label|safe }}</div>
+                <div class="col-sm-8">
+                    {{ form.guiaVideo }}
+                    {% for error in form.guiaVideo.errors %}<span style="color: red">({{ error }})</span>{% endfor %}
+                    {% if form.guiaVideo.help_text %}<small class="form-text text-muted">{% autoescape off %}{{ form.guiaVideo.help_text|safe }}{% endautoescape %}</small>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% if accion == 'Actualizar' %}
+            {% if activos %}
+            <div class="col-md-4">
+                <h5 class="text-center text-bg-primary">Inicio de sesion municipios</h5>
+                <div class="row mt-2">
+                    <div class="form-check">
+                        <label class="form-check-label" for="flexCheckDefault">
+                        ¿Inhabilitar el acceso de inicio de sesion?
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault" name="usuarios_inactivo">                    
+                    </div>
+                </div>
+                <div class="row mt-2 fw-bold  rounded rounded-1 bg-secondary">
+                    <div class="col-sm-8 text-end">Total de inicio de sesion habilitadas</div>
+                    <div class="col-sm-4 text-white">{{ activos }}</div>
+                </div>
+            </div>
+            {% endif %}
+            {% if inactivos %}
+            <div class="col-md-4">
+                <h5 class="text-center text-bg-primary">Inicio de sesion municipios</h5>
+                <div class="row mt-2">
+                    <div class="form-check">
+                        <label class="form-check-label" for="flexCheckDefault">
+                        ¿Habilitar el acceso de inicio de sesion?
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault" name="usuarios_activos">                    
+                    </div>
+                </div>
+                <div class="row mt-2 fw-bold  rounded rounded-1 bg-secondary">
+                    <div class="col-sm-8 text-end">Total de inicio de sesion deshabilitadas</div>
+                    <div class="col-sm-4 text-white">{{ inactivos }}</div>
+                </div>
+            </div>
+            {% endif %}
+            {% if inactivos == 0 and activos == 0 %}
+            <div class="col-md-4">
+                <h5 class="text-center text-bg-primary">Inicio de sesion municipios</h5>
+                <div class="row mt-2">
+                    <div class="row mt-2 fw-bold  rounded rounded-1 bg-secondary">
+                        <div class="text-white">NO se cuenta con ningun usuario con inicio de sesion asignada</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}            
+        {% endif %}
+        
+    </div>
+            <div class="row text-center row mt-2">
+                <div class="col">
                         <button class="btn btn-success" type="submit">
                         <i class="fas fa-save"></i>{{accion}}</button>
-                    </div>
-                    <div class="col">
+                </div>
+                <div class="col">
                         <a href="{{accion2_url}}" class="btn btn-danger">
                         <i class="fas fa-undo-alt"></i>
                         {{accion2}}</a>
-                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
 {% endblock %}

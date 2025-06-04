@@ -12,13 +12,13 @@ urlpatterns = [
     path('RegistroEncargado/<slug:slug>/', ResponsableProy.as_view(), name='ResponsableProyecto'),
     path('confirmacion/<slug:slug>/', Confirmacion.as_view(), name='Confirmacion_solicitud'),
     path('listaCompleta/<slug:slug>/', ListaCompleta.as_view(), name='ListaCompleta'),
-    #ITCP
-    path('listaSolicitud/<slug:slug>/', ListaSolicitudes.as_view(), name='ListaSolicitud'),
     path('fichaPostulacionn/<slug:slug>/', fichaSolicitud.as_view(), name='Ficha_solicitud'),
     path('actualizarPostulacionMAE/<slug:slug>', Act_Ficha_MAE.as_view(), name='Actualizar_Ficha'),
     path('actualizarPostulacionENC/<slug:slug>', Act_ficha_Resp.as_view(), name='Actualizar_Ficha_eNC'),
+    #ITCP
+    path('listaSolicitud/<slug:slug>/', ListaSolicitudes.as_view(), name='ListaSolicitud'),
     #EDTP
-    path('listaSolicitudEjec/', ListaSolicitudesEJEC.as_view(), name='ListaSolicitudEj'),
+    path('listaSolicitudEjec/<slug:slug>/', ListaSolicitudesEJEC.as_view(), name='ListaSolicitudEj'),
     
 ]
 

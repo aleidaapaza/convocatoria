@@ -287,13 +287,21 @@ class ListaCompleta(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA COMPLETA'
         context['object_list'] = self.model.objects.filter(convocatoria__slug=id_conv)
-        user = self.request.user  # Usamos el usuario actual
+        user = self.request.user
         stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
                 'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
                 'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
-            })
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         
         return context
 
@@ -309,39 +317,49 @@ class ListaSolicitudes(ListView):
         context['activate'] = True
         context['entity'] = 'LISTA DE SOLICITUDES - ITCP'
         context['object_list'] = self.model.objects.filter(convocatoria__slug=id_conv).filter(tipo_financiamiento=1)
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        }) 
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
 
 class ListaSolicitudesEJEC(ListView):
     model = Postulacion
     template_name = 'Postulaciones/lista.html'
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo'] = 'LISTA DE SOLICITUDES - EDTP'
+        context = super(ListaSolicitudesEJEC, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
         context['activate'] = True
         context['entity'] = 'LISTA DE SOLICITUDES - EDTP'
         context['object_list'] = self.model.objects.filter(estado=None).filter(tipo_financiamiento=2)
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        }) 
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
     
 class fichaSolicitud(UpdateView):
@@ -382,17 +400,21 @@ class fichaSolicitud(UpdateView):
         context['entity_url'] = reverse_lazy('solicitud:ListaSolicitud', args=[convocatoria.slug])
         context['activate2'] = True
         context['entity2'] = 'FICHA SOLICITUD'  
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, convocatoria.slug)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        }) 
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
 
     def post(self, request, *args, **kwargs):
@@ -440,13 +462,13 @@ class fichaSolicitud(UpdateView):
                     )
                     postulacion_c = Postulacion.objects.get(slug=slug)
                     municipio_c = Municipios.objects.get(id=postulacion_c.municipio.id)
-                    municipio_c.estado="APROBADO"
+                    municipio_c.estado="REVISION"
                     municipio_c.p_a=True
                     municipio_c.save()
                     if postulacion_c.tipo_financiamiento == 1:
-                        return HttpResponseRedirect(reverse('proyecto:lista_inicio', args=[]))
+                        return HttpResponseRedirect(reverse('proyecto:l_ITCP_env', args=[]))
                     else:
-                        return HttpResponseRedirect(reverse('proyecto:lista_inicioEjec', args=[]))
+                        return HttpResponseRedirect(reverse('proyecto:l_EDTP_env', args=[]))
                 else:
                     return self.render_to_response(self.get_context_data(form=form, form2=form2 ))
             else:   
@@ -474,10 +496,8 @@ class Act_Ficha_MAE(UpdateView):
     def get(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug', None)
         postulacion_p = get_object_or_404(self.model, slug=slug)
-
         if postulacion_p.modificacion:
             return redirect('convocatoria:Index')
-
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

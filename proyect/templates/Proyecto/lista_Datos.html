@@ -20,7 +20,12 @@
             <td>            
                  {{ proyecto.revisor.revisor_perfil.persona.nombrecompleto }}
             </td>
-            <td> {{ proyecto.estado }}</td>
+            <td>
+            {% if proyecto.estado == 'SIN REVISAR' %}<p class="bg-danger fw-bold">
+            {% elif proyecto.estado == 'CON OBSERVACION' %}<p class="bg-warning fw-bold">
+            {% elif proyecto.estado == 'CORREGIDO' %}<p class="bg-warning fw-bold">
+            {% endif %} {{ proyecto.estado }} </p>
+            </td>
             <td>
                 <a href=" {% url 'proyecto:ver_Datos' proyecto.slug %} " type="button"
                    class="btn btn-primary btn-xs"><i class="fa fa-eye"></i>

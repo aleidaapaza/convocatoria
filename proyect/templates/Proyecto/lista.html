@@ -2,31 +2,37 @@
 {% load static %}
 {% block thead %}
     <tr>
-        <th scope="col">CONVOCATORIA</th>
+        <th scope="col">CODIGO</th>
         <th scope="col">DEPARTAMENTO</th>
         <th scope="col">ENTIDAD TERRITORIAL</th>
         <th scope="col">MUNICIPIO</th>
-        <th scope="col">NOMBRE DE LA MAE</th>
-        <th scope="col">FECHA Y HORA ASIGANACION USUARIO</th>
-        <th scope="col">INICIO CONEXION</th>
+        <th scope="col">NOMBRE DEL ENCARGADO DEL PROYECTO</th>
+        <th scope="col">CONTACTO</th>
+        <th scope="col">¿REALIZO EL INICIO DE SESION?</th>
+        <th scope="col">ULTIMO INICIO DE SESION</th>    
     </tr>
 
 {% endblock %}
 {% block tbody %}
     {% for postulacion in object_list %}
         <tr>
-            <td> {{ postulacion.convocatoria.nombre }}</td>
+            <td> {{ postulacion.slug }}</td>
             <td> {{ postulacion.municipio.departamento }}</td>
             <td> {{ postulacion.municipio.entidad_territorial }} </td>
             <td> {{ postulacion.municipio.nombre_municipio }}</td>
-            <td> {{ postulacion.mae.persona.nombrecompleto }}</td>
-            <td> {{ postulacion.fecha_registro }}</td>
+            <td> {{ postulacion.responsable.persona.nombrecompleto }}</td>
+            <td> {{ postulacion.responsable.persona.celular }}</td>
             <td> 
             {% if postulacion.fecha_ultimaconexion %}
             <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
             {% else %}<i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
             {% endif %}
             </td>
-        </tr>
+            <td> 
+            {% if postulacion.fecha_ultimaconexion %}
+                {{ postulacion.fecha_ultimaconexion }}
+                {% else %}NO REALIZO NINGUN INICIO DE SESION
+            {% endif %}
+            </td></tr>
     {% endfor %}
 {% endblock %}

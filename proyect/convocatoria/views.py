@@ -11,7 +11,7 @@ from django.contrib import messages
 
 from solicitud.models import Postulacion, Municipios
 from user.models import Revisor, SuperUser, User
-from convocatoria.funciones import obtener_estadisticas_convocatoria
+from convocatoria.funciones import obtener_estadisticas_convocatoria, contar_por_convocatoria
 from convocatoria.models import Convocatoria
 from convocatoria.forms import R_Convocatoria, A_Convocatoria
 
@@ -34,6 +34,7 @@ class Reg_Convocatoria(CreateView):
             context['form'] = self.form_class(self.request.GET)
         context['titulo'] = 'REGISTRO DE LA CONVOCATORIA'
         context['entity'] = 'REGISTRO DE LA CONVOCATORIA'
+        context['superuser']=True
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse('convocatoria:lista_convocatoria', args=[])
@@ -62,31 +63,80 @@ class Reg_Convocatoria(CreateView):
 class Act_Convocatoria(UpdateView):
     model=Convocatoria
     form_class = A_Convocatoria
-    template_name = 'convocatoria/R_Convocatoria.html'
-    
+    template_name = 'convocatoria/R_Convocatoria.html'    
     def get_context_data(self, **kwargs):
         context = super(Act_Convocatoria, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
         if 'form' not in context:
             context['form'] = self.form_class(self.request.GET, self.request.FILES)
         context['titulo'] = 'ACTUALIZACION DE LA CONVOCATORIA'
+        context['superuser']=True
         context['entity'] = 'ACTUALIZACION DE LA CONVOCATORIA'
         context['accion'] = 'Actualizar'
         context['accion2'] = 'Volver'
         context['accion2_url'] = reverse('convocatoria:lista_convocatoria', args=[])
+        activos = 0
+        inactivos = 0
+        postulaciones_conv = Postulacion.objects.filter(convocatoria__slug=slug)
+        c_postulaciones = postulaciones_conv.count()
+        if postulaciones_conv:
+            for postulacion in postulaciones_conv:
+                try:
+                    usuario = DatosProyectoBase.objects.get(slug=postulacion.slug)
+                    if usuario.user.is_active:
+                        activos += 1
+                    else:
+                        inactivos += 1
+                except DatosProyectoBase.DoesNotExist:
+                    continue
+        context['postulaciones_conv'] =postulaciones_conv
+        context['c_postulaciones'] =c_postulaciones
+        context['activos'] =activos
+        context['inactivos'] =inactivos
         return context
+    
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        self.object = self.get_object()        
         slug = self.kwargs.get('slug', None)
-        objeto = self.model.objects.get(slug=slug)     
+        objeto = self.model.objects.get(slug=slug)
+        datosactivos = []
+        datosinactivos = []
+        activos = 0
+        inactivos = 0
+        postulaciones_conv = Postulacion.objects.filter(convocatoria__slug=slug)
+        if postulaciones_conv:
+            for postulacion in postulaciones_conv:
+                try:
+                    usuario = DatosProyectoBase.objects.get(slug=postulacion.slug)
+                    if usuario.user.is_active:
+                        activos += 1
+                        datosactivos.append(usuario.user.id)
+                    else:
+                        inactivos += 1
+                        datosinactivos.append(usuario.user.id)
+                except DatosProyectoBase.DoesNotExist:
+                    continue
         form = self.form_class(request.POST, request.FILES, instance = objeto)
         if form.is_valid():
-            elabEDTP = form.cleaned_data.get('montoElabEDTP')
-            print(elabEDTP)
+            elabEDTP = form.cleaned_data.get('montoElabEDTP')            
+            activo = request.POST.get('usuarios_activos')
+            print(activo)
+            inactivo = request.POST.get('usuarios_inactivo')
+            print(inactivo)
             if elabEDTP == 0 or elabEDTP == None:
                 conv = form.save(commit=False)
                 conv.montoElabEDTP = 0
                 conv.save()
+            if activo:
+                for datos in datosinactivos:
+                    user = User.objects.get(id=datos)
+                    user.is_active = True
+                    user.save()
+            if inactivo:
+                for datos in datosactivos:
+                    user = User.objects.get(id=datos)
+                    user.is_active = False
+                    user.save()
             else:
                 form.save()
             return HttpResponseRedirect(reverse('convocatoria:Actualizar_convocatoria', args=[slug]))
@@ -102,6 +152,7 @@ class Ver_Convocatoria(DetailView):  # Cambiar de UpdateView a DetailView
         context = super().get_context_data(**kwargs)
         context['titulo'] = 'DETALLES DE LA CONVOCATORIA'
         context['entity'] = 'Detalles de la Convocatoria'
+        context['superuser']=True
         context['accion'] = 'Ver Detalles'
         context['accion2'] = 'Volver'
         context['accion2_url'] = reverse('convocatoria:lista_convocatoria')
@@ -155,7 +206,6 @@ class Index(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
         if messages:
-        # Si hay mensajes de éxito, error, etc.
             for message in messages.get_messages(self.request):
                     if message.level_tag == 'success':
                         context['message_title'] = 'Actualización Exitosa'
@@ -236,9 +286,8 @@ class Index(TemplateView):
                 context['slug']=user_sl
                 context['superuser']=True
                 context['postulacion'] = postulacion_p
-                user = self.request.user
                 convocatoria = Convocatoria.objects.all().order_by('-id')
-                context['convocatoria'] = convocatoria                
+                context['convocatoria'] = convocatoria
         else:
             estado = Convocatoria.objects.filter(estado=True).count()
             if estado == 1:
@@ -355,6 +404,21 @@ class Detalle_convocatoria(TemplateView):
             context['fin2_srevisar_c']=fin2_srevisar_c
             context['fin2_observar_c']=fin2_observar_c
             context['fin2_aprobado_c']=fin2_aprobado_c
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
+        if stats:
+            context.update({
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
     
 class ListaMunicipios(TemplateView):

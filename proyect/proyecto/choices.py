@@ -72,6 +72,8 @@ riesgos = [
 estado_proyecto = [
     ("SIN REVISAR", "SIN REVISAR"),
     ("CON OBSERVACION", "CON OBSERVACION"),
+    ("CORREGIDO", "CORREGIDO"),
+    ("COMPLETO", "COMPLETO"),
     ("APROBADO", "APROBADO"),
     ("RECHAZADO", "RECHAZADO"),
     ("EN EJECUCION", "EN EJECUCION"),

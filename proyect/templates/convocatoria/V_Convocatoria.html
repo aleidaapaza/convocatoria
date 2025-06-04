@@ -1,110 +1,153 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block contenido %}
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>FECHA DE REGISTRO:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.fechaRegistro }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>NOMBRE DE LA CONVOCATORIA:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.nombre }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>FECHA DE LANZAMIENTO:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.fechaLanzamiento }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>HORA DE LANZAMIENTO:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.horaLanzamiento }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>FECHA DE CIERRE:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.fechaCierre }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>HORA DE CIERRE:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.horaCierre}}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA ELABORACION DEL EDTP:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.montoElabEDTP }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>MONTO MAXIMO POR PARTE DEL FONABOSQUE PARA LA EJECUCION DEL EDTP:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.montoEjecEDTP }}
-            </div>            
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>TAMAÑO PERMITIDO POR DOCUMENTO PARA EL ITCP-DECLARACION JURADA:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {{ convocatoria.tamañoDoc }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row mb-4">
+                <div class="col-sm-12 col-md-5">
+                    <strong>ESTADO DE LA CONVOCATORIA:</strong>
+                </div>
+                <div class="col-sm-12 col-md-7">
+                    <div class='form-control form-control-sm font-weight-bold border border-info'>
+                    {% if convocatoria.estado %}
+                        ACTIVO
+                    {% else %}
+                        INACTIVO
+                    {% endif %}
+                    </div>            
+                </div>
             </div>
-        </div>
+            <hr>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end fw-bold">NOMBRE/TITULO</div>
+                <div class="col-sm-8 ">
+                    <p class="form-control form-control-sm font-weight-bold border border-info">{{ convocatoria.nombre }}</p>
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end fw-bold">DESCRIPCION ADICIONAL</div>
+                <div class="col-sm-8 ">
+                    <p class="form-control form-control-sm font-weight-bold border border-info">{{ convocatoria.descripcion }}</p>
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end fw-bold">TAMAÑO PERMITIDO POR DOCUMENTO</div>
+                <div class="col-sm-8 ">
+                    <p class="form-control form-control-sm font-weight-bold border border-info">{{ convocatoria.tamanoDoc }}</p>
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end fw-bold">BANNER DE LA CONVOCATORIA</div>
+                <div class="col-sm-8 ">
+                    <p class="form-control form-control-sm font-weight-bold border border-info">{{ convocatoria.banner }}</p>
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">APERTURA</h5>
+                    <div class="row">
+                        <div class="col-sm-8 text-end">FECHA DE LANZAMIENTO</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {{ convocatoria.fechaLanzamiento }}
+                            </p>
+                        </div>
+                        <div class="col-sm-8 text-end">FECHA DE LANZAMIENTO</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {{ convocatoria.horaLanzamiento }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">CIERRE</h5>
+                    <div class="row">
+                        <div class="col-sm-8 text-end">FECHA DE CIERRE</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {{ convocatoria.fechaCierre }}
+                            </p>
+                        </div>
+                        <div class="col-sm-8 text-end">FECHA DE CIERRE</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {{ convocatoria.horaCierre }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">ITCP</h5>
+                    <div class="row">
+                        <div class="col-sm-8 text-end">¿HABILITADO?</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {% if convocatoria.elabEdtp %} SI                            
+                            {% else %} NO{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-sm-8 text-end">MONTO MAXIMO</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {{ convocatoria.montoElabEDTP }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center text-bg-primary">EDTP</h5>
+                    <div class="row">
+                        <div class="col-sm-8 text-end">¿HABILITADO?</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {% if convocatoria.EjecEdtp %} SI                            
+                            {% else %} NO{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-sm-8 text-end">MONTO MAXIMO</div>
+                        <div class="col-sm-4">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">
+                            {{ convocatoria.montoEjecEDTP }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <h5 class="text-center text-bg-primary">MATERIAL DE APOYO</h5>
+                <div class="col-sm-4 text-end fw-bold">DOCUMENTO DE LA CONVOCATORIA</div>
+                <div class="col-sm-8 ">
+                    <a href="{{ convocatoria.documento.url }}" target="_blank">
+                    <button type="button" class="btn btn-secondary">Abrir</button>
+                    </a>
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end fw-bold">GUIA DE LLENADO</div>
+                <div class="col-sm-8 ">
+                    <a href="{{ convocatoria.guia.url }}" target="_blank">
+                    <button type="button" class="btn btn-secondary">Abrir</button>
+                    </a>
+                </div>       
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4 text-end fw-bold">VIDEO AYUDA</div>
+                <div class="col-sm-8 ">
+                    {% if guiaVideo %}
+                        <a href="{{ convocatoria.guiaVideo }}" target="_blank">
+                            <p class="form-control form-control-sm font-weight-bold border border-info">{{ convocatoria.guiaVideo }}</p>
+                        </a>
+                    {% else %}
+                    <p class="form-control form-control-sm font-weight-bold border border-info">NO SE CUENTA</p>
+                    {% endif %}
+                </div>       
+            </div>
+        </div>        
     </div>
-    <div class="row mb-4">
-        <div class="col-sm-12 col-md-5">
-            <strong>ESTADO DE LA CONVOCATORIA:</strong>
-        </div>
-        <div class="col-sm-12 col-md-7">
-            <div class='form-control form-control-sm font-weight-bold border border-info'>
-            {% if convocatoria.estado %}
-                ACTIVO
-            {% else %}
-                INACTIVO
-            {% endif %}
-            </div>            
-        </div>
-    </div>
+    
     <div class="row text-center row mt-2">
         <div class="col">
             <a href="{{accion2_url}}" class="btn btn-danger">

@@ -45,9 +45,13 @@
         <div class="offcanvas-body">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}"><i class="fas fa-home"></i> INICIO</a>
-                    <hr>
+                    <a class="nav-link active" href="{% url 'convocatoria:Index' %}"><i class="fas fa-home"></i>INICIO</a>
                 </li>
+                <hr>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'convocatoria:detalle_convocatoria' convocatoria.slug %}"><i class="fas fa-home"></i> DETALLE DE LA CONVOCATORIA</a>
+                </li>
+                <hr>
                 <li class="nav-item bg-info">
                     <p class="text-center fw-bold">SOLICITUDES</p>
                 </li>  
@@ -59,54 +63,66 @@
                     <span class="badge text-bg-warning">{{sin_revisar_sol_1}}</span> </a>
                 </li>   
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fas fa-file-alt"></i> EDTP
+                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitudEj' convocatoria.slug %}"><i class="fas fa-file-alt"></i> EDTP
                     <span class="badge text-bg-warning">{{sin_revisar_sol_2}}</span> </a>
                 </li>
                 <li class="nav-item bg-info">
                     <p class="text-center fw-bold">ENVIO DE ITCP (CON INICIO DE SESION)</p>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fas fa-file-alt"></i> LISTA COMPLETA</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_p' convocatoria.slug %}"><i class="fas fa-file-alt"></i> ESTADO INICIO DE SESION</a>
                 </li>
                 <hr>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fa-solid fa-question"></i> SIN REVISAR</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fa-solid fa-comment"></i> OBSERVADOS/CORREGIDOS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fa-solid fa-check-double"></i> COMPLETOS</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_env' convocatoria.slug %}"><i class="fas fa-file-alt"></i> LISTA COMPLETA</a>
                 </li>
                 <hr>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fa-solid fa-pen-clip"></i> PASAN A REVISION</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_Sr' convocatoria.slug %}"><i class="fa-solid fa-question"></i> SIN REVISAR
+                    <span class="badge text-bg-warning">{{ itcp_sr }}</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fas fa-times-circle"></i> NO PASAN A REVISION</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_Obs' convocatoria.slug %}"><i class="fa-solid fa-comment"></i> OBSERVADOS/CORREGIDOS
+                    <span class="badge text-bg-warning">{{ itcp_oc }}</span> </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_Comp' convocatoria.slug %}"><i class="fa-solid fa-check-double"></i> COMPLETOS</a>
+                </li>
+                <hr>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_p' convocatoria.slug %}"><i class="fa-solid fa-pen-clip"></i> PASAN A REVISION</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_p' convocatoria.slug %}"><i class="fas fa-times-circle"></i> NO PASAN A REVISION</a>
                 </li>
                 <li class="nav-item bg-info">
                     <p class="text-center fw-bold">ENVIO DE EDTP (CON INICIO DE SESION)</p>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fas fa-file-alt"></i> LISTA COMPLETA</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_EDTP_p' convocatoria.slug %}"><i class="fas fa-file-alt"></i> ESTADO INICIO DE SESION</a>
                 </li>
                 <hr>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fa-solid fa-question"></i> SIN REVISAR</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'solicitud:ListaSolicitud' convocatoria.slug %}"><i class="fa-solid fa-comment"></i> OBSERVADOS/CORREGIDOS</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fa-solid fa-check-double"></i> COMPLETOS</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_EDTP_env' convocatoria.slug %}"><i class="fas fa-file-alt"></i> LISTA COMPLETA</a>
                 </li>
                 <hr>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fa-solid fa-pen-clip"></i> PASAN A REVISION</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_EDTP_Sr' convocatoria.slug %}"><i class="fa-solid fa-question"></i> SIN REVISAR
+                    <span class="badge text-bg-warning">{{ edtp_sr }}</span> </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'proyecto:lista_inicio' %}"><i class="fas fa-times-circle"></i> NO PASAN A REVISION</a>
+                    <a class="nav-link active" href="{% url 'proyecto:l_EDTP_Obs' convocatoria.slug %}"><i class="fa-solid fa-comment"></i> OBSERVADOS/CORREGIDOS
+                    <span class="badge text-bg-warning">{{ edtp_oc }}</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:l_EDTP_Comp' convocatoria.slug %}"><i class="fa-solid fa-check-double"></i> COMPLETOS</a>
+                </li>
+                <hr>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_p' convocatoria.slug %}"><i class="fa-solid fa-pen-clip"></i> PASAN A REVISION</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'proyecto:l_ITCP_p' convocatoria.slug %}"><i class="fas fa-times-circle"></i> NO PASAN A REVISION</a>
                 </li>
             </ul>
         </div>

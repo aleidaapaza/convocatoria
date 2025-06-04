@@ -1,9 +1,9 @@
 from django.urls import path, include
 
-from proyecto.views import (Lista_Proyectos, EnviarDatos, enviarDatos2, Lista_ProyectosDatos, verDatos, 
-                            Lista_ProyectosSinRevisar, Lista_ProyectosObservados, Lista_ProyectosAprobados,
-                            Lista_ProyectosEjec, Lista_ProyectosDatosEjec, Lista_ProyectosSinRevisarEjec,
-                            Lista_ProyectosAprobadosEJEC, Lista_ProyectosObservadosEjec)
+from proyecto.views import (EnviarDatos, enviarDatos2, verDatos,
+                            Lista_ITCP_p, Lista_EDTP_p, Lista_ITCP_Enviados, Lista_EDTP_Enviados,
+                            Lista_ITCP_SinRevisar, Lista_ITCP_ObsCo, Lista_ITCP_COMPLETO,
+                            Lista_EDTP_SinRevisar, Lista_EDTP_ObsCo, Lista_EDTP_COMPLETO)
 from proyecto.view.itcp0 import DatosPostulacion
 from proyecto.view.itcp1 import RegistroDatosBasicos
 from proyecto.view.itcp2 import Reg_Justificaciones, Act_Justificacion
@@ -28,20 +28,18 @@ from proyecto.viewEjec.edtp04 import (R_DerechoPropietarioE, A_DerechoPropietari
 app_name = 'proyecto'
 
 urlpatterns = [    
-    #ListaITCP
-    path('lista_aprobados/', Lista_Proyectos.as_view(), name='lista_inicio'),
-    path('lista_aprobadosDatos/', Lista_ProyectosDatos.as_view(), name='lista_datos'),
-      #LISTA ESTADO DE REVISIONES
-    path('lista_SinRevisar/', Lista_ProyectosSinRevisar.as_view(), name='lista_datosSinrevisar'),
-    path('lista_Observados/', Lista_ProyectosObservados.as_view(), name='lista_datosObservados'),
-    path('lista_Aprobados/', Lista_ProyectosAprobados.as_view(), name='lista_datosAprobados'),
-    #ListaEDTP
-    path('lista_aprobadosEjec/', Lista_ProyectosEjec.as_view(), name='lista_inicioEjec'),
-    path('lista_aprobadosDatosEjec/', Lista_ProyectosDatosEjec.as_view(), name='lista_datosEjec'),
-      #LISTA ESTADO DE REVISIONES
-    path('lista_SinRevisarEjec/', Lista_ProyectosSinRevisarEjec.as_view(), name='lista_datosSinrevisarEjec'),
-    path('lista_ObservadosEjec/', Lista_ProyectosObservadosEjec.as_view(), name='lista_datosObservadosEjec'),
-    path('lista_AprobadosEjec/', Lista_ProyectosAprobadosEJEC.as_view(), name='lista_datosAprobadosEjec'),
+    #LISTA ITCP
+    path('l_ITCP_p/<slug:slug>/', Lista_ITCP_p.as_view(), name='l_ITCP_p'),
+    path('l_ITCP_Env/<slug:slug>/', Lista_ITCP_Enviados.as_view(), name='l_ITCP_env'),
+    path('l_ITCP_SinRevisar/<slug:slug>/', Lista_ITCP_SinRevisar.as_view(), name='l_ITCP_Sr'),
+    path('l_ITCP_Obs/<slug:slug>/', Lista_ITCP_ObsCo.as_view(), name='l_ITCP_Obs'),
+    path('l_ITCP_Completo/<slug:slug>/', Lista_ITCP_COMPLETO.as_view(), name='l_ITCP_Comp'),
+    #Lista EDTP
+    path('l_EDTP_p/<slug:slug>/', Lista_EDTP_p.as_view(), name='l_EDTP_p'),
+    path('l_EDTP_Env/<slug:slug>/', Lista_EDTP_Enviados.as_view(), name='l_EDTP_env'),
+    path('l_EDTP_SinRevisar/<slug:slug>/', Lista_EDTP_SinRevisar.as_view(), name='l_EDTP_Sr'),
+    path('l_EDTP_Obs/<slug:slug>/', Lista_EDTP_ObsCo.as_view(), name='l_EDTP_Obs'),
+    path('l_EDTP_Completo/<slug:slug>/', Lista_EDTP_COMPLETO.as_view(), name='l_EDTP_Comp'),
     #Datos Postulacion
     path('DatosPostulacion/<slug:slug>', DatosPostulacion.as_view(), name='datos_postulacion'),
     #ITCP y EDTP

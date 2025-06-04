@@ -6,8 +6,9 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, View
 from django.utils import timezone
 from django.contrib import messages
+from itertools import chain
 
-from convocatoria.funciones import obtener_estadisticas_convocatoria
+from convocatoria.funciones import obtener_estadisticas_convocatoria, contar_por_convocatoria
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
@@ -20,7 +21,7 @@ import qrcode
 from io import BytesIO
 
 from solicitud.models import Postulacion
-
+from convocatoria.models import Convocatoria
 from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Objetivo_especifico, Beneficiario,
                              Modelo_Acta, Derecho_propietario, Impacto_ambiental, Riesgo_desastre, Detalle_POA,
                              Conclusion_recomendacion, Declaracion_jurada, PresupuestoReferencial,
@@ -29,7 +30,6 @@ from proyecto.models import (DatosProyectoBase, Justificacion, Idea_Proyecto, Ob
 
 from proyecto.forms import R_Declaracion_ITCP, R_Proyecto, R_ProyectoEDTP
 
-   
 def generate_pdf(request, slug):
     # Creamos una respuesta HttpResponse para devolver el PDF
     response = HttpResponse(content_type='application/pdf')
@@ -1064,265 +1064,324 @@ class verDatos(View):
                 messages.error(request, 'Hubo un error al actualizar los datos.')
                 return self.render_to_response(self.get_context_data(form=form))
 
-class Lista_Proyectos(ListView):
+
+class Lista_ITCP_p(ListView):
     model = Postulacion
     template_name = 'Proyecto/lista.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_Proyectos, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado=True).filter(tipo_financiamiento=1)     
-        context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - ITCP'
+        context = super(Lista_ITCP_p, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(convocatoria__slug = id_conv).filter(estado=True).filter(tipo_financiamiento=1)     
+        context['titulo'] = 'CON INICIO DE SESION - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - ITCP'
+        context['entity'] = 'CON INICIO DE SESION - ITCP'
         context['object_list'] = proyectos
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        }) 
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
-    
-class Lista_ProyectosEjec(ListView):
+
+class Lista_ITCP_Enviados(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_Datos.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ITCP_Enviados, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = Postulacion.objects.filter(convocatoria__slug = id_conv).filter(estado=True).filter(tipo_financiamiento=1)
+        proyectos_enviados = []
+        for proyecto in proyectos:
+            try:
+                enviado = self.model.objects.filter(slug=proyecto.slug)
+                if enviado.exists():
+                    proyectos_enviados.append(enviado)
+            except DatosProyectoBase.DoesNotExist:
+                continue
+        proyectos_enviados = list(chain.from_iterable(proyectos_enviados))
+        context['object_list'] = proyectos_enviados
+        context['titulo'] = 'ITCP ENVIADOS'
+        context['activate'] = True
+        context['entity'] = 'ITCP ENVIADOS'
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
+        if stats:
+            context.update({
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
+        return context
+
+class Lista_ITCP_SinRevisar(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_DatosEstado.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ITCP_SinRevisar, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__convocatoria__slug = id_conv).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
+        context['titulo'] = 'SIN REVISAR - ITCP'
+        context['activate'] = True
+        context['entity'] = 'SIN REVISAR - ITCP'
+        context['object_list'] = proyectos
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
+        if stats:
+            context.update({
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
+        return context
+
+class Lista_ITCP_ObsCo(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_DatosObservados.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ITCP_ObsCo, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(
+            estado__in=['CON OBSERVACION', 'CORREGIDO'],
+            ).filter(datos_basicos__postulacion__convocatoria__slug = id_conv).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
+        context['titulo'] = 'OBSERVADO/CORREGIDO - ITCP'
+        context['activate'] = True
+        context['entity'] = 'OBSERVADO/CORREGIDO - ITCP'
+        context['object_list'] = proyectos
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
+        if stats:
+            context.update({
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
+        return context
+
+class Lista_ITCP_COMPLETO(ListView):
+    model = Proyecto
+    template_name = 'Proyecto/lista_DatosEstado.html'
+    def get_context_data(self, **kwargs):
+        context = super(Lista_ITCP_COMPLETO, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(estado='COMPLETO').filter(datos_basicos__postulacion__convocatoria__slug = id_conv).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
+        context['titulo'] = 'COMPLETO - ITCP'
+        context['activate'] = True
+        context['entity'] = 'COMPLETO - ITCP'
+        context['object_list'] = proyectos
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
+        if stats:
+            context.update({
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
+        return context
+
+class Lista_EDTP_p(ListView):
     model = Postulacion
     template_name = 'Proyecto/lista.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosEjec, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado=True).filter(tipo_financiamiento=2)
-        context['titulo'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - EDTP'
+        context = super(Lista_EDTP_p, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(convocatoria__slug = id_conv).filter(estado=True).filter(tipo_financiamiento=2)     
+        context['titulo'] = 'CON INICIO DE SESION - ITCP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS CON INICIO DE SESION - EDTP'
+        context['entity'] = 'CON INICIO DE SESION - ITCP'
         context['object_list'] = proyectos
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })     
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
-    
-class Lista_ProyectosDatos(ListView):
-    model = Proyecto
-    template_name = 'Proyecto/lista_Datos.html'
-    def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosDatos, self).get_context_data(**kwargs)
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
-        context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
-        context['object_list'] = Proyecto.objects.all()
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
-        if stats:
-            context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })      
-        return context
-    
-class Lista_ProyectosDatosEjec(ListView):
+       
+class Lista_EDTP_Enviados(ListView):
     model = EDTP
     template_name = 'Proyecto/lista_Datos.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosDatosEjec, self).get_context_data(**kwargs)
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
+        context = super(Lista_EDTP_Enviados, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = Postulacion.objects.filter(convocatoria__slug = id_conv).filter(estado=True).filter(tipo_financiamiento=2)
+        proyectos_enviados = []
+        for proyecto in proyectos:
+            try:
+                enviado = self.model.objects.filter(slug=proyecto.slug)
+                if enviado.exists():
+                    proyectos_enviados.append(enviado)
+            except DatosProyectoBase.DoesNotExist:
+                continue
+        proyectos_enviados = list(chain.from_iterable(proyectos_enviados))
+        context['object_list'] = proyectos_enviados
+        context['titulo'] = 'EDTP ENVIADOS'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS QUE ENVIARON DATOS'
-        context['object_list'] = EDTP.objects.all()
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        context['entity'] = 'EDTP ENVIADOS'
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })      
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
-    
-class Lista_ProyectosSinRevisar(ListView):
-    model = Proyecto
-    template_name = 'Proyecto/lista_DatosEstado.html'
-    def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosSinRevisar, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__tipo_financiamiento = 1)
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - ITCP'
-        context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - ITCP'
-        context['object_list'] = proyectos                
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
-        if stats:
-            context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        }) 
-        return context
-
-class Lista_ProyectosSinRevisarEjec(ListView):
+class Lista_EDTP_SinRevisar(ListView):
     model = EDTP
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosSinRevisarEjec, self).get_context_data(**kwargs)
-        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__tipo_financiamiento = 2)
-        
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - EDTP'
+        context = super(Lista_EDTP_SinRevisar, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(estado='SIN REVISAR').filter(datos_basicos__postulacion__convocatoria__slug = id_conv).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        context['titulo'] = 'SIN REVISAR - EDTP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS SIN REVISAR - EDTP'
+        context['entity'] = 'SIN REVISAR - EDTP'
         context['object_list'] = proyectos
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })       
-        return context
-    
-class Lista_ProyectosObservados(ListView):
-    model = Proyecto
-    template_name = 'Proyecto/lista_DatosObservados.html'
-    def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosObservados, self).get_context_data(**kwargs)
-        revisor = self.request.user
-        if self.request.user.is_superuser:
-            proyectos = self.model.objects.filter(
-                estado__in=['CON OBSERVACION', 'CORREGIDO']
-            ).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
-        else:
-            proyectos = self.model.objects.filter(
-                estado__in=['CON OBSERVACION', 'CORREGIDO'],
-                revisor=revisor
-            ).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - ITCP'
-        context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - ITCP'
-        context['object_list'] = proyectos
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
-        if stats:
-            context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })       
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
 
-class Lista_ProyectosObservadosEjec(ListView):
+class Lista_EDTP_ObsCo(ListView):
     model = EDTP
     template_name = 'Proyecto/lista_DatosObservados.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosObservadosEjec, self).get_context_data(**kwargs)
-        revisor = self.request.user
-        if self.request.user.is_superuser:
-            proyectos = self.model.objects.filter(
-                estado__in=['CON OBSERVACION', 'CORREGIDO']
-            ).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
-        else:
-            proyectos = self.model.objects.filter(
-                estado__in=['CON OBSERVACION', 'CORREGIDO'],
-                revisor=revisor
-            ).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - EDTP'
+        context = super(Lista_EDTP_ObsCo, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(
+            estado__in=['CON OBSERVACION', 'CORREGIDO'],
+            ).filter(datos_basicos__postulacion__convocatoria__slug = id_conv).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        context['titulo'] = 'OBSERVADO/CORREGIDO - EDTP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE SE OBSERVARON Y/O CORRIGIERON - EDTP'
+        context['entity'] = 'OBSERVADO/CORREGIDO - EDTP'
         context['object_list'] = proyectos
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })      
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context
-    
-    
-class Lista_ProyectosAprobados(ListView):
-    model = Proyecto
-    template_name = 'Proyecto/lista_DatosEstado.html'
-    def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosAprobados, self).get_context_data(**kwargs)
-        revisor = self.request.user
-        if self.request.user.is_superuser:
-            proyectos = self.model.objects.filter(estado='APROBADO').filter(datos_basicos__postulacion__tipo_financiamiento = 1)
-        else:
-            proyectos = self.model.objects.filter(estado='APROBADO').filter(revisor=revisor).filter(datos_basicos__postulacion__tipo_financiamiento = 1)
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
-        context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - ITCP'
-        context['object_list'] = proyectos                
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
-        if stats:
-            context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        }) 
-        return context
-   
-class Lista_ProyectosAprobadosEJEC(ListView):
+
+class Lista_EDTP_COMPLETO(ListView):
     model = EDTP
     template_name = 'Proyecto/lista_DatosEstado.html'
     def get_context_data(self, **kwargs):
-        context = super(Lista_ProyectosAprobadosEJEC, self).get_context_data(**kwargs)
-        revisor = self.request.user
-        if self.request.user.is_superuser:
-            proyectos = self.model.objects.filter(estado='APROBADO').filter(datos_basicos__postulacion__tipo_financiamiento = 2)
-        else:
-            proyectos = self.model.objects.filter(estado='APROBADO').filter(revisor=revisor).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
-        # Añadimos el título y la entidad
-        context['titulo'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - EDTP'
+        context = super(Lista_EDTP_COMPLETO, self).get_context_data(**kwargs)
+        id_conv = self.kwargs.get('slug', None)
+        convocatoria = Convocatoria.objects.get(slug=id_conv)
+        context['convocatoria']=convocatoria
+        proyectos = self.model.objects.filter(estado='COMPLETO').filter(datos_basicos__postulacion__convocatoria__slug = id_conv).filter(datos_basicos__postulacion__tipo_financiamiento = 2)
+        context['titulo'] = 'COMPLETO - EDTP'
         context['activate'] = True
-        context['entity'] = 'LISTA DE PROYECTOS APROBADOS QUE NO TIENEN OBSERVACION - EDTP'
+        context['entity'] = 'COMPLETO - EDTP'
         context['object_list'] = proyectos
-        user = self.request.user  # Usamos el usuario actual
-        stats = obtener_estadisticas_convocatoria(user)
+        user = self.request.user
+        stats = contar_por_convocatoria(user, id_conv)
         if stats:
             context.update({
-            'c_sol_itcp': stats['c_sol_itcp'],
-            'c_sol_edtp': stats['c_sol_edtp'],
-            'c_itcp_SR': stats['c_itcp_SR'],
-            'c_edtp_SR': stats['c_edtp_SR'],
-            'c_itcp_CO': stats['c_itcp_CO'],
-            'c_edtp_CO': stats['c_edtp_CO'],
-        })       
+                'sin_revisar_sol_1': stats['sin_revisar_sol_1'],
+                'sin_revisar_sol_2': stats['sin_revisar_sol_2'],
+                'itcp': stats['itcp'],
+                'itcp_sr': stats['itcp_sr'],
+                'itcp_oc': stats['itcp_oc'],
+                'itcp_ap': stats['itcp_ap'],
+                'edtp': stats['edtp'],
+                'edtp_sr': stats['edtp_sr'],
+                'edtp_oc': stats['edtp_oc'],
+                'edtp_ap': stats['edtp_ap'],
+                })
         return context

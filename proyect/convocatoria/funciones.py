@@ -56,7 +56,23 @@ def contar_por_convocatoria(user, id_conv):
     postulaciones = Postulacion.objects.filter(convocatoria__slug=id_conv)
     sin_revisar_sol_1 = postulaciones.filter(estado=None).filter(tipo_financiamiento=1).count()
     sin_revisar_sol_2 = postulaciones.filter(estado=None).filter(tipo_financiamiento=2).count()
+    itcp = Proyecto.objects.filter(datos_basicos__postulacion__convocatoria__slug=id_conv)
+    itcp_sr = itcp.filter(estado='SIN REVISAR').count()
+    itcp_oc = itcp.filter(estado__in=['CON OBSERVACION', 'CORREGIDO']).count()
+    itcp_ap = itcp.filter(estado='APROBADO').count()
+    edtp = EDTP.objects.filter(datos_basicos__postulacion__convocatoria__slug=id_conv)
+    edtp_sr = edtp.filter(estado='SIN REVISAR').count()
+    edtp_oc = edtp.filter(estado__in=['CON OBSERVACION', 'CORREGIDO']).count()
+    edtp_ap = edtp.filter(estado='APROBADO').count()
     return {
         'sin_revisar_sol_1' : sin_revisar_sol_1,
         'sin_revisar_sol_2' : sin_revisar_sol_2,
+        'itcp' : itcp,
+        'itcp_sr' : itcp_sr,
+        'itcp_oc' : itcp_oc,
+        'itcp_ap' : itcp_ap,
+        'edtp' : edtp,
+        'edtp_sr' : edtp_sr,
+        'edtp_oc' : edtp_oc,
+        'edtp_ap' : edtp_ap,
     }
