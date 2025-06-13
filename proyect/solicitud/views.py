@@ -112,7 +112,6 @@ class mae_r(CreateView):
     template_name = 'homepage/MAE.html'
     form_class = Reg_EncargadoMAE
     second_form_class = Reg_Persona_MAE
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         n_municipio = self.kwargs.get('pk', 0)
@@ -130,16 +129,13 @@ class mae_r(CreateView):
             context['form2'] = self.second_form_class(self.request.GET)
         context['aux_departamento'] = aux_municipio.departamento
         context['aux_municipio'] = aux_municipio.nombre_municipio
-        context['titulo'] = 'Registro de encargado de la MAE'
-        context['entity'] = 'Registro de encargado de la MAE'
+        context['titulo'] = 'REGISTRO DATOS DE LA MAE'
+        context['entity'] = 'Registro DATOS DE LA MAE'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
         fecha = Convocatoria.objects.get(estado=True)
         context['convocatoria']=fecha
-        fechaHoy = datetime.now()
-        print(fechaHoy, 'fecha actual')
-        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
         fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
         context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
         return context
@@ -149,7 +145,6 @@ class mae_r(CreateView):
         municipio_pk = kwargs['pk']
         n_entidad = kwargs['entidad']
         n_financiamiento = self.kwargs.get('financiamiento', 0)        
-        financiamiento = financiamiento_s(n_financiamiento)
         if n_entidad < 3:
             municipiobj = Municipios.objects.get(id=municipio_pk)
         else:
@@ -185,17 +180,18 @@ class mae_r(CreateView):
             encar_Mae.persona = persona_mae
             encar_Mae.save()
             personaResp = Persona.objects.create(
-                nombre = 'Responsable',
-                apellido = 'proyecto',
-                cargo = 'cargo resp PR',
-                celular = '00000',
+                nombre = '',
+                apellido = '',
+                cargo = '',
+                celular = '0',
             )
             responsablePr = ResponsableP.objects.create(
                 persona = personaResp,
-                correo = 'correo@gn.com'
+                correo = ''
             )
             convocatoria = Convocatoria.objects.get(estado=True)
             postulacion_f = self.model.objects.create(
+                fecha_ultimaconexion = None,
                 municipio=municipiobj,
                 mae=encar_Mae,
                 responsable=responsablePr,
@@ -215,7 +211,6 @@ class ResponsableProy(UpdateView):
     template_name = 'homepage/Responsable.html'
     form_class = Reg_ResponsableP
     second_form_class = Reg_Persona_Res
-
     def get_context_data(self, **kwargs):
         context = super(ResponsableProy, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
@@ -227,16 +222,13 @@ class ResponsableProy(UpdateView):
         n_financiamiento = financiamiento_s(postulacion_p.tipo_financiamiento)
         context['financiamiento'] = n_financiamiento
         context['postulacion'] = postulacion_p
-        context['titulo'] = 'Registro de encargado del proyecto'
-        context['entity'] = 'Registro de encargado del proyecto'
+        context['titulo'] = 'REGISTRO DATOS DEL ENCARGADO DEL PROYECTO'
+        context['entity'] = 'REGISTRO DATOS DEL ENCARGADO DEL PROYECTO'
         context['accion'] = 'Registrar'
         context['accion2'] = 'Cancelar'
         context['accion2_url'] = reverse_lazy('convocatoria:Index')
         fecha = Convocatoria.objects.get(estado=True)
         context['convocatoria']=fecha
-        fechaHoy = datetime.now()
-        print(fechaHoy, 'fecha actual')
-        fechalanzamiento = datetime.combine(fecha.fechaLanzamiento, fecha.horaLanzamiento)
         fechaCierre = datetime.combine(fecha.fechaCierre, fecha.horaCierre)
         context['fecha_expiracion'] = fechaCierre.isoformat() if fechaCierre else None
         return context
@@ -251,7 +243,7 @@ class ResponsableProy(UpdateView):
         if form.is_valid() and form2.is_valid():
             form2.save()
             form.save()
-            postulacion_pr.fecha_ultimaconexion =  timezone.now()
+            postulacion_pr.fecha_registro = timezone.now()
             postulacion_pr.save()
             return HttpResponseRedirect(reverse('solicitud:Confirmacion_solicitud', args=[slug]))
         else:
@@ -263,7 +255,7 @@ class Confirmacion(TemplateView):
         context = super(Confirmacion, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
         postulacion = Postulacion.objects.get(slug=slug)
-        context['entity'] = 'confirmacion solicitud'
+        context['entity'] = 'DATOS REGISTRADOS Y ENVIADOS'
         context['postulacion'] = postulacion
         context['n_financiamiento'] = financiamiento_s(postulacion.tipo_financiamiento)
         fecha = Convocatoria.objects.get(estado=True)
@@ -344,6 +336,7 @@ class ListaSolicitudesEJEC(ListView):
         context['convocatoria']=convocatoria
         context['activate'] = True
         context['entity'] = 'LISTA DE SOLICITUDES - EDTP'
+        context['titulo'] = 'LISTA DE SOLICITUDES - EDTP'
         context['object_list'] = self.model.objects.filter(estado=None).filter(tipo_financiamiento=2)
         user = self.request.user
         stats = contar_por_convocatoria(user, id_conv)
@@ -397,7 +390,10 @@ class fichaSolicitud(UpdateView):
         context['titulo'] = 'FICHA SOLICITUD'
         context['activate'] = False
         context['entity'] = 'LISTADO DE SOLICITUDES'
-        context['entity_url'] = reverse_lazy('solicitud:ListaSolicitud', args=[convocatoria.slug])
+        if postulacion_p.tipo_financiamiento == 1:
+            context['entity_url'] = reverse_lazy('proyecto:l_ITCP_env', args=[convocatoria.slug])
+        else:
+            context['entity_url'] = reverse_lazy('proyecto:l_EDTP_env', args=[convocatoria.slug])
         context['activate2'] = True
         context['entity2'] = 'FICHA SOLICITUD'  
         user = self.request.user
@@ -442,11 +438,14 @@ class fichaSolicitud(UpdateView):
                 return self.render_to_response(self.get_context_data(form=form, form2=form2))
             form2.save()
             estado_post = form.cleaned_data.get('estado')
+            print(estado_post)
             if estado_post:
-                postulacion = form.save(commit=False)
-                postulacion.creador = encargado
-                postulacion.save()
+                form.save()
                 if  form3.is_valid():
+                    print('form3')
+                    postulacion = form.save(commit=False)
+                    postulacion.creador = encargado
+                    postulacion.save()
                     user_Pr = form3.save(commit=False)
                     user_Pr.password = '{}{}'.format(user_Pr.username, slug)
                     user_Pr.set_password(user_Pr.password)
@@ -466,9 +465,9 @@ class fichaSolicitud(UpdateView):
                     municipio_c.p_a=True
                     municipio_c.save()
                     if postulacion_c.tipo_financiamiento == 1:
-                        return HttpResponseRedirect(reverse('proyecto:l_ITCP_env', args=[]))
+                        return HttpResponseRedirect(reverse('proyecto:l_ITCP_env', args=[postulacion_c.convocatoria.slug]))
                     else:
-                        return HttpResponseRedirect(reverse('proyecto:l_EDTP_env', args=[]))
+                        return HttpResponseRedirect(reverse('proyecto:l_EDTP_env', args=[postulacion_c.convocatoria.slug]))
                 else:
                     return self.render_to_response(self.get_context_data(form=form, form2=form2 ))
             else:   
@@ -552,6 +551,84 @@ class Act_Ficha_MAE(UpdateView):
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
 
+class Act_Datos_sol(UpdateView):
+    model=Postulacion
+    second_model = EncargadoMAE
+    third_model = Persona 
+    four_model= ResponsableP
+    five_model= Persona
+    template_name='Postulaciones/actualizar.html'
+    form_class=update_Post
+    second_form_class=Reg_EncargadoMAE
+    third_form_class = Reg_Persona_MAE
+    four_form_class=Reg_ResponsableP
+    five_form_class = Reg_Persona_Res
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')
+        postulacion_p = self.model.objects.get(slug=slug)
+
+        mae_p = self.second_model.objects.get(id=postulacion_p.mae.pk)
+        persona_mae = self.third_model.objects.get(id=mae_p.persona.pk)
+        responsable_p = self.four_model.objects.get(id=postulacion_p.responsable.pk)
+        persona_responsable = self.five_model.objects.get(id=responsable_p.persona.pk)
+
+        context.setdefault('form', self.form_class(instance=postulacion_p))
+        context.setdefault('form2', self.second_form_class(instance=mae_p, prefix='mae'))
+        context.setdefault('form3', self.third_form_class(instance=persona_mae, prefix='persona_mae'))
+        context.setdefault('form4', self.four_form_class(instance=responsable_p, prefix='responsable'))
+        context.setdefault('form5', self.five_form_class(instance=persona_responsable, prefix='persona_resp'))
+
+        context.update({
+            'postulacion': postulacion_p,
+            'titulo': 'ACTUALIZAR DATOS DE LA SOLICITUD',
+            'activate': False,
+            'entity': 'ACTUALIZAR DATOS DE LA SOLICITUD',
+            'entity2': 'DATOS DE LA MAE',
+            'entity3': 'DATOS RESPONSABLE DEL PROYECTO',
+            'entity_url': reverse_lazy('convocatoria:Index')
+        })
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        slug = self.kwargs.get('slug')
+        postulacion_pr = Postulacion.objects.get(slug=slug)
+
+        mae_p = self.second_model.objects.get(id=postulacion_pr.mae.pk)
+        persona_mae = self.third_model.objects.get(id=mae_p.persona.pk)
+        responsable_p = self.four_model.objects.get(id=postulacion_pr.responsable.pk)
+        persona_responsable = self.five_model.objects.get(id=responsable_p.persona.pk)
+
+        form = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST, request.FILES, instance=mae_p, prefix='mae')
+        form3 = self.third_form_class(request.POST, instance=persona_mae, prefix='persona_mae')
+        form4 = self.four_form_class(request.POST, request.FILES, instance=responsable_p, prefix='responsable')
+        form5 = self.five_form_class(request.POST, instance=persona_responsable, prefix='persona_resp')
+
+        if form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
+            persona_mae_guardada = form3.save()
+            persona_responsable_guardada = form5.save()
+
+            mae_guardado = form2.save(commit=False)
+            mae_guardado.persona = persona_mae_guardada
+            mae_guardado.save()
+
+            responsable_guardado = form4.save(commit=False)
+            responsable_guardado.persona = persona_responsable_guardada
+            responsable_guardado.save()
+
+            postulacion_pr.modificacion = True
+            postulacion_pr.save()
+
+            return HttpResponseRedirect(reverse('solicitud:Confirmacion_solicitud', args=[slug]))
+        else:
+            return self.render_to_response(self.get_context_data(
+                form=form, form2=form2, form3=form3, form4=form4, form5=form5
+            ))
+
+        
 class Act_ficha_Resp(UpdateView):
     model=Postulacion 
     second_model= ResponsableP

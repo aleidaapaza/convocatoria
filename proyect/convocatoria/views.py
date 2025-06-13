@@ -363,7 +363,7 @@ class Detalle_convocatoria(TemplateView):
         num_total = postulaciones.count()
         totalFin1 = postulaciones.filter(tipo_financiamiento=1).count()
         totalFin2 = postulaciones.filter(tipo_financiamiento=2).count()
-        total_SR = postulaciones.filter(estado=False).count()
+        total_SR = postulaciones.filter(estado=None).count()
         context['convocatoria']=convocatoria
         context['postulaciones']=postulaciones
         context['num_total']=num_total

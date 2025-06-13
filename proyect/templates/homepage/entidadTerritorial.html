@@ -10,33 +10,40 @@
 {% block contenido %}
     {% if not user.is_authenticated%}
         <div class="text-center py-3">
-                <div class="row justify-content-md-center">
-                    <div class="col steps">
-                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
-                        <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
-                        <div class="step-circle bg-success text-white">3</div>
-                        <div class="step-circle">4</div>
-                        <div class="step-circle">5</div>
-                        <div class="step-circle">6</div>
-                        <div class="step-circle">FIN</div>
-                    </div>
+            <div class="row justify-content-md-center">
+                <div class="col steps">
+                    <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                    <div class="step-circle"><i class="fa fa-check-circle text-success" aria-hidden="true"></i></div>
+                    <div class="step-circle bg-success text-white">3</div>
+                    <div class="step-circle">4</div>
+                    <div class="step-circle">5</div>
+                    <div class="step-circle">6</div>
+                    <div class="step-circle">FIN</div>
                 </div>
             </div>
-        <div class="row">            
-            <div class="col">
-                <div class="mb-3 row">
-                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
-                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ fin_d }}</div>
-                    <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
-                    <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ dep_d }}</div>                
-                </div>
+        </div>
+        <div class="row bg-dark-subtle">
+            <div class="p-2 row">
+                <div class="col-md-4 col-sm-12 fw-bold col-form-label">TIPO DE FINANCIAMIENTO</div>
+                <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ fin_d }}</div>
+                <div class="col-md-4 col-sm-12 fw-bold col-form-label">DEPARTAMENTO</div>
+                <div class="col-md-8 col-sm-12 bg-white d-flex align-items-center border border-success-subtle">{{ dep_d }}</div>
+            </div>
+        </div>
+        <h3 class="text-center text-bg-success">SELECCIONE ENTIDAD TERRITORIAL AUTONOMA</h3>
+        <div class="row align-items-center">
+            <div class="col-md-3 col-sm-3">
+                <p class="p-3 bg-warning-subtle"> Posterior a seleccionar la Entidad territorial autonoma (ETA), aparecera todos los municipios, en caso de que <b>no apareciera su municipio</b> puede deberse a que el municipio actualmente cuenta con un
+                proyecto en marcha, caso contrario por favor comuniquese con el contacto proporcionado en la <b><a>GUIA PARA EL LLENADO DE LA CONVOCATORIA</a></b>
+                </p>
+            </div>
+            <div class="col-md-9 col-sm-9">
                 <div class="row">
-                    <h3 class="text-center text-bg-primary">SELECCIONE ENTIDAD TERRITORIAL AUTONOMA</h3>
                     <div class="col-sm-12 col-md-12 p-4">
-                        <div class="card">
+                        <div class="card bg-info-subtle">
                             <a href="{% url 'solicitud:Municipio' fin dep '1' %}" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
-                                    <h5 class="card-title">GOBIERNO AUTÓNOMO DEPARTAMENTAL</h5>
+                                    <h5 class="card-title"><i class="fas fa-landmark"></i> GOBIERNO AUTÓNOMO DEPARTAMENTAL</h5>
                                 </div>
                             </a>
                         </div>
@@ -45,16 +52,16 @@
                         <div class="card">
                             <a href="{% url 'solicitud:Municipio' fin dep '2' %}" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
-                                    <h5 class="card-title">GOBIERNO AUTÓNOMO MUNICIPAL</h5>
+                                    <h5 class="card-title"><i class="fas fa-city"></i> GOBIERNO AUTÓNOMO MUNICIPAL</h5>
                                 </div>
                             </a>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-12 p-4">
-                        <div class="card">
+                        <div class="card bg-info-subtle">
                             <a href="{% url 'solicitud:Municipio' fin dep '3' %}" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
-                                    <h5 class="card-title">GOBIERNO AUTÓNOMO REGIONAL</h5>
+                                    <h5 class="card-title"><i class="fas fa-map-marked-alt"></i> GOBIERNO AUTÓNOMO REGIONAL</h5>
                                 </div>
                             </a>
                         </div>
@@ -63,12 +70,12 @@
                         <div class="card">
                             <a href="{% url 'solicitud:Municipio' fin dep '4' %}" style="text-decoration: none; color: inherit;">
                                 <div class="card-body">
-                                    <h5 class="card-title">GOBIERNO AUTÓNOMO INDIGENA ORIGINARIO CAMPESINO</h5>
+                                    <h5 class="card-title"><i class="fas fa-users"></i> GOBIERNO AUTÓNOMO INDIGENA ORIGINARIO CAMPESINO</h5>
                                 </div>
                             </a>
                         </div>
                     </div>
-                </div>                
+                </div> 
             </div>
         </div>
     {% endif %}

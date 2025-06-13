@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.contrib import messages
 from itertools import chain
 
-from convocatoria.funciones import obtener_estadisticas_convocatoria, contar_por_convocatoria
+from convocatoria.funciones import contar_por_convocatoria
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
@@ -964,13 +964,12 @@ class verDatos(View):
     def get(self, request, slug):        
         postulacion = get_object_or_404(Postulacion, slug=slug)
         derecho = Derecho_propietario.objects.filter(slug=slug)
-        
+        convocatoria = Convocatoria.objects.get(slug=postulacion.convocatoria.slug)                
         if postulacion.tipo_financiamiento == 1:            
             proyecto = get_object_or_404(Proyecto, slug=slug)        
             objetivo_esp = Objetivo_especifico.objects.filter(slug=slug)
             modelo_acta = Modelo_Acta.objects.filter(slug=slug)
-            riesgo_des = Riesgo_desastre.objects.filter(slug=slug)
-            
+            riesgo_des = Riesgo_desastre.objects.filter(slug=slug)            
         else:
             proyecto = get_object_or_404(EDTP, slug=slug)
             objetivo_esp = ObjetivoEspecificoEjec.objects.filter(slug=slug)
@@ -995,6 +994,7 @@ class verDatos(View):
             form = None
             
         context = {
+            'convocatoria': convocatoria,
             'proyecto': proyecto,
             'postulacion': postulacion,
             'objetivo': objetivo_esp,

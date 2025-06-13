@@ -63,110 +63,119 @@
                         <h4 class="card-text">FECHA DE CIERRE CONVOCATORIA: {{fecha_expiracion}}> 
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <h5 class="text-center">MATERIAL DE APOYO</h5>
-                    <div class="col-6 text-center px-3">
-                        <a href="{{convocatoria.documento.url}}">
-                            <div class="py-2 rounded-4 bg-success text-white"><h1><i class="fa fa-file-text text-lg-center" aria-hidden="true"></i></h1>DOCUMENTO DE LA CONVOCATORIA</div>
-                        </a>
-                    </div>
-                    <div class="col-6 text-center px-3">
-                        <a href="{{convocatoria.guia.url}}">
-                            <div class="py-2 rounded-4 bg-success text-white"><h1><i class="fa fa-book text-lg-center" aria-hidden="true"></i></h1>GUIA PARA EL LLENADO DE LA CONVOCATORIA</div>
-                        </a>
-                    </div>
-                </div>
             </div>
             <hr>
-            <div class"row ">
-                <div class="mb-3 row">
-                    <div class="col-md-8 col-sm-8 fw-bold col-form-label text-end">INGRESA EL CODIGO PARA MODIFICAR TU SOLICITUD</div>
-                    <div class="col-md-4 col-sm-4 align-items-center ">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                            <input type="text" id="campo" class='form-control form-control-sm font-weight-bold border border-info' placeholder="Escribe aquí el codigo">
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                            <button onclick="redirigirConDato()" class="btn btn-primary ">Enviar</button>
-                            </div>
-                        </div>
-                        
-                    </div>                            
-                </div>
-            </div>
-            <hr>
-            <h1 class="text-center">FORMULARIO DE SOLICITUD</h1>
-            <hr>
-            <div class="text-center py-3">
-                <div class="row">
-                    <div class="col steps">
-                        <div class="step-circle bg-success text-white">1</div>
-                        <div class="step-circle">2</div>
-                        <div class="step-circle">3</div>
-                        <div class="step-circle">4</div>
-                        <div class="step-circle">5</div>
-                        <div class="step-circle">6</div>
-                        <div class="step-circle">FIN</div>
-                    </div>
-                </div>
-            </div>
             <div class="row">
-                <div class="col">
-                    <h4 class="text-center text-bg-success ">SELECCIONE EL TIPO DEL FINANCIAMIENTO</h4>                        
-                    <div class="row align-items-start justify-content-center p-5">
-                    {% if convocatoria.elabEdtp and convocatoria.EjecEdtp %}
-                        <div class="col-sm-6 col-md-6 pt-3">
-                            <a href="{% url 'solicitud:Departamento' '1' %}" style="text-decoration: none; color: inherit;">
-                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA LA ELABORACION DEL EDTP</h3>
-                            </a>
+                <div class="col-md-3">
+                    <h5 class="text-center">MATERIAL DE APOYO</h5>
+                    <a href="{{convocatoria.documento.url}}">
+                            <div class="py-2 my-1 rounded-4 bg-success text-center text-white"><h1><i class="fa fa-file-text text-lg-center" aria-hidden="true"></i></h1>DOCUMENTO DE LA CONVOCATORIA</div>
+                    </a>
+                    <a href="{{convocatoria.guia.url}}">
+                            <div class="py-2 rounded-4 bg-success text-center text-white"><h1><i class="fa fa-book text-lg-center" aria-hidden="true"></i></h1>GUIA PARA EL LLENADO DE LA CONVOCATORIA</div>
+                    </a>
+                </div>                
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-7 col-sm-7 py-2 fw-bold col-form-label text-end">INGRESA EL CODIGO PARA MODIFICAR TU SOLICITUD</div>
+                        <div class="col-md-5 col-sm-5 py-3 align-items-center ">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                <input type="text" id="campo" class='form-control form-control-sm font-weight-bold border border-info' placeholder="Escribe aquí el codigo">
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                <button onclick="redirigirConDato()" class="btn btn-primary ">Enviar</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 pt-3">
-                            <a href="{% url 'solicitud:Departamento' '2' %}" style="text-decoration: none; color: inherit;">
-                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA EJECUCION DEL EDTP</h3>
-                            </a>
+                    </div>
+                    <div class="row bg-light text-dark p-3 rounded">
+                        <h1 class="text-center">FORMULARIO DE SOLICITUD</h1>
+                        <hr>
+                        <div class="text-center py-3">
+                            <div class="row">
+                                <div class="col steps">
+                                    <div class="step-circle bg-success text-white">1</div>
+                                    <div class="step-circle">2</div>
+                                    <div class="step-circle">3</div>
+                                    <div class="step-circle">4</div>
+                                    <div class="step-circle">5</div>
+                                    <div class="step-circle">6</div>
+                                    <div class="step-circle">FIN</div>
+                                </div>
+                            </div>
                         </div>
-                    {% elif convocatoria.elabEdtp %}
-                        <div class="col-sm-6 col-md-6 pt-3">
-                            <a href="{% url 'solicitud:Departamento' '1' %}" style="text-decoration: none; color: inherit;">
-                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA ELABORACION DEL EDTP</h3>
-                            </a>
+                        <div class="row">
+                            <div class="col">
+                                <h4 class="text-center text-bg-success ">SELECCIONE EL TIPO DEL FINANCIAMIENTO</h4>                        
+                                <div class="row align-items-start justify-content-center p-5">
+                                {% if convocatoria.elabEdtp and convocatoria.EjecEdtp %}
+                                    <div class="col-sm-6 col-md-6 pt-3">
+                                        <a href="{% url 'solicitud:Departamento' '1' %}" style="text-decoration: none; color: inherit;">
+                                            <h3 class="text-center border border-4 bg-success-subtle rounded-2 py-3">FINANCIAMIENTO PARA LA ELABORACION DEL EDTP</h3>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 pt-3">
+                                        <a href="{% url 'solicitud:Departamento' '2' %}" style="text-decoration: none; color: inherit;">
+                                            <h3 class="text-center border border-4 bg-success-subtle rounded-2 py-3">FINANCIAMIENTO PARA EJECUCION DEL EDTP</h3>
+                                        </a>
+                                    </div>
+                                {% elif convocatoria.elabEdtp %}
+                                    <div class="col-sm-6 col-md-6 pt-3">
+                                        <a href="{% url 'solicitud:Departamento' '1' %}" style="text-decoration: none; color: inherit;">
+                                            <h3 class="text-center border border-4 bg-success-subtle rounded-2 py-3">FINANCIAMIENTO PARA ELABORACION DEL EDTP</h3>
+                                        </a>
+                                    </div>
+                                {% elif convocatoria.EjecEdtp %}
+                                    <div class="col-sm-6 col-md-6 pt-3">
+                                        <a href="{% url 'solicitud:Departamento' '2' %}" style="text-decoration: none; color: inherit;">
+                                            <h3 class="text-center border border-4 bg-success-subtle rounded-2 py-3">FINANCIAMIENTO PARA EJECUCION DEL EDTP</h3>
+                                        </a>
+                                    </div>
+                                {% endif %}                        
+                                </div>
+                            </div>
+                        
                         </div>
-                    {% elif convocatoria.EjecEdtp %}
-                        <div class="col-sm-6 col-md-6 pt-3">
-                            <a href="{% url 'solicitud:Departamento' '2' %}" style="text-decoration: none; color: inherit;">
-                                <h3 class="text-center border border-4 border-primary-subtle rounded-2 py-3">FINANCIAMIENTO PARA EJECUCION DEL EDTP</h3>
-                            </a>
-                        </div>
-                    {% endif %}                        
                     </div>
                 </div>
-            
             </div>
+            <hr>            
         {% else %}
-            <h3 class="text-center bg-success rounded-3 text-white"> {{message_fecha}}</h3>
-            <h3 class="text-center rounded-3 text-black fw-bold"> {{convocatoria.nombre}}</h3>
-            <h3 class="text-center rounded-3 text-black fw-bold"> FECHA DE {{estadotemporal}}: {{fecha_expiracion}}</h3>
-            <div class="contador">
-                <p id="tiempo"></p>
-            </div>
-            <div class="card text-center" style="background: transparent;">
-                <img src="{% static 'img/fondo/cierre.png' %}" class="card-img-top" alt="...">
+            <div class="row align-items-center">
+                <div class="col-md-6 card-body bg-primary-subtle p-5">
+                    <h3 class="text-center bg-success rounded-3 text-white"> {{message_fecha}}</h3>
+                    <h3 class="text-center rounded-3 text-black fw-bold"> {{convocatoria.nombre}}</h3>
+                    <h3 class="text-center rounded-3 text-black fw-bold"> FECHA DE {{estadotemporal}}: {{fecha_expiracion}}</h3>
+                </div>
+                <div class="col-md-5 card-body ms-1">
+                    <div class="card text-center" style="background: transparent;">
+                        <img src="{% static 'img/fondo/cierre.png' %}" class="card-img-top" alt="...">
+                    </div>
+                </div>
             </div>
         {% endif %}      
     {% elif conteo > 1 %}
-        <div class="col-md-3 mt-2">
-            <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
-        </div>
-        <div class="card text-center" style="background: transparent;">
-            <img src="{{imagen}}" class="card-img-top" alt="...">
+        <div class="row align-items-center">
+            <div class="col-md-6 card-body bg-primary-subtle p-5">
+                <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
+            </div>
+            <div class="col-md-5 card-body ms-1">
+                    <div class="card text-center" style="background: transparent;">
+                        <img src="{{imagen}}" class="card-img-top" alt="...">
+                    </div>
+            </div>
         </div>
     {% else %}
-        <div class="col-md-3 mt-2">
-            <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
-        </div>
-        <div class="card text-center" style="background: transparent;">                                             
-            <img src="{% static 'img/fondo/esperando.png' %}" class="card-img-top" alt="...">                        
+        <div class="row align-items-center">
+            <div class="col-md-6 card-body bg-primary-subtle p-5">
+                <a href="https://www.fonabosque.gob.bo/" class="btn btn-success btn-block">Volver a la pagina del FONABOSQUE</a>
+            </div>
+            <div class="col-md-5 card-body ms-1">
+                <div class="card text-center" style="background: transparent;">
+                    <img src="{% static 'img/fondo/esperando.png' %}" class="card-img-top" alt="...">  
+                </div>
+            </div>
         </div>
     {% endif %}    
 {% endblock contenido %}
@@ -186,5 +195,35 @@
             const urlCompleta = urlBase.replace('0', encodeURIComponent(campoDatos));
             window.location.href = urlCompleta;  // Redirige a la nueva URL
         }
+</script>
+<script>
+        // Obtener la fecha y hora de cierre desde Django (pasada como string en formato ISO)
+        const fechaHoraCierre2 = new Date("{{ fecha_expiracion }}").getTime();
+
+        // Actualizar la cuenta regresiva cada 1 segundo
+        const intervalo2 = setInterval(function() {
+
+            // Obtener la fecha y hora actuales
+            const ahora2 = new Date().getTime();
+
+            // Calcular la diferencia entre la fecha y hora de cierre y la fecha y hora actuales
+            const distancia2 = fechaHoraCierre2 - ahora2;
+
+            // Calcular los días, horas, minutos y segundos restantes
+            const dias2 = Math.floor(distancia2 / (1000 * 60 * 60 * 24));
+            const horas2 = Math.floor((distancia2 % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos2 = Math.floor((distancia2 % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos2 = Math.floor((distancia2 % (1000 * 60)) / 1000);
+
+            // Mostrar la cuenta regresiva en el HTML
+            document.getElementById("tiempoAct").innerHTML = `${dias2}d ${horas2}h ${minutos2}m ${segundos2}s`;
+
+            // Si la cuenta regresiva ha llegado a cero, mostrar un mensaje
+            if (distancia2 < 0) {
+                clearInterval(intervalo2);
+                document.getElementById("tiempoAct").innerHTML = "¡Se cerro la convocatoria!";
+            }
+
+        }, 1000); // Actualiza cada 1 segundo
 </script>
 {% endblock js %}

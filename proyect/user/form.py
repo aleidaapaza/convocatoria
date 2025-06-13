@@ -74,8 +74,8 @@ class Reg_EncargadoMAE(ModelForm):
         fields = '__all__'
         exclude = ['slug', 'persona']
         labels = {
-            'carnet': 'Carnet de Indentidad MAE (escaneado en pdf y tamaño máximo 2 megas)',
-            'asignacion': 'Documento de Designación y NIT del GAM (escaneado en pdf y tamaño máximo 2 megas)',
+            'carnet': 'Carnet de Indentidad MAE',
+            'asignacion': 'Documento de Designación y NIT del GAM',
             'correo': 'Correo Electrónico Domicilio Legal para notificación'
         }
 

@@ -15,11 +15,12 @@
         <hr>
         <div class="row">
             <div class="pe-3">
-                {% if postulacion.estado == null %}
+                {% if postulacion.creador == null %}
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-6 col-sm-12 mb- pe-3">
+                            {% if form2 %}
                                 <h4 class="text-center text-bg-success">CAMBIAR DATOS</h4>
                                 {% for field in form2 %}
                                     <div class="mb-3 row">
@@ -35,48 +36,52 @@
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %} 
+                                {% endfor %}
+                            {% endif %}                                
                             </div>
                             <div class="col-md-6 col-sm-12 mb- pe-3">
+                                {% if form %}
                                 <h4 class="text-center text-bg-success">HABILITAR USUARIOS</h4>
-                                {% for field in form %}
-                                    <div class="mb-3 row">
-                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                            <div class="col-sm-8">
+                                    {% for field in form %}
+                                        <div class="mb-3 row">
+                                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                                <div class="col-sm-8">
+                                                    <div class="">
+                                                        {{ field }}
+                                                    </div>
                                                 <div class="">
-                                                    {{ field }}
+                                                    {% for error in field.errors %}
+                                                        <span style="color: red">({{ error }})</span>
+                                                    {% endfor %}
                                                 </div>
-                                            <div class="">
-                                                {% for error in field.errors %}
-                                                    <span style="color: red">({{ error }})</span>
-                                                {% endfor %}
                                             </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
-                                {% for field in form3 %}
-                                    <div class="mb-3 row">
-                                        <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                            <div class="col-sm-8">
-                                                <div class="">
-                                                    {{ field }}
-                                                </div>
-                                            <div class="">
-                                                {% for error in field.errors %}
-                                                    <span style="color: red">({{ error }})</span>
-                                                {% endfor %}
-                                                {% if field.help_text %}
-                                                <small style="color: grey">{{ field.help_text }}</small>
-                                            {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                {% if password %}
-                                <p class='bg-warning'>La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo</p>
-                                {% else %}
+                                    {% endfor %}
                                 {% endif %}
-                                
+                                {% if form3 %}
+                                    <h4 class="text-center text-bg-success">REGISTRO DE USUARIOS</h4>
+                                    {% for field in form3 %}
+                                        <div class="mb-3 row">
+                                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
+                                                <div class="col-sm-8">
+                                                    <div class="">
+                                                        {{ field }}
+                                                    </div>
+                                                <div class="">
+                                                    {% for error in field.errors %}
+                                                        <span style="color: red">({{ error }})</span>
+                                                    {% endfor %}
+                                                    {% if field.help_text %}
+                                                    <small style="color: grey">{{ field.help_text }}</small>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    {% if password %}
+                                    <p class='bg-warning'>La contraseña se generara automaticamente la cual sera: nombre de usuario + codigo</p>
+                                    {% endif %}
+                                {% endif %}
                                 <div class="row text-center row mt-2">
                                     <div class="col">
                                         <button class="btn btn-success" type="submit">

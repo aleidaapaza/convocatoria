@@ -1,43 +1,86 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block contenido %}
-    <div class="row">
-            <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-                <div class="row mt-2">
-                    <h3 class="text-center text-bg-primary">{{ entity2 }}</h3>
-                    <hr>
-                    {% for field in form3 %}
-                        <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                <div class="col-sm-8">
-                                    <div class="">
-                                        {{ field }}
-                                    </div>
-                                <div class="">
-                                    {% for error in field.errors %}
-                                        <span style="color: red">({{ error }})</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
+<div class="row rounded bg-warning-subtle align-items-center">
+    <div class="col-md-2 col-sm-12 fw-bold col-form-label py-3 text-center">COSAS A TOMAR EN CUENTA</div>
+    <div class="col-md-10 col-sm-12 py-3">
+        <ul>
+            <li>SOLO CUENTA CON <b>UN (1) INTENTO</b> PARA REALIZAR LAS CORRECCIONES, EN CASO DE QUE SE VUELVA A DAR OTRA OBSERVACION SOLICITAR LA HABILITACION DEL FORMULARIO AL CONTACTO PROPORCIONADO EN LA GUIA DE LLENADO DE LA CONVOCATORIA</li>
+            <li>EL PERSONAL A CARGO SE CONTACTARA CON EL NUMERO REGISTRADO PARA PROPORCIONARLE EL USUARIO Y CONTRASEÑA RESPECTIVO, PARA QUE PUEDA LLENAR LOS DATOS RESPECTIVOS PARA LA SOLICITUD DE {{n_financiamiento}} </li>
+            <li>EN CASO DE QUE ALGUN DOCUMENTO ESTE ILEGIBLE EL PERSONAL SE CONTACTARA CON USTED PARA QUE PUEDA CORREGIRLO</li>
+            <li>EN CASO DE QUE NO SE LE PROPORCIONE EL USUARIO Y CONTRASEÑA <b>HASTA 24 HORAS DESPUES DEL ENVIO DE LOS DATOS</b>, PUEDE COMUNICARSE CON LOS CONTACTOS DE REFERENCIA PROPORCIONADO EN LA GUIA DE LLENADO DE LA CONVOCATORIA</li>
+        </ul>
+    </div>
+</div>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    <div class="row fw-bold">
+        <div class="col-md-6 col-sm-12 mt-2 bg-success-subtle rounded p-2">
+            <h3 class="text-center text-bg-primary">{{ entity2 }}</h3>
+            <hr>
+            {% for field3 in form3 %}
+                <div class="mb-3 row">
+                    <div class="col-sm-4 col-form-labe text-end">{{ field3.label_tag }}</div>
+                    <div class="col-sm-8">
+                        <div class="">{{ field3 }}</div>
+                        <div class="">
+                            {% for error in field3.errors %}
+                                <span style="color: red">({{ error }})</span>
+                            {% endfor %}
                         </div>
-                    {% endfor %} 
-                    {% for field in form2 %}
-                        <div class="mb-3 row">
-                            <div class="col-sm-4 col-form-labe text-end">{{ field.label_tag }}</div>
-                                <div class="col-sm-8">
-                                    <div class="">
-                                        {{ field }}
-                                    </div>
-                                <div class="">
-                                    {% for error in field.errors %}
-                                        <span style="color: red">({{ error }})</span>
-                                    {% endfor %}
-                                </div>
+                    </div>
+                </div>
+            {% endfor %} 
+            {% for field2 in form2 %}
+                <div class="mb-3 row">
+                    <div class="col-sm-4 col-form-labe text-end">{{ field2.label_tag }}</div>
+                    <div class="col-sm-8">
+                            <div class="">
+                                {{ field2 }}
                             </div>
+                            <div class="">
+                                {% for error in field2.errors %}
+                                    <span style="color: red">({{ error }})</span>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            {% endfor %} 
+            <hr>
+        </div>
+        <div class="col-md-6 col-sm-12 mt-2 p-2">
+            <h3 class="text-center text-bg-primary">{{ entity3 }}</h3>
+            <hr>
+            {% for field5 in form5 %}
+                <div class="mb-3 row">
+                    <div class="col-sm-4 col-form-labe text-end">{{ field5.label_tag }}</div>
+                    <div class="col-sm-8">
+                        <div class="">{{ field5 }}</div>
+                        <div class="">
+                            {% for error in field5.errors %}
+                                <span style="color: red">({{ error }})</span>
+                            {% endfor %}
                         </div>
-                    {% endfor %} 
-                    <hr>
+                    </div>
+                </div>
+            {% endfor %} 
+            {% for field4 in form4 %}
+                <div class="mb-3 row">
+                    <div class="col-sm-4 col-form-labe text-end">{{ field4.label_tag }}</div>
+                    <div class="col-sm-8">
+                            <div class="">
+                                {{ field4 }}
+                            </div>
+                            <div class="">
+                                {% for error in field4.errors %}
+                                    <span style="color: red">({{ error }})</span>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            {% endfor %} 
+            <hr>
+        </div>
                 <div class="row text-center row mt-2">
                     <div class="col">
                         <button class="btn btn-success" type="submit">
@@ -48,6 +91,7 @@
                         <i class="fas fa-trash-alt"></i>CANCELAR</a>
                     </div>
                 </div>
+    
+                
             </form>
-        </div>
 {% endblock %}
